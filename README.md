@@ -16,10 +16,11 @@ Welcome to Gearfinity, your playground for boundless mechanical creations! Gearf
 
 1. [Getting Started](#getting-started)
 2. [Join Our Patreon](#join-our-patreon)
-3. [Contributing](#contributing)
-4. [License](#license)
-5. [Acknowledgements](#acknowledgements)
-6. [Get in Touch](#get-in-touch)
+3. [Parts List](#parts-list)
+4. [Contributing](#contributing)
+5. [License](#license)
+6. [Acknowledgements](#acknowledgements)
+7. [Get in Touch](#get-in-touch)
 
 ## Getting Started
 
@@ -52,6 +53,9 @@ Interested in unlocking more of the Gearfinity universe? Our Patreon (launching 
 - A lively community to discuss designs, showcase your creations, and provide valuable feedback
 - Regular updates to keep you in the loop with all things Gearfinity!
 
+## Parts List
+
+You can view the current parts list table [here](https://docs.google.com/spreadsheets/d/158TpOWADwtF0e0_Nwcch7mfOSl0_y_dtp3eGY885oxw/edit?usp=sharing).
 ## Contributing
 
 Community and collaboration are the cornerstones of Gearfinity. If you're keen on contributing, check out our guidelines. Together, let's push the boundaries of what we can create!
