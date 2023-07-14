@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/gearfinity/gearfinity/assets/139299901/2c0567ad-f31d-4f41-975c-5792fb7ff2a5" alt="Gearfinity logo"/>
+  <img src="https://github.com/gearfinity/gearfinity/assets/139299901/ef71524d-b3eb-48cb-994c-3ec41cec557e" alt="Gearfinity logo"/>
 </p>
 
 # Gearfinity Project
