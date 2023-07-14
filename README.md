@@ -9,12 +9,11 @@ Welcome to Gearfinity, your playground for boundless mechanical creations! Gearf
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
-2. [How to Use](#how-to-use)
-3. [Join Our Patreon](#join-our-patreon)
-4. [Contributing](#contributing)
-5. [License](#license)
-6. [Acknowledgements](#acknowledgements)
-7. [Get in Touch](#get-in-touch)
+2. [Join Our Patreon](#join-our-patreon)
+3. [Contributing](#contributing)
+4. [License](#license)
+5. [Acknowledgements](#acknowledgements)
+6. [Get in Touch](#get-in-touch)
 
 ## Getting Started
 
