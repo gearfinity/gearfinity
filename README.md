@@ -36,7 +36,7 @@ Once you're equipped, it's time to print your first tool: the [pin tool](https:/
 Ready to get your hands dirty with your first module? Meet the [crank module](LINK_TO_CRANK_MODULE) – an excellent starting point for all aspiring Gearfinity builders.
 
 <p align="center">
-  <img src="https://github.com/gearfinity/gearfinity/assets/139299901/78d22eb4-a354-4f2e-80f3-b568463db80d" alt="Crank module gif"/>
+  <img src="https://github.com/gearfinity/gearfinity/assets/139299901/f8c02c5f-3d95-4bda-999e-bde5d6313789" alt="Crank module gif"/>
 </p>
 
 Remember, patience is key when it comes to assembly. So, take your time, enjoy the process, and watch as your mechanical masterpiece comes to life!
