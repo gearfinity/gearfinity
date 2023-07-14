@@ -60,4 +60,4 @@ A heartfelt thank you to all Gearfinity contributors, users, and supporters. You
 
 ## Get in Touch
 
-Have questions or suggestions? Eager to share your latest creation? We're all ears! Feel free to open up an issue or message us directly ad gearfinity3d@gmail.com
+Have questions or suggestions? Eager to share your latest creation? We're all ears! Feel free to open up an issue or message us directly at gearfinity3d@gmail.com
