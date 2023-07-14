@@ -6,6 +6,10 @@
 
 Welcome to Gearfinity, your playground for boundless mechanical creations! Gearfinity is a modular and extensible 3D printing project, functioning as a comprehensive engineering kit. With Gearfinity, you can assemble intricate, fully functional mechanical constructs entirely from 3D printed parts – bearings, fasteners, and all. Ready to gear up?
 
+<p align="center">
+  <img src="https://github.com/gearfinity/gearfinity/assets/139299901/42980850-ee0f-4b2a-a8c5-67bd87bb84fd" alt="Gearfinity logo"/>
+</p>
+
 ## Table of Contents
 
 1. [Getting Started](#getting-started)
