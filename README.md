@@ -18,11 +18,22 @@ Welcome to Gearfinity, your playground for boundless mechanical creations! Gearf
 
 ## Getting Started
 
-To commence your Gearfinity journey, there are a few initial setup steps. Fear not, we've compiled a comprehensive guide to get you up and running in no time!
+Your journey into the Gearfinity universe begins with a few essential tools and resources. Here's what you'll need:
 
-## How to Use 
+1. **A 3D printer**: The cornerstone of your Gearfinity creations.
 
-Jumpstart your creative endeavors with our assembly instructions available right here on GitHub. Follow these guidelines, and you'll soon bring your first 3D printed mechanical marvel to life!
+2. **A hard, flat edge**: Something like a small flathead screwdriver or a knife will come in handy for separating parts.
+
+3. **Wire cutters/snips or needle-nose pliers** (recommended): These tools will be useful for removing (and sometimes inserting) pins.
+
+Once you're equipped, it's time to print your first tool: the [pin tool](LINK_TO_PIN_TOOL). This is our recommended device for inserting pins seamlessly.
+
+Ready to get your hands dirty with your first module? Meet the [crank module](LINK_TO_CRANK_MODULE) – an excellent starting point for all aspiring Gearfinity builders.
+
+![crank_module_2_stage_reduced](https://github.com/gearfinity/gearfinity/assets/139299901/78d22eb4-a354-4f2e-80f3-b568463db80d)
+
+Remember, patience is key when it comes to assembly. So, take your time, enjoy the process, and watch as your mechanical masterpiece comes to life!
+
 
 ## Join Our Patreon
 
@@ -48,4 +59,4 @@ A heartfelt thank you to all Gearfinity contributors, users, and supporters. You
 
 ## Get in Touch
 
-Have questions or suggestions? Eager to share your latest creation? We're all ears! Here's how you can reach out to us...
+Have questions or suggestions? Eager to share your latest creation? We're all ears! Feel free to open up an issue or message us directly ad gearfinity3d@gmail.com
