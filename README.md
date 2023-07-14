@@ -33,7 +33,7 @@ Your journey into the Gearfinity universe begins with a few essential tools and 
 
 Once you're equipped, it's time to print your first tool: the [pin tool](https://github.com/gearfinity/gearfinity/blob/main/tools/pin_tool.STL). This is our recommended device for inserting pins seamlessly.
 
-Ready to get your hands dirty with your first module? Meet the [crank module](LINK_TO_CRANK_MODULE) – an excellent starting point for all aspiring Gearfinity builders. This module is meant to showcase some of the core features of Gearfinity in a simple way, so check it out!
+Ready to get your hands dirty with your first module? Meet the [crank module](https://github.com/gearfinity/gearfinity/blob/main/crank_module/README.md) – an excellent starting point for all aspiring Gearfinity builders. This module is meant to showcase some of the core features of Gearfinity in a simple way, so check it out!
 
 <p align="center">
   <img src="https://github.com/gearfinity/gearfinity/assets/139299901/f8c02c5f-3d95-4bda-999e-bde5d6313789" alt="Crank module gif"/>
