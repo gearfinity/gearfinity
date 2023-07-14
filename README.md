@@ -25,7 +25,7 @@ Your journey into the Gearfinity universe begins with a few essential tools and 
 
 3. **Wire cutters/snips or needle-nose pliers** (recommended): These tools will be useful for removing (and sometimes inserting) pins.
 
-Once you're equipped, it's time to print your first tool: the [pin tool](LINK_TO_PIN_TOOL). This is our recommended device for inserting pins seamlessly.
+Once you're equipped, it's time to print your first tool: the [pin tool](https://github.com/gearfinity/gearfinity/blob/main/tools/pin_tool.STL). This is our recommended device for inserting pins seamlessly.
 
 Ready to get your hands dirty with your first module? Meet the [crank module](LINK_TO_CRANK_MODULE) – an excellent starting point for all aspiring Gearfinity builders.
 
