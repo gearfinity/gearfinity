@@ -24,4 +24,8 @@ While the Crank Module is an excellent starting point, it's just the beginning o
 
 So, ready to crank up your 3D printing game with Gearfinity? Let's get started!
 
+## Next up...The Fan Module
+
+Ready to take what you've learned to the next level? The [Fan Module](https://github.com/gearfinity/gearfinity/blob/main/fan_module/README.md) is an excellent next step where you'll see firsthand the power of Gearfinity's swappable modular components. Check it out!
+
 
