@@ -68,6 +68,18 @@ Embrace the freedom of creation! All Gearfinity models are free and open-source.
 
 A heartfelt thank you to all Gearfinity contributors, users, and supporters. You're the driving force behind our constantly turning gears!
 
+### The shoulders of giants...
+
+Gearfinity takes direct inspiration from many different designs and projects shared by others and would certainly not be possible with out their amazing contributions. Below you can find links to these foundational creations.
+
+- [Getriebe Bibliothek für OpenSCAD / Gears Library for OpenSCAD](https://www.thingiverse.com/thing:1604369)
+- [Turbine Propeller Fan Generator v2](https://www.thingiverse.com/thing:3874607)
+- [Pin Connectors V3](https://www.thingiverse.com/thing:33790/files)
+- [New 608 Bearing Concept: Conical Geometry Bearings](https://www.thingiverse.com/thing:4628063)
+- [Planetary gear](https://www.thingiverse.com/thing:264769)
+- [Mechanical Fan with planetary gears](https://www.thingiverse.com/thing:2058267)
+- [Stackable Planetary Gear Mechanism (Reducer)](https://www.thingiverse.com/thing:1727833)
+
 ## Get in Touch
 
 Have questions or suggestions? Eager to share your latest creation? We're all ears! Feel free to open up an issue or message us directly at gearfinity3d@gmail.com
