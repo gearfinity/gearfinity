@@ -28,14 +28,14 @@ It took a few years of iterating and tinkering but I'm proud to say the Bubble M
 
 ## Table of Contents
 
-1. [Getting Started 🚀](#getting-started)
-2. [Safety Warning ⚠️](#safety-warning)
-3. [Join Our Patreon 💖](#join-our-patreon)
-4. [Parts List 📋](#parts-list)
-5. [Contributing 🤝](#contributing)
-6. [License 📄](#license)
-7. [Acknowledgements 👏](#acknowledgements)
-8. [Get in Touch 📧](#get-in-touch)
+1. [🚀 Getting Started](#getting-started)
+2. [⚠️ Safety Warning](#safety-warning)
+3. [💖 Join Our Patreon](#join-our-patreon)
+4. [📋 Parts List](#parts-list)
+5. [🤝 Contributing](#contributing)
+6. [📄 License](#license)
+7. [👏 Acknowledgements](#acknowledgements)
+8. [📧 Get in Touch](#get-in-touch)
 
 ## Getting Started 🚀
 
