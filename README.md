@@ -28,15 +28,16 @@ It took a few years of iterating and tinkering but I'm proud to say the Bubble M
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
-2. [Join Our Patreon](#join-our-patreon)
-3. [Parts List](#parts-list)
-4. [Contributing](#contributing)
-5. [License](#license)
-6. [Acknowledgements](#acknowledgements)
-7. [Get in Touch](#get-in-touch)
+1. [Getting Started 🚀](#getting-started)
+2. [Safety Warning ⚠️](#safety-warning)
+3. [Join Our Patreon 💖](#join-our-patreon)
+4. [Parts List 📋](#parts-list)
+5. [Contributing 🤝](#contributing)
+6. [License 📄](#license)
+7. [Acknowledgements 👏](#acknowledgements)
+8. [Get in Touch 📧](#get-in-touch)
 
-## Getting Started
+## Getting Started 🚀
 
 Your journey into the Gearfinity universe begins with a few essential tools and resources. Here's what you'll need:
 
@@ -58,8 +59,18 @@ Ready to get your hands dirty with your first module? Meet the [crank module](ht
 
 Remember, patience is key when it comes to assembly. So, take your time, enjoy the process, and watch as your mechanical masterpiece comes to life!
 
+## Safety Warning ⚠️
+While Gearfinity is designed for educational and recreational use, it's important to remember that the modules can generate high speeds and/or high torque due to the nature of the planetary gears and moving components.
 
-## Join Our Patreon
+Please exercise caution when assembling and operating the modules. Here are a few safety tips:
+
+- Always keep your fingers and any loose clothing away from the moving parts to avoid injury.
+- Avoid running the modules at high speeds for extended periods as it can lead to wear and potential breakage.
+- Gearfinity modules are not toys. They should not be used by children without direct adult supervision.
+
+Remember, safety first! Enjoy your Gearfinity experience responsibly.
+
+## Join Our Patreon 💖
 
 Interested in unlocking more of the Gearfinity universe? Our Patreon (launching soon) is the key! As a patron, you'll gain access to:
 
@@ -69,18 +80,18 @@ Interested in unlocking more of the Gearfinity universe? Our Patreon (launching 
 - A lively community to discuss designs, showcase your creations, and provide valuable feedback
 - Regular updates to keep you in the loop with all things Gearfinity!
 
-## Parts List
+## Parts List 📋
 
 You can view the current parts list table [here](https://docs.google.com/spreadsheets/d/158TpOWADwtF0e0_Nwcch7mfOSl0_y_dtp3eGY885oxw/edit?usp=sharing).
-## Contributing
+## Contributing 🤝
 
 Community and collaboration are the cornerstones of Gearfinity. If you're keen on contributing, check out our guidelines. Together, let's push the boundaries of what we can create!
 
-## License
+## License 📄
 
 Embrace the freedom of creation! All Gearfinity models are free and open-source. Create, modify, and enjoy to your heart's content!
 
-## Acknowledgements
+## Acknowledgements 👏
 
 A heartfelt thank you to all Gearfinity contributors, users, and supporters. You're the driving force behind our constantly turning gears!
 
@@ -96,6 +107,6 @@ Gearfinity takes direct inspiration from many different designs and projects sha
 - [Mechanical Fan with planetary gears](https://www.thingiverse.com/thing:2058267)
 - [Stackable Planetary Gear Mechanism (Reducer)](https://www.thingiverse.com/thing:1727833)
 
-## Get in Touch
+## Get in Touch 📧
 
 Have questions or suggestions? Eager to share your latest creation? We're all ears! Feel free to open up an issue or message us directly at gearfinity3d@gmail.com
