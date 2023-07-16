@@ -14,7 +14,7 @@ Welcome to Gearfinity, your playground for boundless mechanical creations! Gearf
 
 ## A Note from the Founder
 
-(not interested? [skip ahead](#getting-started) to get started 😉)
+(not interested? [skip ahead](#-getting-started) to get started 😉)
 
 Since I was a kid I've always been fascinated with modular construction sets. From Tinker Toys and Lincoln Logs to Legos and K'nex, I would get lost in the [challenge of building and creating](https://www.youtube.com/watch?v=j3P41ri6QZ8). My passion for designing and building later led me into studying robotics and [founding a team to compete in the NASA Lunabotics competition](https://www.alabamaastrobotics.com/) (the team went on to win many years of the competition). Building lunar excavator prototypes introduced me to the power of planetary gears and modular design. Around 2014 I purchased my first 3D printer: the legendary Da Vinci 1.0. I immediately fell in love with 3D printing. In designing robots I had picked up some CAD skills, and now I could almost instantly bring my designs into reality. The possibilities truly seemed endless!
 
