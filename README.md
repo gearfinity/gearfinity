@@ -53,9 +53,21 @@ In Gearfinity, a 'module' refers to a specific configuration of components that 
 
 Ready to get your hands dirty with your first module? Meet the [crank module](https://github.com/gearfinity/gearfinity/blob/main/crank_module/README.md) – an excellent starting point for all aspiring Gearfinity builders. This module is meant to showcase some of the core features of Gearfinity in a simple way, so check it out!
 
-<p align="center">
-  <img src="https://github.com/gearfinity/gearfinity/assets/139299901/f8c02c5f-3d95-4bda-999e-bde5d6313789" alt="Crank module gif"/>
-</p>
+<table>
+  <tr>
+    <td>
+      <!-- This is the code to include your GIF. -->
+      <img src="https://github.com/gearfinity/gearfinity/assets/139299901/f8c02c5f-3d95-4bda-999e-bde5d6313789" alt="Crank module gif"/>
+    </td>
+    <td>
+      <!-- This is the code to embed your YouTube video. -->
+      <a href="YOUTUBE_VIDEO_LINK" target="_blank">
+        <img src="http://img.youtube.com/vi/n-d26yRk0Yk/0.jpg" alt="YouTube Video">
+      </a>
+    </td>
+  </tr>
+</table>
+
 
 Remember, patience is key when it comes to assembly. So, take your time, enjoy the process, and watch as your mechanical masterpiece comes to life!
 
