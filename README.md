@@ -61,7 +61,7 @@ Ready to get your hands dirty with your first module? Meet the [crank module](ht
     </td>
     <td>
       <!-- This is the code to embed your YouTube video. -->
-      <a href="YOUTUBE_VIDEO_LINK" target="_blank">
+      <a href="https://www.youtube.com/watch?v=n-d26yRk0Yk" target="_blank">
         <img src="http://img.youtube.com/vi/n-d26yRk0Yk/0.jpg" alt="YouTube Video">
       </a>
     </td>
