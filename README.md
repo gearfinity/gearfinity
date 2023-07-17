@@ -62,7 +62,7 @@ Ready to get your hands dirty with your first module? Meet the [crank module](ht
     <td>
       <!-- This is the code to embed your YouTube video. -->
       <a href="https://www.youtube.com/watch?v=n-d26yRk0Yk" target="_blank">
-        <img src="http://img.youtube.com/vi/n-d26yRk0Yk/0.jpg" alt="YouTube Video">
+        <img src="https://github.com/gearfinity/gearfinity/assets/139299901/0d3a183a-5f53-4c3f-b839-399f797dcb66" alt="YouTube Video">
       </a>
     </td>
   </tr>
