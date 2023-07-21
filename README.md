@@ -71,6 +71,18 @@ Ready to get your hands dirty with your first module? Meet the [crank module](ht
 
 Remember, patience is key when it comes to assembly. So, take your time, enjoy the process, and watch as your mechanical masterpiece comes to life!
 
+## 🧩 Modularity
+
+Gearfinity acts as a construction set, which means modules can be quickly converted from one to another. The demo below shows how the crank module can be converted into a fan module in just a few steps.
+
+<p align="center">
+  <br>
+  <img src="https://github.com/gearfinity/gearfinity/assets/139299901/2975e0fc-0efb-4b74-b779-3991f9db8e26" alt="modularity demo"/>
+  <br>
+  <sub>Modular modules! .</sub>
+</p>
+
+
 ## ⚠️ Safety Warning
 While Gearfinity is designed for educational and recreational use, it's important to remember that the modules can generate high speeds and/or high torque due to the nature of the planetary gears and moving components.
 
