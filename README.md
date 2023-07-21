@@ -80,7 +80,7 @@ Gearfinity acts as a construction set, which means modules can be quickly conver
   <br>
   <img src="https://github.com/gearfinity/gearfinity/assets/139299901/2975e0fc-0efb-4b74-b779-3991f9db8e26" alt="modularity demo"/>
   <br>
-  <sub>Modular modules! .</sub>
+  <sub>Modular modules!</sub>
 </p>
 
 
