@@ -52,6 +52,8 @@ Once you're equipped, it's time to print your first tool: the [pin tool](https:/
 
 In Gearfinity, a 'module' refers to a specific configuration of components that together form a fully functioning mechanism. Each module incorporates various Gearfinity parts (i.e. components) in a way that showcases a distinct mechanical function or interaction.
 
+The main component for most modules is the planetary gear stage. Check out this video to get started building! - https://www.youtube.com/watch?v=IewrQ3KnOlo
+
 Ready to get your hands dirty with your first module? Meet the [crank module](https://github.com/gearfinity/gearfinity/blob/main/crank_module/README.md) – an excellent starting point for all aspiring Gearfinity builders. This module is meant to showcase some of the core features of Gearfinity in a simple way, so check it out!
 
 <table>
