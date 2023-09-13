@@ -12,7 +12,9 @@ This simple yet comprehensive model offers a hands-on exploration of some core G
 - How **planetary gear modules** integrate seamlessly with each other to form efficient gear systems.
 - How various **input and output components** can interface with the planetary gear stages to bring about mechanical motion.
 
-Check out this video to guide you through each step of the assembly process: https://www.youtube.com/watch?v=rEJv3zD0lIk
+Start off by learning how to build planetary gear stages: https://www.youtube.com/watch?v=IewrQ3KnOlo
+
+Then check out this video to guide you through each step of the crank module assembly process: https://www.youtube.com/watch?v=rEJv3zD0lIk
 
 While the Crank Module is an excellent starting point, it's just the beginning of what Gearfinity has to offer. Subscribing to our [Patreon](LINK_TO_PATREON) gives you access to:
 
