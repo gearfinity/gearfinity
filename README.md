@@ -55,7 +55,7 @@ In Gearfinity, a 'module' refers to a specific configuration of components that 
 ---
 
 <p align="center">
-  The main component for most modules is the planetary gear stage. Check out this video below to get started building!
+  The main component for most modules is the planetary gear stage. Check out the video below to get started building!
 </p>
 
 
