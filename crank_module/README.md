@@ -12,22 +12,26 @@ This simple yet comprehensive model offers a hands-on exploration of some core G
 - How **planetary gear modules** integrate seamlessly with each other to form efficient gear systems.
 - How various **input and output components** can interface with the planetary gear stages to bring about mechanical motion.
 
-Start off by learning how to build planetary gear stages: https://www.youtube.com/watch?v=IewrQ3KnOlo
+Start off by learning how to build planetary gear stages: [Planetary Gear Stage Assembly Video](https://www.youtube.com/watch?v=IewrQ3KnOlo)
 
-Then check out this video to guide you through each step of the crank module assembly process: https://www.youtube.com/watch?v=rEJv3zD0lIk
+Then check out this video to guide you through each step of the crank module assembly process: [Crank Module Assembly Video](https://www.youtube.com/watch?v=rEJv3zD0lIk)
 
-While the Crank Module is an excellent starting point, it's just the beginning of what Gearfinity has to offer. Subscribing to our [Patreon](LINK_TO_PATREON) gives you access to:
+While the Crank Module is an excellent starting point, it's just the beginning of what Gearfinity has to offer.
 
-- Detailed assembly instructions for other modules
-- Expert tips and tricks for 3D printing and assembly
-- In-depth tutorials to boost your mechanical prowess
-- A lively community to discuss designs, showcase your creations, and provide valuable feedback
-- Regular updates to keep you in the loop with all things Gearfinity!
+## 💖 Join Our Community
+
+Interested in becoming a part of the Gearfinity universe? Join our community to stay updated and get exclusive access to new content! By signing up, you'll gain:
+
+- **Latest Updates:** Stay informed about new projects and developments.
+- **Early Access:** Be the first to access new 3D models and modules.
+- **Exclusive Tutorials:** Receive tips and guides to enhance your 3D printing skills.
+- **Community Engagement:** Connect with fellow enthusiasts in our private Discord channel.
+- **Monthly Newsletters:** Get featured builds and community highlights delivered to your inbox.
+
+Learn more and join the Gearfinity community at [https://gearfinity.xyz](https://gearfinity.xyz).
 
 So, ready to crank up your 3D printing game with Gearfinity? Let's get started!
 
 ## Next up...The Fan Module
 
 Ready to take what you've learned to the next level? The [Fan Module](https://github.com/gearfinity/gearfinity/blob/main/fan_module/README.md) is an excellent next step where you'll see firsthand the power of Gearfinity's swappable modular components. Check it out!
-
-
