@@ -31,7 +31,7 @@ It took a few years of iterating and tinkering but I'm proud to say the Bubble M
 1. [🚀 Getting Started](#-getting-started)
 2. [🧩 Modularity](#-modularity)
 3. [⚠️ Safety Warning](#-safety-warning)
-4. [💖 Join Our Patreon](#-join-our-patreon)
+4. [💖 Join Our Community](#-join-our-community)
 5. [📋 Parts List](#-parts-list)
 6. [🤝 Contributing](#-contributing)
 7. [📄 License](#-license)
@@ -109,15 +109,18 @@ Please exercise caution when assembling and operating the modules. Here are a fe
 
 Remember, safety first! Enjoy your Gearfinity experience responsibly.
 
-## 💖 Join Our Patreon
+## 💖 Join Our Community
 
-Interested in unlocking more of the Gearfinity universe? Our Patreon (launching soon) is the key! As a patron, you'll gain access to:
+Interested in becoming a part of the Gearfinity universe? Join our community to stay updated and get exclusive access to new content! By signing up, you'll gain:
 
-- A library of assembly instructions for various modules
-- Insider tips and tricks for seamless 3D printing and assembly
-- In-depth tutorials to boost your mechanical prowess
-- A lively community to discuss designs, showcase your creations, and provide valuable feedback
-- Regular updates to keep you in the loop with all things Gearfinity!
+- **Latest Updates:** Stay informed about new projects and developments.
+- **Early Access:** Be the first to access new 3D models and modules.
+- **Exclusive Tutorials:** Receive tips and guides to enhance your 3D printing skills.
+- **Community Engagement:** Connect with fellow enthusiasts in our private Discord channel.
+- **Monthly Newsletters:** Get featured builds and community highlights delivered to your inbox.
+
+Learn more and join the Gearfinity community at [https://gearfinity.xyz](https://gearfinity.xyz).
+
 
 ## 📋 Parts List
 
