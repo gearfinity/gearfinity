@@ -151,7 +151,7 @@ Gearfinity takes direct inspiration from many different designs and projects sha
 
 ## 📧 Get in Touch
 
-Have questions or suggestions? Eager to share your latest creation? We're all ears! Feel free to open up an issue or message us directly at gearfinity3d@gmail.com
+Have questions or suggestions? Eager to share your latest creation? We're all ears! Feel free to open up an issue, join the community at https://gearfinity.xyz, or message us directly at gearfinity3d@gmail.com
 
 ## 🌟 Like what you see?
 
