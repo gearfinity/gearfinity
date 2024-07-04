@@ -36,7 +36,7 @@ It took a few years of iterating and tinkering but I'm proud to say the Bubble M
 6. [🤝 Contributing](#-contributing)
 7. [📄 License](#-license)
 8. [👏 Acknowledgements](#-acknowledgements)
-9. [Awards and Recognition](#-awards-and-recognition)
+9. [🏆 Awards and Recognition](#-awards-and-recognition)
 10. [📧 Get in Touch](#-get-in-touch)
 
 ## 🚀 Getting Started
