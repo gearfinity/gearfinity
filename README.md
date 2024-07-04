@@ -36,7 +36,8 @@ It took a few years of iterating and tinkering but I'm proud to say the Bubble M
 6. [🤝 Contributing](#-contributing)
 7. [📄 License](#-license)
 8. [👏 Acknowledgements](#-acknowledgements)
-9. [📧 Get in Touch](#-get-in-touch)
+9. [Awards and Recognition](#-awards-and-recognition)
+10. [📧 Get in Touch](#-get-in-touch)
 
 ## 🚀 Getting Started
 
@@ -148,6 +149,16 @@ Gearfinity takes direct inspiration from many different designs and projects sha
 - [Planetary gear](https://www.thingiverse.com/thing:264769)
 - [Mechanical Fan with planetary gears](https://www.thingiverse.com/thing:2058267)
 - [Stackable Planetary Gear Mechanism (Reducer)](https://www.thingiverse.com/thing:1727833)
+
+
+## 🏆 Awards and Recognition
+**Gearfinity Fan Module: Elegoo x All3DP Summer Design Contest 2023 Winner**
+
+We're honored to have our work recognized by Elegoo and All3DP, two leading names in the 3D printing industry. This award is not just a celebration of what we've achieved, but a springboard for what's to come.
+
+Award: [First Prize, Elegoo x All3DP Summer Design Contest 2023](https://all3dp.com/4/elegoo-x-all3dp-summer-design-contest-wraps-up-with-amazing-creative-entries-ad/)
+
+What's Next? This is just the beginning. Stay tuned for exciting new developments as we continue to innovate and expand the possibilities of 3D printed engineering.
 
 ## 📧 Get in Touch
 
