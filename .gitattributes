@@ -1,0 +1,28 @@
+# Git LFS tracking for large binary CAD / 3D / media assets.
+# Keeps these out of regular git history so clones stay lean.
+# NOTE: this affects files added from here on; existing history is unchanged
+# unless migrated separately with `git lfs migrate`.
+
+# SolidWorks
+*.SLDPRT  filter=lfs diff=lfs merge=lfs -text
+*.sldprt  filter=lfs diff=lfs merge=lfs -text
+*.SLDASM  filter=lfs diff=lfs merge=lfs -text
+*.sldasm  filter=lfs diff=lfs merge=lfs -text
+*.SLDDRW  filter=lfs diff=lfs merge=lfs -text
+*.slddrw  filter=lfs diff=lfs merge=lfs -text
+
+# Neutral CAD exchange formats
+*.STEP  filter=lfs diff=lfs merge=lfs -text
+*.step  filter=lfs diff=lfs merge=lfs -text
+*.STP   filter=lfs diff=lfs merge=lfs -text
+*.stp   filter=lfs diff=lfs merge=lfs -text
+
+# Mesh / print formats
+*.STL  filter=lfs diff=lfs merge=lfs -text
+*.stl  filter=lfs diff=lfs merge=lfs -text
+*.3MF  filter=lfs diff=lfs merge=lfs -text
+*.3mf  filter=lfs diff=lfs merge=lfs -text
+
+# Video
+*.mp4  filter=lfs diff=lfs merge=lfs -text
+*.MP4  filter=lfs diff=lfs merge=lfs -text
