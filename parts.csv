@@ -1,192 +1,192 @@
-ID,Name,Description,Printing Notes,File Link
-BG15-1,Bevel Gear,"Bevel gear, 15 teeth, drive variant. [SPECS TBD – please confirm]","- Perimeters: 3
+ID,alias,rev,Name,Description,Printing Notes,File Link
+BG15D,,1,Bevel Gear,"Bevel gear, 15 teeth, drive gear.","- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/bevel_gear_15_drive.STL
-CA-1,Crank Arm,Small crank arm. 2 arms.,"- Perimeters: 3
+CA2,CA-1,1,Crank Arm,Small crank arm. 2 arms.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_arm-1.STL
-CA-2,Crank Arm,Small crank arm. 1 arm.,"- Perimeters: 3
+CA1,CA-2,1,Crank Arm,Small crank arm. 1 arm.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_arm-2.STL
-CH-1,Crank Handle,Small crank handle. 2 handles.,"- Perimeters: 3
+CH2,CH-1,1,Crank Handle,Small crank handle. 2 handles.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
 - After printing, twist the handle grips to break loose for free spinning.",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_handle-1.STL
-CH-2,Crank Handle,Small crank handle. 1 handle.,"- Perimeters: 3
+CH1,CH-2,1,Crank Handle,Small crank handle. 1 handle.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
 - After printing, twist the handle grip to break loose for free spinning.",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_handle-2.STL
-CHG-1,Crank Handle Grip,Small crank handle grip.,"- Perimeters: 3
+CHG,CHG-1,1,Crank Handle Grip,Small crank handle grip.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_handle-grip-1.STL
-CP-1,Crank Plate,Crank plate for small handles.,"- Perimeters: 3
+CP,CP-1,1,Crank Plate,Crank plate for small handles.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_plate-1.STL
-CS-1,Crank Spindle,Small crank spindle.,"- Perimeters: 3
+CSP,CS-1,1,Crank Spindle,Small crank spindle.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_spindle-1.STL
-CS5-1,Crank Shaft,Crank shaft for 5:1 drive shaft.,"- Infill: 100%
+CS5,CS5-1,1,Crank Shaft,Crank shaft for 5:1 drive shaft.,"- Infill: 100%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_shaft_5-1.STL
-CSS-1,Crank Shaft Sleeve,Crank shaft sleeve.,"- Perimeters: 3
+CSS,CSS-1,1,Crank Shaft Sleeve,Crank shaft sleeve.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_shaft_sleeve-1.STL
-DS5-1,Drive Shaft - output,5:1 output drive shaft.18 mm.,"- Infill: 100%
+DS5O,DS5-1,1,Drive Shaft - output,5:1 output drive shaft.18 mm.,"- Infill: 100%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/drive_shaft_5-1.STL
-DS5-2,Drive Shaft - output,5:1 output drive shaft. Lockable. 18.75 mm. ,"- Infill: 100%
+DS5OL,DS5-2,1,Drive Shaft - output,5:1 output drive shaft. Lockable. 18.75 mm. ,"- Infill: 100%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/drive_shaft_5-2.STL
-DS5-3,Drive Shaft - input,5:1 input drive shaft. Lockable. 28.3 mm.,"- Infill: 100%
+DS5IL,DS5-3,1,Drive Shaft - input,5:1 input drive shaft. Lockable. 28.3 mm.,"- Infill: 100%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/drive_shaft_5-3.STL
-DS5-3-2,Drive Shaft - input,5:1 input drive shaft. Lockable. 28.3 mm. Tight fit on sun gear side.,"- Infill: 100%
+DS5ILT,DS5-3-2,1,Drive Shaft - input,5:1 input drive shaft. Lockable. 28.3 mm. Tight fit on sun gear side.,"- Infill: 100%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/drive_shaft_5-3-2.STL
-DS5-4,Drive Shaft - input,5:1 input drive shaft. 55 mm.,"- Infill: 100%
+DS5I,DS5-4,1,Drive Shaft - input,5:1 input drive shaft. 55 mm.,"- Infill: 100%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/drive_shaft_5-4.STL
-FC-1,Fan Cage,Fan cage for fan prop. Acts as a protective covering and an air inlet. Meant to take advantage of the Coandă effect.,"- Perimeters: 3
+FC,FC-1,1,Fan Cage,Fan cage for fan prop. Acts as a protective covering and an air inlet. Meant to take advantage of the Coandă effect.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/fan_cage-1.STL
-FF-1,Fan Funnel,Fan funnel. Acts as a ducted fan outlet and stabilizer for a fan prop.,"- Perimeters: 3
+FF,FF-1,1,Fan Funnel,Fan funnel. Acts as a ducted fan outlet and stabilizer for a fan prop.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/fan_funnel-1.STL
-FP5CC-1,Fan Prop,Fan Prop. 5 blades. Counter-clockwise rotation. 90 mm diameter. 15 mm blade height.,"- Perimeters: 3
+FP5CC,FP5CC-1,1,Fan Prop,Fan Prop. 5 blades. Counter-clockwise rotation. 90 mm diameter. 15 mm blade height.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: maybe raft or brim",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/fan_prop_5CC-1.STL
-FP5C-1,Fan Prop,Fan Prop. 5 blades. Clockwise rotation. 90 mm diameter. 15 mm blade height.,"- Perimeters: 3
+FP5C,FP5C-1,1,Fan Prop,Fan Prop. 5 blades. Clockwise rotation. 90 mm diameter. 15 mm blade height.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: maybe raft or brim",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/fan_prop_5C-1.STL
-GC1-1,Gearbox Cover,Gearbox cover for 1 planetary stages.,"- Perimeters: 3
+GC1,GC1-1,1,Gearbox Cover,Gearbox cover for 1 planetary stages.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/gearbox_cover_1_stage-1.STL
-GC2-1,Gearbox Cover,Gearbox cover for 2 planetary stages.,"- Perimeters: 3
+GC2,GC2-1,1,Gearbox Cover,Gearbox cover for 2 planetary stages.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/gearbox_cover_2_stage-1.STL
-GC3-1,Gearbox Cover Half,Gearbox cover for 3 planetary stages. 2 required,"- Perimeters: 3
+GC3,GC3-1,1,Gearbox Cover Half,Gearbox cover for 3 planetary stages. 2 required,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/gearbox_cover_3_stage-1.STL
-H-1,Handle Half,2 parts make a handle.,"- Perimeters: 3
+H,H-1,1,Handle Half,2 parts make a handle.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/handle-1.STL
-HP-1,Handle Plate,Handle plate. 2 stage width.,"- Perimeters: 3
+HP2,HP-1,1,Handle Plate,Handle plate. 2 stage width.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/handle_plate-1.STL
-HP-2,Handle Plate,Handle plate. 1 stage width.,"- Perimeters: 3
+HP1,HP-2,1,Handle Plate,Handle plate. 1 stage width.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/handle_plate-2.STL
-HP-3,Handle Plate,Handle plate. 3 stage width.,"- Perimeters: 3
+HP3,HP-3,1,Handle Plate,Handle plate. 3 stage width.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/handle_plate-3.STL
-HPB-1,Handle Plate Bracket Half,Bracket to lock the handle plate in place. 2 stage,"- Perimeters: 3
+HPB2,HPB-1,1,Handle Plate Bracket Half,Bracket to lock the handle plate in place. 2 stage,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: built in",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/handle_plate_bracket_half-1.STL
-HPB-2,Handle Plate Bracket Half,Bracket to lock the handle plate in place. 1 stage,"- Perimeters: 3
+HPB1,HBP-2,1,Handle Plate Bracket Half,Bracket to lock the handle plate in place. 1 stage,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: built in",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/handle_plate_bracket_half-2.STL
-HPB-3,Handle Plate Bracket,Bracket to lock the handle plate in place. 3 stage,"- Perimeters: 3
+HPB3,HBP-3,1,Handle Plate Bracket,Bracket to lock the handle plate in place. 3 stage,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: built in",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/handle_plate_bracket_3.STL
-P-1,Pin - short,Pin. 9.1 mm length. 5.4 mm diameter.,"- Perimeters: 3
+PS54,P-1,1,Pin - short,Pin. 9.1 mm length. 5.4 mm diameter.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: optional raft if you have trouble with the first layer",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/pin-1.STL
-P-1-1,Pin - short (tight fit),Pin. 9.1 mm length. 5.6 mm diameter.,"- Perimeters: 3
+PS56,P-1-1,1,Pin - short (tight fit),Pin. 9.1 mm length. 5.6 mm diameter.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: optional raft if you have trouble with the first layer",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/pin-1-1.STL
-P-1-2,Pin - short (tight fit),Pin. 9.1 mm length. 5.8 mm diameter.,"- Perimeters: 3
+PS58,P-1-2,1,Pin - short (tight fit),Pin. 9.1 mm length. 5.8 mm diameter.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: optional raft if you have trouble with the first layer",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/pin-1-2.STL
-P-2,Pin - long,Pin. 24.1 mm length. 7.1 mm diameter.,"- Perimeters: 3
+PL71,P-2,1,Pin - long,Pin. 24.1 mm length. 7.1 mm diameter.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/pin-2.STL
-P-2-1,Pin - long (loose fit),Pin. 24.1 mm length. 6.9 mm diameter.,"- Perimeters: 3
+PL69,P-2-1,1,Pin - long (loose fit),Pin. 24.1 mm length. 6.9 mm diameter.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/pin-2-1.STL
-P-2-2,Pin - long (loose fit),Pin. 24.1 mm length. 6.7 mm diameter.,"- Perimeters: 3
+PL67,P-2-2,1,Pin - long (loose fit),Pin. 24.1 mm length. 6.7 mm diameter.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/pin-2-2.STL
-PCB5-1,Planet Carrier Bottom,Planet carrier bottom for 5:1 gear stage.,"- Perimeters: 3
+PCB5,PCB5-1,1,Planet Carrier Bottom,Planet carrier bottom for 5:1 gear stage.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planet_carrier_bottom_5-1.STL
-PCT5-1,Planet Carrier Top,Planet carrier top for 5:1 gear stage.,"- Perimeters: 3
+PCT5,PCT5-1,1,Planet Carrier Top,Planet carrier top for 5:1 gear stage.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planet_carrier_top_5-1.STL
-PGC5-1S15,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Closed ring. Sleeve bearing. 0.15 mm tolerance.,"- Perimeters: 3
+PGC5C15,PGC5-1S15,1,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Closed ring. Sleeve bearing. 0.15 mm tolerance.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",
-PGC5-2S05,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Middle slots on ring. Sleeve bearing. 0.05 mm tolerance.,"- Perimeters: 3
+PGC5M05,PGC5-2S05,1,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Middle slots on ring. Sleeve bearing. 0.05 mm tolerance.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
 - Other: This is an extremely tight tolerance. If it feels too tight you can use a looser tolerance version such as PGC5-2S10",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planetary_gear_core_5-2S05.STL
-PGC5-2S10,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Middle slots on ring. Sleeve bearing. 0.10 mm tolerance.,"- Perimeters: 3
+PGC5M10,PGC5-2S10,1,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Middle slots on ring. Sleeve bearing. 0.10 mm tolerance.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
 - Other: This is a tight tolerance. If it feels too tight you can use a looser tolerance version such as PGC5-2S15",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planetary_gear_core_5-2S10.STL
-PGC5-2S15,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Middle slots on ring. Sleeve bearing. 0.15 mm tolerance.,"- Perimeters: 3
+PGC5M15,PGC5-2S15,1,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Middle slots on ring. Sleeve bearing. 0.15 mm tolerance.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
 - Other: This is a loose tolerance. If it feels too loose you can use a tighter tolerance version such as PGC5-2S10",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planetary_gear_core_5-2S15.STL
-PGC5-3S15,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Outer slots on ring. Sleeve bearing. 0.15 mm tolerance.,"- Perimeters: 3
+PGC5O15,PGC5-3S15,1,Planetary Gear Core ,Planetary gear core. 5:1 ratio. Outer slots on ring. Sleeve bearing. 0.15 mm tolerance.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
 - Other: This is a loose tolerance. If it feels too loose you can use a tighter tolerance version such as PGC5-2S10",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planetary_gear_core_5-3S15.STL
-PGSB-1,Planet Gear Sleeve Bearing,Planet gear sleeve bearing. 7.4mm OD 6.2mm ID,"- Perimeters: 3
+PGSB62,PGSB-1,1,Planet Gear Sleeve Bearing,Planet gear sleeve bearing. 7.4mm OD 6.2mm ID,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planet_gear_sleeve_bearing-1.STL
-PGSB-2,Planet Gear Sleeve Bearing (thinner),Planet gear sleeve bearing. 7.4mm OD 6.4mm ID,"- Perimeters: 3
+PGSB64,PGSB-2,1,Planet Gear Sleeve Bearing (thinner),Planet gear sleeve bearing. 7.4mm OD 6.4mm ID,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planet_gear_sleeve_bearing-2.STL
-PGSB-3,Planet Gear Sleeve Bearing (thinner),Planet gear sleeve bearing. 7.4mm OD 6.6mm ID,"- Perimeters: 3
+PGSB66,PGSB-3,1,Planet Gear Sleeve Bearing (thinner),Planet gear sleeve bearing. 7.4mm OD 6.6mm ID,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planet_gear_sleeve_bearing-3.STL
-Pin Tool,Pin Tool,Used to insert small pins into sockets,"- Perimeters: 3
+PT,Pin Tool,1,Pin Tool,Used to insert small pins into sockets,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/pin_tool.STL
-PSC-1,Planetary Stage Cover,Planetary stage cover.,"- Perimeters: 3
+PSC,PSC-1,1,Planetary Stage Cover,Planetary stage cover.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/planetary_stage_cover-1.STL
-RB-1,Roller Bearing,Roller Bearing. 22 mm OD. 8 mm ID.,"- Infill: 100%
+RB-2,RB-1,2,Roller Bearing,Roller Bearing. 22 mm OD. 8 mm ID.,"- Infill: 100%
 - Layer height: 0.2 mm
 - Supports: optional raft if you have trouble with the first layer",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/roller_bearing-1.STL
