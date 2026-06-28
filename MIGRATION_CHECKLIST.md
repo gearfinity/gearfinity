@@ -20,86 +20,86 @@ Tracks every per-part task for rolling the new ID scheme (see
 
 - ⬜ = to do · ✅ = done · — = not applicable
 - ✋ = **you** (SolidWorks / CAD) · 🤖 = **me** (git rename + `parts.csv` link + validate)
-- **Filename convention:** `<NewID>_<slug>.STL` / `.STEP` — new ID plus a
-  readable slug from the part name, e.g. `PGC5M05_planetary_gear_core.STL`.
+- **Old/New filename** columns show the export base name only (the same name
+  applies to each of the part's `.STL`/`.STEP` files).
 
 ## Per-part workflow (Section A parts)
 
 1. ✋ Re-emboss the `.SLDPRT` with the new ID, in place.
 2. ✋ Re-export the `.STL` (and `.STEP` if present).
 3. ✋ Commit the updated source + exports, or tell me they're ready.
-4. 🤖 I `git mv` the exports to their new-ID names, update the `parts.csv`
+4. 🤖 I `git mv` the exports to their new filename, update the `parts.csv`
    link, and run the validator.
 
 ---
 
 ## Section A — Re-emboss + re-export + rename  (23 parts)
 
-| New ID | Current source name | Files | ✋ Re-emboss | ✋ Re-export | 🤖 Rename + catalog | Notes |
-|---|---|---|---|---|---|---|
-| **BG15D** | `bevel_gear_15_drive` | SLDPRT, STL | ⬜ | ⬜ | ⬜ | new part -> confirm emboss `BG15D` |
-| **CA2** | `crank_arm-1` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **CA1** | `crank_arm-2` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **CH2** | `crank_handle-1` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **CH1** | `crank_handle-2` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **CSP** | `crank_spindle-1` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **DS5O** | `drive_shaft_5-1` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **DS5OL** | `drive_shaft_5-2` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **DS5IL** | `drive_shaft_5-3` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **DS5ILT** | `drive_shaft_5-3-2` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **DS5I** | `drive_shaft_5-4` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **HP2** | `handle_plate-1` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **HP1** | `handle_plate-2` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **HP3** | `handle_plate-3` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **HPB2** | `handle_plate_bracket_half-1` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **HPB1** | `handle_plate_bracket_half-2` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **HPB3** | `handle_plate_bracket_3` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **PGC5C15** | _(no file yet)_ | — | ⬜ | ⬜ | — |  |
-| **PGC5M05** | `planetary_gear_core_5-2S05` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **PGC5M10** | `planetary_gear_core_5-2S10` | STL | ⬜ | ⬜ | ⬜ |  |
-| **PGC5M15** | `planetary_gear_core_5-2S15` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
-| **PGC5O15** | `planetary_gear_core_5-3S15` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
-| **RB-2** | `roller_bearing-1` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ | revision bump -> emboss `RB-2` |
+| Old ID | New ID | Old filename | New filename | Files | ✋ Re-emboss | ✋ Re-export | 🤖 Rename + catalog | Notes |
+|---|---|---|---|---|---|---|---|---|
+| _(new)_ | **`BG15D`** | `bevel_gear_15_drive` | `BG15D_bevel_gear` | SLDPRT, STL | ⬜ | ⬜ | ⬜ | new part -> confirm emboss `BG15D` |
+| `CA-1` | **`CA2`** | `crank_arm-1` | `CA2_crank_arm` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `CA-2` | **`CA1`** | `crank_arm-2` | `CA1_crank_arm` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `CH-1` | **`CH2`** | `crank_handle-1` | `CH2_crank_handle` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `CH-2` | **`CH1`** | `crank_handle-2` | `CH1_crank_handle` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `CS-1` | **`CSP`** | `crank_spindle-1` | `CSP_crank_spindle` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `DS5-1` | **`DS5O`** | `drive_shaft_5-1` | `DS5O_drive_shaft` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `DS5-2` | **`DS5OL`** | `drive_shaft_5-2` | `DS5OL_drive_shaft` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `DS5-3` | **`DS5IL`** | `drive_shaft_5-3` | `DS5IL_drive_shaft` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `DS5-3-2` | **`DS5ILT`** | `drive_shaft_5-3-2` | `DS5ILT_drive_shaft` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `DS5-4` | **`DS5I`** | `drive_shaft_5-4` | `DS5I_drive_shaft` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `HP-1` | **`HP2`** | `handle_plate-1` | `HP2_handle_plate` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `HP-2` | **`HP1`** | `handle_plate-2` | `HP1_handle_plate` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `HP-3` | **`HP3`** | `handle_plate-3` | `HP3_handle_plate` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `HPB-1` | **`HPB2`** | `handle_plate_bracket_half-1` | `HPB2_handle_plate_bracket_half` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `HBP-2` | **`HPB1`** | `handle_plate_bracket_half-2` | `HPB1_handle_plate_bracket_half` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `HBP-3` | **`HPB3`** | `handle_plate_bracket_3` | `HPB3_handle_plate_bracket` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `PGC5-1S15` | **`PGC5C15`** | _(no file yet)_ | _(pending)_ `PGC5C15_planetary_gear_core` | — | ⬜ | ⬜ | — |  |
+| `PGC5-2S05` | **`PGC5M05`** | `planetary_gear_core_5-2S05` | `PGC5M05_planetary_gear_core` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `PGC5-2S10` | **`PGC5M10`** | `planetary_gear_core_5-2S10` | `PGC5M10_planetary_gear_core` | STL | ⬜ | ⬜ | ⬜ |  |
+| `PGC5-2S15` | **`PGC5M15`** | `planetary_gear_core_5-2S15` | `PGC5M15_planetary_gear_core` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ |  |
+| `PGC5-3S15` | **`PGC5O15`** | `planetary_gear_core_5-3S15` | `PGC5O15_planetary_gear_core` | SLDPRT, STL | ⬜ | ⬜ | ⬜ |  |
+| `RB-1` | **`RB-2`** | `roller_bearing-1` | `RB-2_roller_bearing` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ | revision bump -> emboss `RB-2` |
 
 ## Section B — Rename only (not embossed: pins, sleeve bearings, tool)  (10 parts)
 
 These have no embossing, so they just need their export files renamed.
 
-| New ID | Current source name | Files | 🤖 Rename + catalog | Notes |
-|---|---|---|---|---|
-| **PS54** | `pin-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **PS56** | `pin-1-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **PS58** | `pin-1-2` | SLDPRT, STEP, STL | ⬜ |  |
-| **PL71** | `pin-2` | SLDPRT, STEP, STL | ⬜ |  |
-| **PL69** | `pin-2-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **PL67** | `pin-2-2` | SLDPRT, STEP, STL | ⬜ |  |
-| **PGSB62** | `planet_gear_sleeve_bearing-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **PGSB64** | `planet_gear_sleeve_bearing-2` | SLDPRT, STEP, STL | ⬜ |  |
-| **PGSB66** | `planet_gear_sleeve_bearing-3` | SLDPRT, STEP, STL | ⬜ |  |
-| **PT** | `pin_tool` | SLDPRT, STL | ⬜ |  |
+| Old ID | New ID | Old filename | New filename | Files | 🤖 Rename + catalog | Notes |
+|---|---|---|---|---|---|---|
+| `P-1` | **`PS54`** | `pin-1` | `PS54_pin` | SLDPRT, STEP, STL | ⬜ |  |
+| `P-1-1` | **`PS56`** | `pin-1-1` | `PS56_pin` | SLDPRT, STEP, STL | ⬜ |  |
+| `P-1-2` | **`PS58`** | `pin-1-2` | `PS58_pin` | SLDPRT, STEP, STL | ⬜ |  |
+| `P-2` | **`PL71`** | `pin-2` | `PL71_pin` | SLDPRT, STEP, STL | ⬜ |  |
+| `P-2-1` | **`PL69`** | `pin-2-1` | `PL69_pin` | SLDPRT, STEP, STL | ⬜ |  |
+| `P-2-2` | **`PL67`** | `pin-2-2` | `PL67_pin` | SLDPRT, STEP, STL | ⬜ |  |
+| `PGSB-1` | **`PGSB62`** | `planet_gear_sleeve_bearing-1` | `PGSB62_planet_gear_sleeve_bearing` | SLDPRT, STEP, STL | ⬜ |  |
+| `PGSB-2` | **`PGSB64`** | `planet_gear_sleeve_bearing-2` | `PGSB64_planet_gear_sleeve_bearing` | SLDPRT, STEP, STL | ⬜ |  |
+| `PGSB-3` | **`PGSB66`** | `planet_gear_sleeve_bearing-3` | `PGSB66_planet_gear_sleeve_bearing` | SLDPRT, STEP, STL | ⬜ |  |
+| `Pin Tool` | **`PT`** | `pin_tool` | `PT_pin_tool` | SLDPRT, STL | ⬜ |  |
 
 ## Section C — Rename only (ID unchanged; old emboss still valid)  (15 parts)
 
 No re-embossing needed — the existing emboss is still correct via `alias`.
-Renaming their export files to the ID is optional tidy-up; do it last.
+Renaming their export files is optional tidy-up; do it last.
 
-| New ID | Current source name | Files | 🤖 Rename + catalog | Notes |
-|---|---|---|---|---|
-| **CHG** | `crank_handle-grip-1` | SLDPRT, STL | ⬜ |  |
-| **CP** | `crank_plate-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **CS5** | `crank_shaft_5-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **CSS** | `crank_shaft_sleeve-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **FC** | `fan_cage-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **FF** | `fan_funnel-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **FP5CC** | `fan_prop_5CC-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **FP5C** | `fan_prop_5C-1` | SLDPRT, STL | ⬜ |  |
-| **GC1** | `gearbox_cover_1_stage-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **GC2** | `gearbox_cover_2_stage-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **GC3** | `gearbox_cover_3_stage-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **H** | `handle-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **PCB5** | `planet_carrier_bottom_5-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **PCT5** | `planet_carrier_top_5-1` | SLDPRT, STEP, STL | ⬜ |  |
-| **PSC** | `planetary_stage_cover-1` | SLDPRT, STEP, STL | ⬜ |  |
+| Old ID | New ID | Old filename | New filename | Files | 🤖 Rename + catalog | Notes |
+|---|---|---|---|---|---|---|
+| `CHG-1` | **`CHG`** | `crank_handle-grip-1` | `CHG_crank_handle_grip` | SLDPRT, STL | ⬜ |  |
+| `CP-1` | **`CP`** | `crank_plate-1` | `CP_crank_plate` | SLDPRT, STEP, STL | ⬜ |  |
+| `CS5-1` | **`CS5`** | `crank_shaft_5-1` | `CS5_crank_shaft` | SLDPRT, STEP, STL | ⬜ |  |
+| `CSS-1` | **`CSS`** | `crank_shaft_sleeve-1` | `CSS_crank_shaft_sleeve` | SLDPRT, STEP, STL | ⬜ |  |
+| `FC-1` | **`FC`** | `fan_cage-1` | `FC_fan_cage` | SLDPRT, STEP, STL | ⬜ |  |
+| `FF-1` | **`FF`** | `fan_funnel-1` | `FF_fan_funnel` | SLDPRT, STEP, STL | ⬜ |  |
+| `FP5CC-1` | **`FP5CC`** | `fan_prop_5CC-1` | `FP5CC_fan_prop` | SLDPRT, STEP, STL | ⬜ |  |
+| `FP5C-1` | **`FP5C`** | `fan_prop_5C-1` | `FP5C_fan_prop` | SLDPRT, STL | ⬜ |  |
+| `GC1-1` | **`GC1`** | `gearbox_cover_1_stage-1` | `GC1_gearbox_cover` | SLDPRT, STEP, STL | ⬜ |  |
+| `GC2-1` | **`GC2`** | `gearbox_cover_2_stage-1` | `GC2_gearbox_cover` | SLDPRT, STEP, STL | ⬜ |  |
+| `GC3-1` | **`GC3`** | `gearbox_cover_3_stage-1` | `GC3_gearbox_cover_half` | SLDPRT, STEP, STL | ⬜ |  |
+| `H-1` | **`H`** | `handle-1` | `H_handle_half` | SLDPRT, STEP, STL | ⬜ |  |
+| `PCB5-1` | **`PCB5`** | `planet_carrier_bottom_5-1` | `PCB5_planet_carrier_bottom` | SLDPRT, STEP, STL | ⬜ |  |
+| `PCT5-1` | **`PCT5`** | `planet_carrier_top_5-1` | `PCT5_planet_carrier_top` | SLDPRT, STEP, STL | ⬜ |  |
+| `PSC-1` | **`PSC`** | `planetary_stage_cover-1` | `PSC_planetary_stage_cover` | SLDPRT, STEP, STL | ⬜ |  |
 
 ---
 
