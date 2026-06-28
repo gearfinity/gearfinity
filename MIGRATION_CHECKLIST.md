@@ -7,9 +7,10 @@ Tracks every per-part task for rolling the new ID scheme (see
 
 ## Ground rules that keep this safe
 
-- **Only exports get renamed.** `.STL`/`.STEP` are renamed to the new ID
-  (e.g. `PGC5M05.STL`). Source `.SLDPRT`/`.SLDASM` keep their current
-  filenames, so the **9 assemblies never break**.
+- **Only exports get renamed.** `.STL`/`.STEP` are renamed to the new ID plus a
+  readable slug (e.g. `PGC5M05_planetary_gear_core.STL`). Source
+  `.SLDPRT`/`.SLDASM` keep their current filenames, so the **9 assemblies never
+  break**.
 - **Re-embossing edits the `.SLDPRT` in place** (same filename) — assemblies
   still resolve, they just show the updated part.
 - Old physical prints stay valid: their old emboss maps to the new ID via the
@@ -19,8 +20,8 @@ Tracks every per-part task for rolling the new ID scheme (see
 
 - ⬜ = to do · ✅ = done · — = not applicable
 - ✋ = **you** (SolidWorks / CAD) · 🤖 = **me** (git rename + `parts.csv` link + validate)
-- **Filename convention:** `<NewID>.STL` / `<NewID>.STEP` (pure ID). Tell me if
-  you'd prefer `<NewID>_<slug>` instead.
+- **Filename convention:** `<NewID>_<slug>.STL` / `.STEP` — new ID plus a
+  readable slug from the part name, e.g. `PGC5M05_planetary_gear_core.STL`.
 
 ## Per-part workflow (Section A parts)
 

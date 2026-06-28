@@ -108,7 +108,7 @@ Each part carries several identifiers, each with one job:
 | **Attribute columns** | ratio=5, slot=middle, tolerance=0.05 | The full, queryable truth; extensible |
 | **Descriptive label** | "Planetary Gear Core — 5:1, middle-slot, sleeve, 0.05 mm" | Human-readable; **auto-generated from columns** (never hand-typed, so never typo'd) |
 | **Alias(es)** | `PGC5-2S05` | Legacy IDs people already cite |
-| **Filename** | starts with the Part ID | Folder ↔ emboss ↔ catalog all agree |
+| **Filename** | `<ID>_<slug>` (e.g. `PGC5M05_planetary_gear_core`) | Folder ↔ emboss ↔ catalog all agree |
 
 Parts too small to emboss (pins, small bearings) still have a Part ID — it just
 isn't physically on the part. They're identified by context (packaging, slicer
