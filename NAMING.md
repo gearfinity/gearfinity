@@ -207,8 +207,13 @@ When existing IDs change, three things keep it graceful:
    (semicolon-separated), forever.
 2. **Migration log** — a public old → new table (kept in `parts.csv` via `alias`,
    and summarized here) so anyone with an old code can find the current part.
-3. **Embossing** — re-emboss only where the ID stem actually changed. Where the
-   new ID equals the old (see the audit), the physical part is already correct.
+3. **Embossing & file renames** — when a part adopts a new ID, its model is
+   re-embossed and **all** of its files (`.SLDPRT`/`.STL`/`.STEP`) are renamed to
+   `<ID>_<slug>`. Source-file renames are always done with a reference-preserving
+   SolidWorks rename — **Pack and Go**, or FeatureManager rename with every
+   assembly open — **never Save-As-then-delete**, so assemblies never lose their
+   components. Until a physical part is re-embossed, its old emboss still resolves
+   via the `alias`.
 
 Revisions never invalidate old physical parts: a part with no suffix (or an
 explicit `-1`) is revision 1, and a later `-2` is visibly the newer iteration.
