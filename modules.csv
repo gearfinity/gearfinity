@@ -1,0 +1,50 @@
+module,part_id,part_name
+crank_module,CH2,Crank Handle
+crank_module,CP,Crank Plate
+crank_module,CS5,Crank Shaft
+crank_module,CSS,Crank Shaft Sleeve
+crank_module,DS5O,Drive Shaft - output
+crank_module,DS5OL,Drive Shaft - output
+crank_module,DS5IL,Drive Shaft - input
+crank_module,GC2,Gearbox Cover
+crank_module,H,Handle Half
+crank_module,HP2,Handle Plate
+crank_module,PS54,Pin - short
+crank_module,PL71,Pin - long
+crank_module,PT,Pin Tool
+crank_module,PCB5,Planet Carrier Bottom
+crank_module,PCT5,Planet Carrier Top
+crank_module,PGSB62,Planet Gear Sleeve Bearing
+crank_module,PGC5M15,Planetary Gear Core
+crank_module,PSC,Planetary Stage Cover
+fan_module,CH1,Crank Handle
+fan_module,CP,Crank Plate
+fan_module,CS5,Crank Shaft
+fan_module,CSS,Crank Shaft Sleeve
+fan_module,DS5O,Drive Shaft - output
+fan_module,DS5OL,Drive Shaft - output
+fan_module,DS5I,Drive Shaft - input
+fan_module,FC,Fan Cage
+fan_module,FF,Fan Funnel
+fan_module,FP5CC,Fan Prop
+fan_module,GC2,Gearbox Cover
+fan_module,H,Handle Half
+fan_module,HP2,Handle Plate
+fan_module,PS54,Pin - short
+fan_module,PL71,Pin - long
+fan_module,PT,Pin Tool
+fan_module,PCB5,Planet Carrier Bottom
+fan_module,PCT5,Planet Carrier Top
+fan_module,PGSB62,Planet Gear Sleeve Bearing
+fan_module,PGC5M15,Planetary Gear Core
+fan_module,PSC,Planetary Stage Cover
+fan_module,RB-2,Roller Bearing
+planetary_gear_stage,DS5O,Drive Shaft - output
+planetary_gear_stage,PS56,Pin - short (tight fit)
+planetary_gear_stage,PL71,Pin - long
+planetary_gear_stage,PT,Pin Tool
+planetary_gear_stage,PCB5,Planet Carrier Bottom
+planetary_gear_stage,PCT5,Planet Carrier Top
+planetary_gear_stage,PGSB62,Planet Gear Sleeve Bearing
+planetary_gear_stage,PGC5M15,Planetary Gear Core
+planetary_gear_stage,PSC,Planetary Stage Cover
