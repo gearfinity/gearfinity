@@ -2,3 +2,4 @@ myenv
 ~$*
 dist/
 __pycache__/
+.claude/
