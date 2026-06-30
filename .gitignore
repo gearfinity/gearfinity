@@ -1,3 +1,4 @@
 myenv
 ~$*
 dist/
+__pycache__/
