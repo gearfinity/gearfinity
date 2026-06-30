@@ -21,7 +21,7 @@
 | `PT` | 1 | Pin Tool | assembly tool |
 
 **Swappable options:**
-- **Cores**: recommended at tolerance `15`; tolerance `10`/`05` are tighter alternatives, and any slot style still functions.
+- **Cores**: recommended tolerance `15`; `10`/`05` are tighter, and any slot style still functions.
 
 ## Crank Module
 
@@ -97,7 +97,7 @@
 **Swappable options:**
 - **CH2** (crank handle (double; single = CH1)) - alternatives: `CH1`
 - **DS5O** (drive_shaft_output) - alternatives: `DS5OL`
-- **Cores**: recommended at tolerance `15`; tolerance `10`/`05` are tighter alternatives, and any slot style still functions.
+- **Cores**: recommended tolerance `15`; `10`/`05` are tighter, and any slot style still functions.
 
 ## Fan Module
 
@@ -186,5 +186,5 @@
 - **FP5CC** (prop (CCW; CW = FP5C)) - alternatives: `FP5C`
 - **CH1** (crank_handle) - alternatives: `CH2`
 - **DS5O** (drive_shaft_output) - alternatives: `DS5OL`
-- **Cores**: recommended at tolerance `15`; tolerance `10`/`05` are tighter alternatives, and any slot style still functions.
+- **Cores**: recommended tolerance `15`; `10`/`05` are tighter, and any slot style still functions.
 

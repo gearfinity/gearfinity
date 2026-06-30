@@ -1,0 +1,46 @@
+name: Build module bundles
+
+# Builds per-module, per-variant download bundles from _all_parts/ using the
+# config model, and attaches the zips to a Release. Runs when a Release is
+# published, or manually (artifacts only).
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bundles:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (with LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build bundles
+        run: python scripts/build_bundles.py
+
+      - name: Attach bundles to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mapfile -t zips < <(find dist -name '*.zip' | sort)
+          echo "Uploading ${#zips[@]} bundles to ${{ github.event.release.tag_name }}"
+          gh release upload "${{ github.event.release.tag_name }}" "${zips[@]}" --clobber
+
+      - name: Upload bundles as artifact (manual runs)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: gearfinity-bundles
+          path: dist/**
