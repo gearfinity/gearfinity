@@ -1,13 +1,10 @@
 {
   "_about": "Gearfinity configuration model. Each module variant prescribes a RECOMMENDED build; alternatives also function (nothing here is a hard requirement). Source of truth for download bundles, platform descriptions, and a future configurator. Part IDs are defined in parts.csv / NAMING.md.",
   "_assumptions_to_confirm": [
-    "planet_sleeve_bearing qty = 3 per stage (one per planet gear?)",
-    "stage_cover (PSC) is per-stage (counted once per planetary stage)",
-    "pins (PS54/PL71) live at module level, not per-stage",
-    "crank_input/output not yet broken out as submodules (needs the assembly BOMs)",
-    "fan assembly-video link still needed",
-    "core default tolerance = 15"
+    "crank_input / output not yet broken out as submodules (needs the assembly BOMs)",
+    "pin counts are TBD - to be derived from an interface model, see _pin_model"
   ],
+  "_pin_model": "Planned (future phase): each part declares (a) how many pin-holes it has and (b) which non-pin parts it mates with. A pin spans ONE hole in EACH of two mating parts, so pins at an interface are shared and counted once - not summed per part. Total pins are then computed from the assembly graph rather than added up per part. Example: a planetary core has 8 pin-holes and each stage cover has 4; attaching 2 covers to one core uses 8 pins total (shared), not 16.",
 
   "defaults": { "core_tolerance": "15" },
   "core_style_codes": { "middle": "M", "outer": "O", "closed": "C" },
@@ -28,7 +25,7 @@
         "planet_carrier_bottom": { "recommended": "PCB5", "qty": 1 },
         "planet_carrier_top":    { "recommended": "PCT5", "qty": 1 },
         "planet_sleeve_bearing": { "recommended": "PGSB62", "qty": 3, "_confirm": "qty per stage" },
-        "stage_cover":           { "recommended": "PSC", "qty": 1, "_confirm": "per-stage vs per-module" }
+        "stage_cover":           { "recommended": "PSC", "qty": 2, "note": "2 per stage (covers both ends)" }
       }
     }
   },
@@ -40,8 +37,8 @@
       "uses_submodule": "planetary_stage",
       "shared_slots": {
         "drive_shaft": { "recommended": "DS5O" },
-        "pins_short":  { "recommended": "PS56" },
-        "pins_long":   { "recommended": "PL71" },
+        "pins_short":  { "recommended": "PS56", "qty": "TBD" },
+        "pins_long":   { "recommended": "PL71", "qty": "TBD" },
         "pin_tool":    { "recommended": "PT", "role": "assembly tool" }
       },
       "variants": {
@@ -61,8 +58,8 @@
         "drive_shaft_input":  { "recommended": "DS5IL" },
         "handle":             { "recommended": "H", "qty": 2 },
         "handle_plate":       { "recommended": "HP2" },
-        "pins_short":         { "recommended": "PS54" },
-        "pins_long":          { "recommended": "PL71" },
+        "pins_short":         { "recommended": "PS54", "qty": "TBD" },
+        "pins_long":          { "recommended": "PL71", "qty": "TBD" },
         "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
       },
       "variants": {
@@ -74,7 +71,7 @@
 
     "fan": {
       "name": "Fan Module",
-      "assembly_video": "",
+      "assembly_video": "https://www.youtube.com/watch?v=oZlYVgYIprY",
       "shared_slots": {
         "fan_prop":           { "recommended": "FP5CC", "alternatives": ["FP5C"], "role": "prop (CCW; CW = FP5C)" },
         "fan_cage":           { "recommended": "FC" },
@@ -88,8 +85,8 @@
         "drive_shaft_input":  { "recommended": "DS5I" },
         "handle":             { "recommended": "H", "qty": 2 },
         "handle_plate":       { "recommended": "HP2" },
-        "pins_short":         { "recommended": "PS54" },
-        "pins_long":          { "recommended": "PL71" },
+        "pins_short":         { "recommended": "PS54", "qty": "TBD" },
+        "pins_long":          { "recommended": "PL71", "qty": "TBD" },
         "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
       },
       "variants": {

@@ -31,7 +31,8 @@ def build(module):
         agg = {}
         def add(pid, qty, role):
             if pid in agg:
-                agg[pid][0] += qty
+                a = agg[pid]
+                a[0] = a[0] + qty if isinstance(a[0], int) and isinstance(qty, int) else "TBD"
             else:
                 agg[pid] = [qty, role]
         # per-stage parts
@@ -74,8 +75,8 @@ for mid, module in CFG["modules"].items():
         md.append(f"\n[Assembly video]({module['assembly_video']})")
     builds = build(module)
     for vname, agg in builds.items():
-        total = sum(q for q, _ in agg.values())
-        md.append(f"\n### {vname}  -  {total} parts to print\n")
+        total = sum(q for q, _ in agg.values() if isinstance(q, int))
+        md.append(f"\n### {vname}  -  {total}+ parts to print (pins TBD)\n")
         md.append("| Part | Qty | Name | Role |")
         md.append("|---|---|---|---|")
         for pid, (qty, role) in agg.items():
@@ -90,4 +91,5 @@ for mid, module in CFG["modules"].items():
 print("Wrote MODULES.md")
 for mid, module in CFG["modules"].items():
     for vname, agg in build(module).items():
-        print(f"  {module['name']} / {vname}: {sum(q for q,_ in agg.values())} parts, {len(agg)} unique")
+        n = sum(q for q, _ in agg.values() if isinstance(q, int))
+        print(f"  {module['name']} / {vname}: {n}+ parts, {len(agg)} unique")
