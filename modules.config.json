@@ -1,0 +1,102 @@
+{
+  "_about": "Gearfinity configuration model. Each module variant prescribes a RECOMMENDED build; alternatives also function (nothing here is a hard requirement). Source of truth for download bundles, platform descriptions, and a future configurator. Part IDs are defined in parts.csv / NAMING.md.",
+  "_assumptions_to_confirm": [
+    "planet_sleeve_bearing qty = 3 per stage (one per planet gear?)",
+    "stage_cover (PSC) is per-stage (counted once per planetary stage)",
+    "pins (PS54/PL71) live at module level, not per-stage",
+    "crank_input/output not yet broken out as submodules (needs the assembly BOMs)",
+    "fan assembly-video link still needed",
+    "core default tolerance = 15"
+  ],
+
+  "defaults": { "core_tolerance": "15" },
+  "core_style_codes": { "middle": "M", "outer": "O", "closed": "C" },
+
+  "submodules": {
+    "planetary_stage": {
+      "name": "Planetary Stage",
+      "description": "One 5:1 herringbone planetary gear stage - the core reusable building block.",
+      "assembly_video": "https://www.youtube.com/watch?v=IewrQ3KnOlo",
+      "core_param": {
+        "name": "core_style",
+        "options": ["middle", "outer", "closed"],
+        "default": "middle",
+        "note": "Picks which core variant aligns its ring slots with the open cover windows (aesthetic). Any style still functions."
+      },
+      "slots": {
+        "core":                  { "recommended": "PGC5{style}{tol}", "qty": 1, "role": "gear core", "alt_note": "same style at tolerance 10 or 05 for a tighter fit" },
+        "planet_carrier_bottom": { "recommended": "PCB5", "qty": 1 },
+        "planet_carrier_top":    { "recommended": "PCT5", "qty": 1 },
+        "planet_sleeve_bearing": { "recommended": "PGSB62", "qty": 3, "_confirm": "qty per stage" },
+        "stage_cover":           { "recommended": "PSC", "qty": 1, "_confirm": "per-stage vs per-module" }
+      }
+    }
+  },
+
+  "modules": {
+    "planetary_stage": {
+      "name": "Planetary Stage (standalone)",
+      "assembly_video": "https://www.youtube.com/watch?v=IewrQ3KnOlo",
+      "uses_submodule": "planetary_stage",
+      "shared_slots": {
+        "drive_shaft": { "recommended": "DS5O" },
+        "pins_short":  { "recommended": "PS56" },
+        "pins_long":   { "recommended": "PL71" },
+        "pin_tool":    { "recommended": "PT", "role": "assembly tool" }
+      },
+      "variants": {
+        "single": { "stages": ["middle"], "cover": null }
+      }
+    },
+
+    "crank": {
+      "name": "Crank Module",
+      "assembly_video": "https://www.youtube.com/watch?v=rEJv3zD0lIk",
+      "shared_slots": {
+        "crank_handle":       { "recommended": "CH2", "alternatives": ["CH1"], "role": "crank handle (double; single = CH1)" },
+        "crank_plate":        { "recommended": "CP" },
+        "crank_shaft":        { "recommended": "CS5" },
+        "crank_shaft_sleeve": { "recommended": "CSS" },
+        "drive_shaft_output": { "recommended": "DS5O", "alternatives": ["DS5OL"] },
+        "drive_shaft_input":  { "recommended": "DS5IL" },
+        "handle":             { "recommended": "H", "qty": 2 },
+        "handle_plate":       { "recommended": "HP2" },
+        "pins_short":         { "recommended": "PS54" },
+        "pins_long":          { "recommended": "PL71" },
+        "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
+      },
+      "variants": {
+        "1-stage": { "stages": ["middle"], "cover": "GC1" },
+        "2-stage": { "stages": ["middle", "middle"], "cover": "GC2" },
+        "3-stage": { "stages": ["middle", "outer", "middle"], "cover": "GC3" }
+      }
+    },
+
+    "fan": {
+      "name": "Fan Module",
+      "assembly_video": "",
+      "shared_slots": {
+        "fan_prop":           { "recommended": "FP5CC", "alternatives": ["FP5C"], "role": "prop (CCW; CW = FP5C)" },
+        "fan_cage":           { "recommended": "FC" },
+        "fan_funnel":         { "recommended": "FF" },
+        "roller_bearing":     { "recommended": "RB-2" },
+        "crank_handle":       { "recommended": "CH1", "alternatives": ["CH2"] },
+        "crank_plate":        { "recommended": "CP" },
+        "crank_shaft":        { "recommended": "CS5" },
+        "crank_shaft_sleeve": { "recommended": "CSS" },
+        "drive_shaft_output": { "recommended": "DS5O", "alternatives": ["DS5OL"] },
+        "drive_shaft_input":  { "recommended": "DS5I" },
+        "handle":             { "recommended": "H", "qty": 2 },
+        "handle_plate":       { "recommended": "HP2" },
+        "pins_short":         { "recommended": "PS54" },
+        "pins_long":          { "recommended": "PL71" },
+        "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
+      },
+      "variants": {
+        "1-stage": { "stages": ["middle"], "cover": "GC1" },
+        "2-stage": { "stages": ["middle", "middle"], "cover": "GC2" },
+        "3-stage": { "stages": ["middle", "outer", "middle"], "cover": "GC3" }
+      }
+    }
+  }
+}
