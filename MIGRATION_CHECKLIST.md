@@ -45,7 +45,7 @@ re-embossed.
 | `CHG-1` | **`CHG`** | `crank_handle-grip-1` | `CHG_crank_handle_grip` | SLDPRT, STL | ⬜ | ⬜ | ⬜ | ⬜ |  |
 | `CP-1` | **`CP`** | `crank_plate-1` | `CP_crank_plate` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ | ⬜ |  |
 | `CS-1` | **`CSP`** | `crank_spindle-1` | `CSP_crank_spindle` | SLDPRT, STL | ⬜ | ⬜ | ⬜ | ⬜ |  |
-| `CS5-1` | **`CS5`** | `crank_shaft_5-1` | `CS5_crank_shaft` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ | ⬜ |  |
+| `CS5-1` | **`CS5`** | `crank_shaft_5-1` | `CS5_crank_shaft` | SLDPRT, STEP, STL | ✅ | ✅ | ✅ | ✅ | done |
 | `CSS-1` | **`CSS`** | `crank_shaft_sleeve-1` | `CSS_crank_shaft_sleeve` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ | ⬜ |  |
 | `DS5-1` | **`DS5O`** | `drive_shaft_5-1` | `DS5O_drive_shaft` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ | ⬜ |  |
 | `DS5-2` | **`DS5OL`** | `drive_shaft_5-2` | `DS5OL_drive_shaft` | SLDPRT, STEP, STL | ⬜ | ⬜ | ⬜ | ⬜ |  |

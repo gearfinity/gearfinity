@@ -35,7 +35,7 @@ CSP,CS-1,1,Crank Spindle,Small crank spindle.,"- Perimeters: 3
 - Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_spindle-1.STL
 CS5,CS5-1,1,Crank Shaft,Crank shaft for 5:1 drive shaft.,"- Infill: 100%
 - Layer height: 0.2 mm
-- Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/crank_shaft_5-1.STL
+- Supports: none",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/CS5_crank_shaft.STL
 CSS,CSS-1,1,Crank Shaft Sleeve,Crank shaft sleeve.,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
