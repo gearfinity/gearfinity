@@ -37,8 +37,8 @@
       "uses_submodule": "planetary_stage",
       "shared_slots": {
         "drive_shaft": { "recommended": "DS5O" },
-        "pins_short":  { "recommended": "PS56", "qty": "TBD" },
-        "pins_long":   { "recommended": "PL71", "qty": "TBD" },
+        "pins_short":  { "recommended": "PS56", "qty": "TBD", "alternatives": ["PS54", "PS58"], "role": "short pins (PS54 looser, PS58 tighter)" },
+        "pins_long":   { "recommended": "PL71", "qty": "TBD", "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)" },
         "pin_tool":    { "recommended": "PT", "role": "assembly tool" }
       },
       "variants": {
@@ -58,8 +58,8 @@
         "drive_shaft_input":  { "recommended": "DS5IL" },
         "handle":             { "recommended": "H", "qty": 2 },
         "handle_plate":       { "recommended": "HP2" },
-        "pins_short":         { "recommended": "PS54", "qty": "TBD" },
-        "pins_long":          { "recommended": "PL71", "qty": "TBD" },
+        "pins_short":         { "recommended": "PS54", "qty": "TBD", "alternatives": ["PS56", "PS58"], "role": "short pins (PS56/PS58 = tighter fit)" },
+        "pins_long":          { "recommended": "PL71", "qty": "TBD", "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)" },
         "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
       },
       "variants": {
@@ -85,8 +85,8 @@
         "drive_shaft_input":  { "recommended": "DS5I" },
         "handle":             { "recommended": "H", "qty": 2 },
         "handle_plate":       { "recommended": "HP2" },
-        "pins_short":         { "recommended": "PS54", "qty": "TBD" },
-        "pins_long":          { "recommended": "PL71", "qty": "TBD" },
+        "pins_short":         { "recommended": "PS54", "qty": "TBD", "alternatives": ["PS56", "PS58"], "role": "short pins (PS56/PS58 = tighter fit)" },
+        "pins_long":          { "recommended": "PL71", "qty": "TBD", "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)" },
         "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
       },
       "variants": {
