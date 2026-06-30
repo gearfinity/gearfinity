@@ -22,6 +22,12 @@ Building the Fan Module, you'll see firsthand how different components can be sw
 3. **Follow the Video:** Watch the [Fan Module Assembly Video](https://www.youtube.com/watch?v=oZlYVgYIprY) for step-by-step instructions.
 4. **Enjoy Your Creation:** Once assembled, use the fan module to stay cool during hot summer days or integrate it into larger Gearfinity projects.
 
+#### 📦 Get the parts
+The printable files live in one place now (no more duplicate copies in this folder):
+- **Recommended build & quantities:** [MODULES.md](../MODULES.md) — the Fan Module's 1/2/3-stage builds.
+- **Full parts list:** [parts.csv](../parts.csv) — every part with print settings, linking to its STL in [_all_parts/](../_all_parts/).
+- **One-click download bundles** (per variant) are published as GitHub Release assets *(coming with the next release)*.
+
 #### Join the Gearfinity Community:
 Interested in becoming a part of the Gearfinity universe? Join our community to stay updated and get exclusive access to new content! By signing up, you'll gain:
 

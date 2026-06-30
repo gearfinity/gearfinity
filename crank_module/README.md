@@ -18,6 +18,14 @@ Then check out this video to guide you through each step of the crank module ass
 
 While the Crank Module is an excellent starting point, it's just the beginning of what Gearfinity has to offer.
 
+## 📦 Get the parts
+
+The printable files live in one place now (no more duplicate copies in this folder):
+
+- **Recommended build & quantities:** [MODULES.md](../MODULES.md) — the Crank Module's 1/2/3-stage builds.
+- **Full parts list:** [parts.csv](../parts.csv) — every part with print settings, linking to its STL in [_all_parts/](../_all_parts/).
+- **One-click download bundles** (per variant) are published as GitHub Release assets *(coming with the next release)*.
+
 ## 💖 Join Our Community
 
 Interested in becoming a part of the Gearfinity universe? Join our community to stay updated and get exclusive access to new content! By signing up, you'll gain:
