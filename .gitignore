@@ -3,3 +3,4 @@ myenv
 dist/
 __pycache__/
 .claude/
+*.bom.json

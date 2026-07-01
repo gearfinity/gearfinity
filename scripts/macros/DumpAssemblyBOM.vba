@@ -88,7 +88,7 @@ Function JStr(s As String) As String
     JStr = """" & r & """"
 End Function
 
-Function Num(d As Double) As String
+Function Num(ByVal d As Double) As String
     Num = Format(d, "0.000000")
 End Function
 
