@@ -4,3 +4,8 @@ dist/
 __pycache__/
 .claude/
 *.bom.json
+# local/generated web assets (GLBs move to _all_parts/ under the automation plan;
+# scenes are generated from *.bom.json)
+web/scenes/
+web/parts/
+web/models/*.glb

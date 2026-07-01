@@ -89,3 +89,26 @@ three.js configurator  → assemble, swap on config change, animate
 - `<model-viewer>` vs three.js threshold — stay on model-viewer through Phase 1;
   move to three.js at Phase 2 when we need per-node control.
 - Whether to vendor the viewer library locally (offline / no-CDN) vs CDN.
+
+## Export coordinate systems: print frame vs design frame (critical)
+
+A part has **two** meaningful orientations, and they can differ:
+
+| Export | Frame | Why |
+|---|---|---|
+| **STL** | **print frame** (sometimes a custom coordinate system) | so it drops into the slicer already oriented to print correctly — critical for 3D printing |
+| **GLB** | **design / assembly frame** (default part origin) | so the assembly viewer reconstructs the model from the extracted transforms |
+
+**Rule for the sync-export macro:** STL uses the print coordinate system — a CS
+named **`CS_PRINT`** if the part defines one, else the default; **GLB always uses
+the default (design) frame.** Mixing them misplaces parts — this is what clocked
+the crank shaft 45° off in the first assembly test. The macro should also
+**report which parts define a `CS_PRINT`**, surfaced in `parts.csv`, so print
+orientations are tracked as source-of-truth data.
+
+## Print-preview mode (planned app feature)
+
+A per-part view showing the **STL sitting on a virtual print bed** (grid at Z=0)
+in its print orientation — a fast QA check that each STL will import into the
+slicer arranged correctly. A second mode alongside the assembly/configurator
+view; both read from the same `_all_parts` library.
