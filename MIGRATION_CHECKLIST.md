@@ -4,6 +4,15 @@
 file and model — nothing left on the old scheme. Work it **slowly**; check a box
 only once that task is truly done and committed on `feature/part-naming-scheme`.
 
+> ## ✅ Status — file renames COMPLETE (commit `afdf673`)
+> All sources (`.SLDPRT`) renamed to `<ID>_<slug>` in SolidWorks (assemblies
+> updated), all exports (`.STL`/`.STEP`) renamed to match, and `parts.csv` links
+> updated — validator clean. **This is the clean ground state.**
+>
+> **Remaining (intentionally deferred):** **re-emboss + re-export** the embossed
+> parts. Old embossings stay valid via the `alias` column, and this will ride the
+> future sync-export automation. The ✋ Re-emboss / Re-export columns below track it.
+
 ## Ground rules that keep this safe
 
 Every part's source (`.SLDPRT`) **and** exports (`.STL`/`.STEP`) are renamed to
