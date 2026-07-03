@@ -9,9 +9,9 @@ only once that task is truly done and committed on `feature/part-naming-scheme`.
 > updated), all exports (`.STL`/`.STEP`) renamed to match, and `parts.csv` links
 > updated — validator clean. **This is the clean ground state.**
 >
-> **Remaining (intentionally deferred):** **re-emboss + re-export** the embossed
-> parts. Old embossings stay valid via the `alias` column, and this will ride the
-> future sync-export automation. The ✋ Re-emboss / Re-export columns below track it.
+> **Remaining:** **re-emboss + re-export** the embossed parts. Old embossings stay
+> valid via the `alias` column. Track/check it off in the clickable
+> **[Re-embossing Tracker →](docs/REEMBOSS_TRACKER.md)** (37 parts to go).
 
 ## Ground rules that keep this safe
 
