@@ -4,12 +4,12 @@ The file renames are done ([MIGRATION_CHECKLIST.md](../MIGRATION_CHECKLIST.md));
 this tracks bringing the **embossed geometry** onto the new IDs. Pins, sleeve
 bearings, and the pin tool aren't embossed, so they're not listed. **37 parts to go.**
 
-## How to check a box
-- **In VS Code:** open this file, open the **Markdown Preview** (`Ctrl+Shift+V`),
-  and **click a checkbox** — VS Code toggles it in the file. Save, and it's tracked.
-- **Editing source:** change `- [ ]` to `- [x]`.
-- *(On github.com the boxes render but aren't clickable in the file view — they
-  are clickable if we mirror this list into an Issue/PR. Ask if you'd like that.)*
+## How to check off
+
+Check boxes in the **[clickable tracker → Issue #5](https://github.com/gearfinity/gearfinity/issues/5)**
+— task-list checkboxes are one-click there. (VS Code's built-in preview renders
+the boxes as literal text, so use the Issue for checking off; this file is a
+static reference.)
 
 ## Per-part workflow
 1. Open the part's `.SLDPRT`, update the embossed text to the **new ID**.
