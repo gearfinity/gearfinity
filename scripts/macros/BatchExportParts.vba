@@ -59,13 +59,9 @@ Sub main()
                 Dim ext As SldWorks.ModelDocExtension
                 Set ext = swModel.Extension
 
-                ' STL output coordinate system: CS_PRINT if present, else default
-                Dim useCS As String
-                useCS = ""
-                If ext.SelectByID2("CS_PRINT", "COORDSYS", 0, 0, 0, False, 0, Nothing, 0) Then useCS = "CS_PRINT"
-                swModel.ClearSelection2 True
-                ext.SetUserPreferenceString swSTLComponentCoordinateSystem, 0, useCS
-                swApp.SetUserPreferenceToggle swSTLBinaryFormat, True
+                ' STL/STEP use your CURRENT export options (Tools > Options > Export).
+                ' Per-part print orientation (CS_PRINT) will be re-added once we
+                ' confirm the correct STL-coordinate-system API constant.
 
                 ext.SaveAs stl, swSaveAsCurrentVersion, swSaveAsOptions_Silent, Nothing, errs, warns
                 If EXPORT_STEP Then ext.SaveAs stp, swSaveAsCurrentVersion, swSaveAsOptions_Silent, Nothing, errs, warns
