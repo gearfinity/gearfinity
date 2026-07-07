@@ -141,7 +141,6 @@ ID  =  FAMILY [PRIMARY] [SEGMENT...] [ "-" REV ]
 | Quantity | Encoding | Example |
 |---|---|---|
 | Ratio, counts (stages, blades, teeth, arms, handles, width) | integer | `5`, `2` |
-| Sub-millimeter design tolerance | hundredths, 2 digits | `05` = 0.05 mm |
 | Diameters / bores (catalog-only parts) | tenths | `54` = 5.4 mm |
 
 ### Category-letter legend
@@ -151,7 +150,7 @@ ID  =  FAMILY [PRIMARY] [SEGMENT...] [ "-" REV ]
 | `C` / `CC` | rotation: clockwise / counter-clockwise (fan props) |
 | `I` / `O` | drive direction: input / output (drive shafts) |
 | `L` | lockable (drive shafts) |
-| `T` | tight-fit variant (drive shafts) |
+| `T` | tight-fit variant — drive shafts, and gear-core **tight** preset |
 | `C` / `M` / `O` | ring slot style: closed / middle / outer (gear cores) |
 | `S` / `L` | pin size: short / long |
 | `D` / `N` | gear role: drive / driven |
@@ -184,7 +183,7 @@ ID  =  FAMILY [PRIMARY] [SEGMENT...] [ "-" REV ]
 | Pin Tool | `PT` | `PT` | (single) |
 | Planet Carrier Bottom | `PCB` | `PCB<ratio>` | `PCB5` |
 | Planet Carrier Top | `PCT` | `PCT<ratio>` | `PCT5` |
-| Planetary Gear Core | `PGC` | `PGC<ratio><slot><tol>` | `PGC5M05` = 5:1, middle slot, 0.05 mm (sleeve default) |
+| Planetary Gear Core | `PGC` | `PGC<ratio><slot>[fit]` | `PGC5M` = 5:1, middle, standard fit · `PGC5MT` = tight (sleeve default) |
 | Planet Gear Sleeve Bearing | `PGSB` | `PGSB<bore×10>` | `PGSB62` = 6.2 mm bore |
 | Planetary Stage Cover | `PSC` | `PSC` | (single) |
 | Roller Bearing | `RB` | `RB` (bore added only if >1) | (single today) |
@@ -192,7 +191,11 @@ ID  =  FAMILY [PRIMARY] [SEGMENT...] [ "-" REV ]
 
 ### Per-family defaults (omitted from the ID)
 
-- **Planetary Gear Core:** bearing = sleeve. A non-sleeve core marks its type.
+- **Planetary Gear Core:** bearing = sleeve; **fit = standard** (default, omitted).
+  Tight adds `T` (e.g. `PGC5MT`); `L` (loose) is reserved for a future preset.
+  Fit is a qualitative preset built into the SolidWorks source (no numbers, no
+  user adjustment) — see [docs/GEAR_CORE_TOLERANCE.md](docs/GEAR_CORE_TOLERANCE.md).
+  A non-sleeve core marks its type.
 - **Pins:** fit = standard. (Tight/loose pins are distinguished by their diameter,
   which is the real differentiator; the named fit lives in a column.)
 - **Drive Shaft:** non-lockable, standard fit. `L`/`T` appear only when true.
