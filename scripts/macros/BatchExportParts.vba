@@ -2,7 +2,8 @@
 ' --------------------------------------------------------------------------
 ' Batch-exports STL (+ STEP) for every part in _all_parts whose .SLDPRT is
 ' NEWER than its .STL (i.e. re-exports only what changed since last export).
-' Set FORCE_ALL = True to export everything.
+' Only touches parts that already have an .STL (skips profiles/mocks/blanks).
+' Set FORCE_ALL = True to re-export every part that has an .STL, ignoring dates.
 '
 ' STL output uses a coordinate system named "CS_PRINT" if the part has one
 ' (the print orientation); otherwise the default part origin. STEP uses default.
@@ -52,7 +53,12 @@ Sub main()
         stl = FOLDER & base & ".STL"
         stp = FOLDER & base & ".STEP"
 
-        If FORCE_ALL Or Dir(stl) = "" Or FileDateTime(sldprt) > FileDateTime(stl) Then
+        ' Only re-export parts that ALREADY have an STL (skips profiles/mocks/blanks
+        ' that have no export). VBA has no short-circuit, so guard FileDateTime.
+        Dim doExport As Boolean
+        doExport = False
+        If Dir(stl) <> "" Then doExport = (FORCE_ALL Or FileDateTime(sldprt) > FileDateTime(stl))
+        If doExport Then
             Dim swModel As SldWorks.ModelDoc2
             Set swModel = swApp.OpenDoc6(sldprt, swDocPART, swOpenDocOptions_Silent, "", errs, warns)
             If Not swModel Is Nothing Then
