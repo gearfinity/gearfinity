@@ -46,3 +46,20 @@ are counted once, at full quantity).
   sleeve-bearing count and the `TBD` pin counts with ground truth.
 - **Component transforms** for the web viewer (Path 3) — where each part sits,
   so the configurator can assemble proxies and animate them.
+
+---
+
+## BatchExportParts
+
+Re-exports **STL (+ STEP)** for every part in `_all_parts/` whose `.SLDPRT` is
+**newer than its `.STL`** (so it only re-exports what you changed). This is the
+first piece of the **sync-export automation** — no more hand-exporting each part.
+
+- Run: Tools ▸ Macro ▸ New… → paste [`BatchExportParts.vba`](BatchExportParts.vba)
+  → save as `.swp` → F5.
+- `FORCE_ALL = True` exports everything regardless of dates.
+- **Print orientation:** STL uses a coordinate system named **`CS_PRINT`** if the
+  part has one, else the default origin. Give a part a `CS_PRINT` CS when it needs
+  a specific slicer orientation.
+- Untested live — report any "constant not defined" / error line and I'll fix it.
+- Next: a GLB export pass (design frame) can be added for the viewer.
