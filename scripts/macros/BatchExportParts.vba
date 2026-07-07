@@ -6,11 +6,13 @@
 ' Set FORCE_ALL = True to re-export every part that has an .STL, ignoring dates.
 '
 ' PRINT ORIENTATION (CS_PRINT): the STL "Output coordinate system" is a
-' PERSISTENT export setting, not a per-save API call (the macro recorder
-' confirmed this). So set it ONCE in Tools > Options > Import/Export > STL
-' (or the STL export dialog) to "CS_PRINT". Then this macro exports each part
-' relative to its own CS_PRINT if it has one, else the default origin - because
-' SaveAs uses the current export options. STEP uses default.
+' PERSISTENT export setting, not a per-save API call. Set it ONCE in the STL
+' export dialog (System Options > Export) to "CS_PRINT". IMPORTANT: use
+' ModelDoc2.SaveAs3 (below), NOT ModelDocExtension.SaveAs - only SaveAs3 honors
+' that persistent output-coordinate-system setting (Extension.SaveAs ignored it
+' and exported from the default origin, which flipped the bevel gear). Each part
+' then exports relative to its own CS_PRINT if it has one, else default. STEP
+' ignores CS_PRINT (uses default) - that's fine, STEP isn't for slicing.
 ' This is the first piece of the sync-export automation (docs/AUTOMATION.md).
 '
 ' HOW TO USE
@@ -66,15 +68,12 @@ Sub main()
             Dim swModel As SldWorks.ModelDoc2
             Set swModel = swApp.OpenDoc6(sldprt, swDocPART, swOpenDocOptions_Silent, "", errs, warns)
             If Not swModel Is Nothing Then
-                Dim ext As SldWorks.ModelDocExtension
-                Set ext = swModel.Extension
-
-                ' STL/STEP use your CURRENT export options (Tools > Options > Export).
-                ' Per-part print orientation (CS_PRINT) will be re-added once we
-                ' confirm the correct STL-coordinate-system API constant.
-
-                ext.SaveAs stl, swSaveAsCurrentVersion, swSaveAsOptions_Silent, Nothing, errs, warns
-                If EXPORT_STEP Then ext.SaveAs stp, swSaveAsCurrentVersion, swSaveAsOptions_Silent, Nothing, errs, warns
+                ' Use SaveAs3 - the EXACT call the macro recorder produced for a
+                ' manual export - so it honors the persistent STL "Output coordinate
+                ' system" (CS_PRINT). swSaveAsOptions_Copy (=2) leaves the .SLDPRT
+                ' untouched, just like a manual export does.
+                swModel.SaveAs3 stl, 0, swSaveAsOptions_Silent + swSaveAsOptions_Copy
+                If EXPORT_STEP Then swModel.SaveAs3 stp, 0, swSaveAsOptions_Silent + swSaveAsOptions_Copy
 
                 swApp.CloseDoc swModel.GetTitle
                 nExp = nExp + 1

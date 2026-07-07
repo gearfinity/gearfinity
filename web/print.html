@@ -82,6 +82,9 @@
     const statusEl = document.getElementById('status');
     const grid = document.getElementById('grid');
     const loader = new STLLoader();
+    // cache-buster stamped once per page load, so a refresh always fetches the
+    // freshly re-exported STLs (browsers cache ../_all_parts/*.STL aggressively).
+    const CB = '?v=' + Date.now();
 
     // ---- shared scene builder (Z-up, part dropped onto a bed grid) ----------
     function buildScene(geo) {
@@ -126,7 +129,7 @@
 
     async function makeThumb(part, card) {
       let geo;
-      try { geo = await new Promise((res, rej) => loader.load(part.stl, res, undefined, rej)); }
+      try { geo = await new Promise((res, rej) => loader.load(part.stl + CB, res, undefined, rej)); }
       catch { card.querySelector('.thumb').textContent = 'load failed'; return; }
       const { scene, cam, size } = buildScene(geo);
       cam.aspect = 300 / 225; cam.updateProjectionMatrix();
@@ -159,7 +162,7 @@
       document.getElementById('mId').textContent = `${part.id} — ${part.name}`;
       document.getElementById('mDims').textContent = '';
       let geo;
-      try { geo = await new Promise((res, rej) => loader.load(part.stl, res, undefined, rej)); }
+      try { geo = await new Promise((res, rej) => loader.load(part.stl + CB, res, undefined, rej)); }
       catch { document.getElementById('mDims').textContent = 'load failed'; return; }
       const { scene, cam, size, target } = buildScene(geo);
       document.getElementById('mDims').textContent =
