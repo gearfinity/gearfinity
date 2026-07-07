@@ -5,8 +5,12 @@
 ' Only touches parts that already have an .STL (skips profiles/mocks/blanks).
 ' Set FORCE_ALL = True to re-export every part that has an .STL, ignoring dates.
 '
-' STL output uses a coordinate system named "CS_PRINT" if the part has one
-' (the print orientation); otherwise the default part origin. STEP uses default.
+' PRINT ORIENTATION (CS_PRINT): the STL "Output coordinate system" is a
+' PERSISTENT export setting, not a per-save API call (the macro recorder
+' confirmed this). So set it ONCE in Tools > Options > Import/Export > STL
+' (or the STL export dialog) to "CS_PRINT". Then this macro exports each part
+' relative to its own CS_PRINT if it has one, else the default origin - because
+' SaveAs uses the current export options. STEP uses default.
 ' This is the first piece of the sync-export automation (docs/AUTOMATION.md).
 '
 ' HOW TO USE
