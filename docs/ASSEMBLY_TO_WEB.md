@@ -64,9 +64,19 @@ around them (carriers, covers, pins, shafts, bearings).
 | `*gear_mesh_planet*` / `*planet3*` | `planet` | orbit = carrier, spin = planet rate |
 | `*mock_display*` (the ring body) | `ring` | fixed — **defines the stage frame** |
 | `PCB*` / `PCT*` (carrier plates), `PL*` (long pins), `PGSB*` (sleeve bearings) | `carrier` | carrier rate |
-| `DS<r>I*` (input shaft) | `sun` | stage input |
-| `DS<r>O*` (output shaft) | `carrier` | carrier rate |
+| `DS<r>I*` | `sun` of the stage its **geometry** engages | sun rate of that stage |
+| `DS<r>O*` | `carrier` keyed at its spline (top) end | carrier rate of that stage |
 | everything else (covers, short pins…) | `static` | fixed |
+
+**Shaft letter semantics (owner convention):** `I`/`O` are fixed to the gear
+*member*, not the usage direction — `I` = the **fast** side (keys the sun),
+`O` = the **strong** side (keys the carrier). Modules may crank either side
+(the fan cranks the `O`/strong side; speed comes out the `I`/fast side).
+Because a long shaft's *origin* can sit far from the stage it keys (the fan's
+68 mm DS5I output shaft origins near stage 1 but keys stage 2's sun), the
+generator assigns shaft stages from **world-space geometry extent**
+(transform × GLB bbox): I-shafts → the stage band they overlap; O-shafts →
+the stage nearest their top end.
 
 Model the display assembly with the **ring at the assembly origin, identity
 orientation** — the stage axis is Z through the origin, and the ring's

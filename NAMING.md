@@ -148,7 +148,7 @@ ID  =  FAMILY [PRIMARY] [SEGMENT...] [ "-" REV ]
 | Letters | Meaning |
 |---|---|
 | `C` / `CC` | rotation: clockwise / counter-clockwise (fan props) |
-| `I` / `O` | drive direction: input / output (drive shafts) |
+| `I` / `O` | drive shafts — fixed to the gear member, not the usage direction: `I` (input) = the **fast** side (keys the **sun**), `O` (output) = the **strong** side (keys the **carrier**). Modules may crank either side: the fan cranks the `O`/strong side and takes speed from the `I`/fast side. |
 | `L` | lockable (drive shafts) |
 | `T` | tight-fit variant — drive shafts, and gear-core **tight** preset |
 | `C` / `M` / `O` | ring slot style: closed / middle / outer (gear cores) |
