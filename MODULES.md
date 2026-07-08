@@ -6,7 +6,7 @@
 
 [Assembly video](https://www.youtube.com/watch?v=IewrQ3KnOlo)
 
-### single  -  10+ parts to print (pins TBD)
+### single  -  24+ parts to print (pins TBD)
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
@@ -16,8 +16,8 @@
 | `PGSB62` | 3 | Planet Gear Sleeve Bearing | planet sleeve bearing |
 | `PSC` | 2 | Planetary Stage Cover | stage cover |
 | `DS5O` | 1 | Drive Shaft - output | drive shaft |
-| `PS56` | TBD | Pin - short (tight fit) | short pins (PS54 looser, PS58 tighter) |
-| `PL71` | TBD | Pin - long | long pins (PL69/PL67 = looser fit) |
+| `PS56` | 8 | Pin - short (tight fit) | short pins (PS54 looser, PS58 tighter) |
+| `PL71` | 6 | Pin - long | long pins (PL69/PL67 = looser fit) |
 | `PT` | 1 | Pin Tool | assembly tool |
 
 **Swappable options:**

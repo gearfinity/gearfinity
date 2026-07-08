@@ -305,22 +305,28 @@
       clearRoot();
       chain = chainStages((data.kinematics?.stages || []).map(s => s.teeth || Z));
       const loads = data.parts.map(p => new Promise(res =>
-        gltf.load(p.url, g => res({ p, obj: g.scene }), undefined, () => res(null))));
-      for (const it of (await Promise.all(loads)).filter(Boolean)) {
+        p.url ? gltf.load(p.url, g => res({ p, obj: g.scene }), undefined, () => res(null)) : res(null)));
+      const okParts = (await Promise.all(loads)).filter(Boolean);
+      for (const it of okParts) {
         const { p, obj } = it;
         const a = p.transform;
         const M = new THREE.Matrix4().set(a[0], a[1], a[2], a[9], a[3], a[4], a[5], a[10],
                                           a[6], a[7], a[8], a[11], 0, 0, 0, 1);
         obj.applyMatrix4(new THREE.Matrix4().makeScale(1000, 1000, 1000).multiply(M)); // m -> mm
         root.add(obj);
-        if (p.kin && p.kin.role !== 'static')
+        if (p.kin && p.kin.role !== 'static') {
+          const base = obj.matrix.clone();
           animated.push({ obj, role: p.kin.role, stage: p.kin.stage || 0,
-                          orbit: null, base: obj.matrix.clone(),
+                          orbit: null, base,
+                          pos0: new THREE.Vector3().setFromMatrixPosition(base),
                           axis: data.kinematics?.stages?.[p.kin.stage || 0]?.axis });
+        }
       }
       frame((data.kinematics?.stages || []).length || 1);
-      document.getElementById('mode').textContent = `scene: ${data.name || state.module}`;
-      document.getElementById('note').textContent = '';
+      document.getElementById('mode').textContent =
+        `scene: ${data.name || state.module} (${okParts.length}/${data.parts.length} GLBs)`;
+      document.getElementById('note').textContent = okParts.length < data.parts.length
+        ? `${data.parts.length - okParts.length} part(s) have no GLB yet — export to web/parts/ and regenerate the scene.` : '';
     }
 
     function frame(nStages) {
@@ -328,6 +334,13 @@
       controls.target.set(0, h / 2 - GAP, 0);
       camera.position.set(r * 1.7, h / 2 + r * .9, r * 1.9);
       controls.update();
+    }
+
+    // rotation about an arbitrary axis (point + dir): T(p) . R . T(-p)
+    function rotAbout(point, dir, angle) {
+      const R = new THREE.Matrix4().makeRotationAxis(dir, angle);
+      const moved = point.clone().applyMatrix4(R);
+      return R.setPosition(point.clone().sub(moved));
     }
 
     // ---------- animation loop -----------------------------------------------
@@ -351,14 +364,22 @@
           const oa = s.carrier * theta + a.orbit.psi;
           a.obj.position.set(a.orbit.r * Math.cos(oa), a.orbit.r * Math.sin(oa), a.obj.position.z);
           a.obj.rotation.z = ang + (a.obj.userData.phase || 0); // absolute spin
-        } else if (a.base) { // GLB mode: rotate about stage axis in assembly frame
+        } else if (a.base) { // GLB mode: rotate about the stage axis in the assembly frame
           const ax = a.axis || { origin: [0, 0, 0], dir: [0, 0, 1] };
           const d = new THREE.Vector3(...ax.dir).normalize();
-          const o = new THREE.Vector3(...ax.origin).multiplyScalar(1000);
-          const R = new THREE.Matrix4().makeRotationAxis(d, ang)
-            .setPosition(o.clone().sub(o.clone().applyMatrix4(new THREE.Matrix4().makeRotationAxis(d, ang))));
+          const o = new THREE.Vector3(...ax.origin).multiplyScalar(1000); // m -> mm
           a.obj.matrixAutoUpdate = false;
-          a.obj.matrix.copy(R.multiply(a.base));
+          if (a.role === 'planet') {
+            // orbit about the stage axis at carrier rate + spin about the
+            // planet's own axis (through its station) at planet-minus-carrier
+            // rate, so absolute spin = the planet rate. Mesh phase approximate
+            // until real tooth counts land.
+            const orbit = rotAbout(o, d, s.carrier * theta);
+            const spin = rotAbout(a.pos0, d, (s.planet - s.carrier) * theta);
+            a.obj.matrix.copy(orbit.multiply(spin).multiply(a.base));
+          } else {
+            a.obj.matrix.copy(rotAbout(o, d, ang).multiply(a.base));
+          }
         } else {
           a.obj.rotation.z = ang;
         }

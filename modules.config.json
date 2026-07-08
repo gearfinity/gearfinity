@@ -2,7 +2,7 @@
   "_about": "Gearfinity configuration model. Each module variant prescribes a RECOMMENDED build; alternatives also function (nothing here is a hard requirement). Source of truth for download bundles, platform descriptions, and a future configurator. Part IDs are defined in parts.csv / NAMING.md.",
   "_assumptions_to_confirm": [
     "crank_input / output not yet broken out as submodules (needs the assembly BOMs)",
-    "pin counts are TBD - to be derived from an interface model, see _pin_model"
+    "crank/fan pin counts still TBD (need their assembly BOMs); planetary_stage counts observed from its display-assembly BOM"
   ],
   "_pin_model": "Planned (future phase): each part declares (a) how many pin-holes it has and (b) which non-pin parts it mates with. A pin spans ONE hole in EACH of two mating parts, so pins at an interface are shared and counted once - not summed per part. Total pins are then computed from the assembly graph rather than added up per part. Example: a planetary core has 8 pin-holes and each stage cover has 4; attaching 2 covers to one core uses 8 pins total (shared), not 16.",
 
@@ -38,8 +38,8 @@
       "uses_submodule": "planetary_stage",
       "shared_slots": {
         "drive_shaft": { "recommended": "DS5O" },
-        "pins_short":  { "recommended": "PS56", "qty": "TBD", "alternatives": ["PS54", "PS58"], "role": "short pins (PS54 looser, PS58 tighter)" },
-        "pins_long":   { "recommended": "PL71", "qty": "TBD", "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)" },
+        "pins_short":  { "recommended": "PS56", "qty": 8, "alternatives": ["PS54", "PS58"], "role": "short pins (PS54 looser, PS58 tighter)", "_source": "observed in planetary_stage_core_mock_display.SLDASM BOM (4 per cover x 2 covers)" },
+        "pins_long":   { "recommended": "PL71", "qty": 6, "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)", "_source": "observed in planetary_stage_core_mock_display.SLDASM BOM (carrier)" },
         "pin_tool":    { "recommended": "PT", "role": "assembly tool" }
       },
       "variants": {
