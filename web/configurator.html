@@ -113,6 +113,19 @@
       selVariant.value = state.variant;
       state.fits = variantDef().stages.map(() => 'standard');
       state.swaps = {};
+      markLiveVariants();
+    }
+
+    // mark variants that have a real display scene: "2-stage ● 3D"
+    async function markLiveVariants() {
+      const mod = state.module;
+      for (const opt of [...selVariant.options]) {
+        try {
+          const r = await fetch(`scenes/cfg_${mod}_${opt.value}.json`,
+                                { method: 'HEAD', cache: 'no-store' });
+          if (r.ok && mod === state.module) opt.textContent = `${opt.value} ● 3D`;
+        } catch { /* proxy-only variant */ }
+      }
     }
 
     // ---------- sidebar ------------------------------------------------------
