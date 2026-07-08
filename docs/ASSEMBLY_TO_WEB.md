@@ -153,11 +153,19 @@ when a part and its assembly share a stem.
 
 ## Extending to a new module (crank, fan, multi-stage)
 
-1. Build its display assembly (reuse the planetary display parts for stages).
+1. Build its display assembly (reuse the planetary display parts for stages —
+   sub-assemblies are fine, the pipeline flattens them with root-space poses).
 2. Run the two macros + the generator with `--out cfg_<module>_<variant>`.
-3. Multi-stage: stages will need distinct `stage` indices and per-stage axes —
-   extend the generator when the first multi-stage display assembly exists
-   (the app already animates per-stage).
+3. **Multi-stage works automatically**: the generator detects one stage per
+   ring (ordered along +Z, stage 0 = crank end), assigns every part to its
+   nearest ring mesh-plane, and stations each stage's planets on its own
+   bearings. Proven on `fan_module_2_stage` (68 parts, 2 stages).
+4. **Drive direction** — pass `--drive`:
+   - `--drive sun` (default): sun driven, carrier out — *reduction* (crank module)
+   - `--drive carrier`: carrier driven, sun out — *speed-up* (fan: prop turns
+     at 36²/7² ≈ 26.45× the crank)
+   The generator writes exact per-stage `rates` into the scene; the app uses
+   them directly (crank parts spin at input rate, `FP*` props at output rate).
 
 ## Debugging tools
 

@@ -306,6 +306,9 @@
       // GLB mode (activates once display scenes exist)
       clearRoot();
       chain = chainStages((data.kinematics?.stages || []).map(s => s.teeth || Z));
+      // the generator's per-stage rates encode the drive direction (sun-driven
+      // reduction vs carrier-driven speed-up, e.g. the fan) - they win.
+      (data.kinematics?.stages || []).forEach((s, i) => { if (s.rates) chain.stages[i] = s.rates; });
       const loads = data.parts.map(p => new Promise(res =>
         p.url ? gltf.load(p.url, g => res({ p, obj: g.scene }), undefined, () => res(null)) : res(null)));
       const okParts = (await Promise.all(loads)).filter(Boolean);

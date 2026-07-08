@@ -71,29 +71,60 @@ def glb_bbox_centre(url: str):
 
 
 def role_of(stem: str) -> str:
-    """Map a display-assembly component file stem to its kinematic role."""
+    """Map a display-assembly component file stem to its kinematic role.
+    'input'/'output' are resolved to sun/carrier by the drive mode."""
     s = stem.lower()
     if s.endswith("-sun"):
         return "sun"
     if "gear_mesh_planet" in s or "planet3" in s:
         return "planet"
-    if "mock_display" in s:                      # the ring body defines the frame
+    if "mock_display" in s:                      # the ring body defines the stage frame
         return "ring"
     if s.startswith(("pcb", "pct")):             # carrier plates
         return "carrier"
     if s.startswith(("pl", "pgsb")):             # long pins + sleeve bearings ride the carrier
         return "carrier"
-    if s.startswith("ds"):                       # DS<r>I* = input (sun speed); DS<r>O* = output (carrier speed)
+    if s.startswith("css"):                      # crank shaft SLEEVE is the stationary bearing
+        return "static"                          # (must precede the 'cs' input rule)
+    if s.startswith(("cs", "ch", "cp")):         # crank shaft/handle/plate/grip spin with the crank
+        return "input"
+    if s.startswith("fp"):                       # fan prop turns at the train output speed
+        return "output"
+    if s.startswith("ds"):                       # DS<r>I* couples the sun; DS<r>O* the carrier
         return "carrier" if "o" in s.split("_")[0][3:] else "sun"
-    return "static"                              # covers, short pins, ...
+    return "static"                              # covers, short pins, frame, bearings, ...
+
+
+def stage_rates(drive: str, n: int):
+    """Exact per-stage rates (multiples of the train input speed).
+    drive='sun'      reduction: sun driven, carrier out (crank module)
+    drive='carrier'  speed-up:  carrier driven, sun out (fan module)
+    Stages chain output -> next stage's driven member."""
+    from fractions import Fraction
+    Zs, Zp, Zr = (Fraction(NOMINAL_TEETH[k]) for k in ("sun", "planet", "ring"))
+    R = 1 + Zr / Zs                              # 36/7 exactly
+    w, out = Fraction(1), []
+    for _ in range(n):
+        if drive == "sun":
+            sun, carrier = w, w / R
+            w = carrier
+        else:
+            carrier, sun = w, w * R
+            w = sun
+        out.append({"sun": float(sun), "carrier": float(carrier),
+                    "planet": float(carrier * (1 - Zr / Zp)),   # ring fixed
+                    "ring": 0.0})
+    return out
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("bom")
-    ap.add_argument("--out", required=True, help="scene name, e.g. cfg_planetary_stage_single")
+    ap.add_argument("--out", required=True, help="scene name, e.g. cfg_fan_2-stage")
+    ap.add_argument("--drive", choices=["sun", "carrier"], default="sun",
+                    help="driven member per stage: sun=reduction (crank), carrier=speed-up (fan)")
     ap.add_argument("--planet-z", type=float, default=0.0,
-                    help="assembly-frame Z (metres) for re-stationed planets")
+                    help="fallback mesh-plane Z (metres) if the ring GLB is missing")
     args = ap.parse_args()
 
     d = json.loads(Path(args.bom).read_text(encoding="utf-8"))
@@ -103,37 +134,60 @@ def main():
     comps = [c for c in d.get("components", [])
              if not c.get("suppressed") and c["file"].lower().endswith(".sldprt")]
 
-    # planet stations = sleeve-bearing positions, sorted by angle for stable pairing
-    stations = sorted(
-        ((c["transform"][9], c["transform"][10]) for c in comps
-         if c["file"].upper().startswith("PGSB")),
-        key=lambda xy: math.atan2(xy[1], xy[0]))
+    def stem_of(c):
+        return c["file"].rsplit(".", 1)[0]
 
-    # the ring defines the stage frame; its geometry mid-plane = the gear mesh Z
-    ring = next((c for c in comps if role_of(c["file"].rsplit(".", 1)[0]) == "ring"), None)
-    mesh_z = args.planet_z
-    if ring:
-        rc = glb_bbox_centre(GLB.get(ring["file"].rsplit(".", 1)[0].lower(), ""))
-        if rc:
-            mesh_z = rc[2] + ring["transform"][11]
+    # ---- stages: one per ring, ordered along +Z (stage 0 = input/crank end) --
+    rings = sorted((c for c in comps if role_of(stem_of(c)) == "ring"),
+                   key=lambda c: c["transform"][11])
+    mids = []                                    # gear mesh plane per stage
+    for rg in rings:
+        rc = glb_bbox_centre(GLB.get(stem_of(rg).lower(), "")) or [0, 0, args.planet_z]
+        mids.append(rg["transform"][11] + rc[2])
+    n_stages = max(len(rings), 1)
 
-    parts, missing, planet_i = [], [], 0
+    def stage_of_z(z):
+        return min(range(len(mids)), key=lambda k: abs(z - mids[k])) if mids else 0
+
+    # planet stations per stage = that stage's sleeve-bearing positions
+    stations = [[] for _ in range(n_stages)]
     for c in comps:
-        stem = c["file"].rsplit(".", 1)[0]
+        if c["file"].upper().startswith("PGSB"):
+            t = c["transform"]
+            stations[stage_of_z(t[11])].append((t[9], t[10]))
+    for st in stations:
+        st.sort(key=lambda xy: math.atan2(xy[1], xy[0]))
+
+    rates = stage_rates(args.drive, n_stages)
+    # input spins with stage 0's driven member; output with the last stage's output
+    input_role = "sun" if args.drive == "sun" else "carrier"
+    output_role = "carrier" if args.drive == "sun" else "sun"
+
+    parts, missing = [], []
+    placed = [0] * n_stages
+    for c in comps:
+        stem = stem_of(c)
         role = role_of(stem)
         t = list(c["transform"])
-        kin = {"role": role, "stage": 0}
+        if role == "input":
+            kin = {"role": input_role, "stage": 0}
+        elif role == "output":
+            kin = {"role": output_role, "stage": n_stages - 1}
+        else:
+            kin = {"role": role, "stage": stage_of_z(t[11])}
         if role == "planet":
-            if planet_i < len(stations):        # re-station parked display planets
-                x, y = stations[planet_i]
+            # parked z is meaningless - assign to the next stage with a free station
+            k = next((k for k in range(n_stages) if placed[k] < len(stations[k])), None)
+            if k is not None:
+                x, y = stations[k][placed[k]]
+                placed[k] += 1
                 # display planets keep the CORE's origin (body ~96 mm off its
-                # part origin), so compensate by the GLB body centre: place the
-                # BODY at the station, on the ring's mesh plane.
+                # part origin) - compensate by the GLB body centre: place the
+                # BODY at the station, on that stage's mesh plane.
                 bc = glb_bbox_centre(GLB.get(stem.lower(), "")) or [0, 0, 0]
-                t = [1, 0, 0, 0, 1, 0, 0, 0, 1,
-                     x - bc[0], y - bc[1], mesh_z - bc[2]]
-                kin["center"] = [x, y, mesh_z]  # spin axis through the BODY, not the part origin
-                planet_i += 1
+                mz = mids[k] if mids else args.planet_z
+                t = [1, 0, 0, 0, 1, 0, 0, 0, 1, x - bc[0], y - bc[1], mz - bc[2]]
+                kin = {"role": "planet", "stage": k, "center": [x, y, mz]}
             else:
                 print(f"warn: no free station for {c['name']} - left at parked pose")
         url = GLB.get(stem.lower(), "")
@@ -143,16 +197,23 @@ def main():
 
     scene = {
         "name": args.out.removeprefix("cfg_"),
+        "drive": args.drive,
         "parts": parts,
-        "kinematics": {"stages": [{"teeth": NOMINAL_TEETH,
-                                   "axis": {"origin": [0, 0, 0], "dir": [0, 0, 1]}}]},
+        "kinematics": {"stages": [
+            {"teeth": NOMINAL_TEETH,
+             "axis": {"origin": [0, 0, 0], "dir": [0, 0, 1]},
+             "rates": rates[k]} for k in range(n_stages)]},
     }
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / f"{args.out}.json"
     out.write_text(json.dumps(scene, indent=2), encoding="utf-8")
     have = len(parts) - len(missing)
-    print(f"wrote {out.relative_to(REPO)}  ({have}/{len(parts)} parts have GLBs, "
-          f"{planet_i} planets re-stationed)")
+    total = 1.0
+    for r in rates:
+        total = r["sun"] if args.drive == "carrier" else r["carrier"]
+    print(f"wrote {out.relative_to(REPO)}  ({have}/{len(parts)} parts have GLBs)")
+    print(f"  {n_stages} stage(s), drive={args.drive}, planets stationed: {placed}, "
+          f"output rate: {total:.4f}x input")
     if missing:
         uniq = sorted(set(missing))
         print(f"need GLB exports ({len(uniq)} unique):")
