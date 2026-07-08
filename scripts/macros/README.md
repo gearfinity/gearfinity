@@ -92,3 +92,6 @@ BatchExportParts (`FORCE_ALL = True` to re-export everything).
 3. Run **ExportAssemblyGLBs** → `web/parts/*.glb` (geometry).
 4. `python scripts/gen_kinematic_scene.py <bom> --out cfg_<module>_<variant>`
    → the configurator renders + animates the real assembly.
+
+Full pipeline doc (modeling conventions, kinematics, gotchas):
+[docs/ASSEMBLY_TO_WEB.md](../../docs/ASSEMBLY_TO_WEB.md)

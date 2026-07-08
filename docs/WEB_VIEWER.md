@@ -6,6 +6,11 @@ watch the gears turn, and download exactly the parts you need. This doc records
 what we proved in the exploratory POC and the plan to get from there to the full
 app.
 
+> **The assembly→web pipeline is live and documented in
+> [ASSEMBLY_TO_WEB.md](ASSEMBLY_TO_WEB.md)** — the step-by-step process,
+> naming conventions, kinematics, and the critical gotchas (rotation
+> transpose, ActivateDoc3, planet-origin offset).
+
 ## Status
 
 - ✅ **Static POC works.** `web/index.html` renders a SolidWorks-exported `.glb`
@@ -91,12 +96,12 @@ three.js configurator  → assemble, swap on config change, animate
 - **Kinematics** live in `web/js/gear-train.js` (pure math, no three.js):
   Willis equation on tooth counts; stages chain carrier → next sun; total
   ratio and per-role rates come out as exact rationals.
-- **EXACTNESS:** the real Gearfinity ratio is **not exactly 5:1** — "5:1" is the
-  nominal name. `gear-train.js` falls back to `NOMINAL_TEETH` (10/15/40 → 5:1)
-  until real tooth counts are supplied per stage; then rates become exact.
-  Gears that **start perfectly meshed** (poses from the `.bom.json`) **stay
-  meshed** only with exact rates — approximate is acceptable for now (owner
-  call, 2026-07).
+- **EXACTNESS:** the real Gearfinity ratio is **not exactly 5:1** — the true
+  counts (recovered from the original OpenSCAD source) are **14/22/58 →
+  exactly 36:7 ≈ 5.1429 per stage**. Rates are exact rationals of these, so
+  gears that **start perfectly meshed** (poses from the `.bom.json`) **stay
+  meshed**. Full derivation + verification in
+  [ASSEMBLY_TO_WEB.md](ASSEMBLY_TO_WEB.md).
 - **Proxy mode:** until display GLBs exist, the app renders parametric
   trapezoid-tooth proxy gears so the animation layer is testable end-to-end.
 

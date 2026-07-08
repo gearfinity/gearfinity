@@ -29,7 +29,11 @@ for d in [REPO / "web" / "models", REPO / "web" / "parts"]:
         for p in d.glob("*.glb"):
             GLB[p.stem.lower()] = f"{d.name}/{p.name}"
 
-NOMINAL_TEETH = {"sun": 10, "planet": 15, "ring": 40}  # placeholder; real counts later
+# REAL tooth counts, derived from the original OpenSCAD source
+# (planetary_gear_stage_no_bearings.scad): np=22 -> ns=14, nr=58.
+# Exact ratio 36/7 per stage. Verified: scad planet-orbit radius (27.2mm)
+# matches the PGSB62 bearing stations in the .bom.json.
+NOMINAL_TEETH = {"sun": 14, "planet": 22, "ring": 58}
 
 
 def glb_bbox_centre(url: str):

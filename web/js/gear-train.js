@@ -1,13 +1,14 @@
 // gear-train.js — Gearfinity planetary kinematics (pure math, no three.js).
 //
 // EXACTNESS MODEL
-//   Rates are exact rational functions of TOOTH COUNTS. When a stage supplies
-//   real tooth counts {sun, planet, ring}, every rate is exact and gears that
-//   START perfectly meshed (poses from the SolidWorks .bom.json) STAY meshed.
-//   Without tooth counts we fall back to NOMINAL_TEETH, which encodes the
-//   marketing ratio ("5:1") — close enough for display, not tooth-perfect.
-//   The real Gearfinity ratio is NOT exactly 5:1; swap in true counts later
-//   and everything snaps to exact with no other changes.
+//   Rates are exact rational functions of TOOTH COUNTS. With real counts,
+//   gears that START perfectly meshed (poses from the SolidWorks .bom.json)
+//   STAY meshed. NOMINAL_TEETH below are the REAL counts, recovered from the
+//   original OpenSCAD source (planetary_gear_stage_no_bearings.scad):
+//     np = 22 (given) -> ns = 14, nr = 58  =>  ratio = 72/14 = 36/7 ~ 5.1429
+//   "5:1" is the marketing name; the true ratio is 36:7. Verified against the
+//   display assembly: the scad's planet-orbit radius (27.2 mm) matches the
+//   PGSB62 bearing stations in the .bom.json exactly.
 //
 // CONVENTION (ring fixed, sun driven, carrier output — the Gearfinity stack):
 //   Willis: (ω_sun − ω_carrier) / (ω_ring − ω_carrier) = −Z_ring / Z_sun
@@ -17,7 +18,7 @@
 //   All rates below are multiples of the STAGE INPUT (its sun's) speed.
 //   Sign convention: + = same direction as the stage input.
 
-export const NOMINAL_TEETH = { sun: 10, planet: 15, ring: 40 }; // R = 1+40/10 = 5
+export const NOMINAL_TEETH = { sun: 14, planet: 22, ring: 58 }; // exact: 36/7 per stage
 
 /** Rates for one stage, as multiples of that stage's sun speed. */
 export function stageRates(teeth = NOMINAL_TEETH) {

@@ -171,12 +171,12 @@
         q.textContent = `×${qty}`; row.appendChild(q);
         slotsEl.appendChild(row);
       }
-      // gear-train readout
+      // gear-train readout (14/22/58 teeth -> exactly 36:7 per stage)
       const chain = chainStages(v.stages.map(() => NOMINAL_TEETH));
       ratioEl.innerHTML =
-        `<div class="big">≈ ${chain.totalRatio.toFixed(0)} : 1</div>
+        `<div class="big">${chain.totalRatio.toFixed(2)} : 1</div>
          <div class="sub">${v.stages.length} stage${v.stages.length > 1 ? 's' : ''} ·
-         nominal (exact once tooth counts land)</div>`;
+         exact (36:7 per stage, teeth 14/22/58)</div>`;
       rebuildScene();
     }
 
@@ -217,7 +217,9 @@
     // ---------- proxy gear geometry (until display GLBs land) ----------------
     // Simple trapezoid-tooth spur profile: fine for showing correct KINEMATICS;
     // the real display parts (SolidWorks motion-study exports) replace these.
-    const m = 1.6; // module (mm) -> sun r=8, planet r=12, ring r=32 at nominal teeth
+    // m = 1.51 mm matches the real pitch (ring pitch dia 87.6 mm at 58 teeth,
+    // planet orbit 27.2 mm - same as the PGSB62 stations in the bom.json).
+    const m = 1.51;
     function gearShape(Z, { internal = false } = {}) {
       const r = m * Z / 2, tip = r + m * (internal ? -1 : 1), root = r - m * 1.25 * (internal ? -1 : 1);
       const p = 2 * Math.PI / Z, s = new THREE.Shape();
@@ -254,7 +256,7 @@
     // ---------- scene build + animation --------------------------------------
     // animated: [{ obj, role, stage, orbit: {r, psi} | null }]
     let animated = [], chain = null, theta = 0;
-    const Z = NOMINAL_TEETH, DEPTH = 14, GAP = 6;
+    const Z = NOMINAL_TEETH, DEPTH = 15, GAP = 6;   // T=15mm, like the real stage
 
     function clearRoot() { root.clear(); animated = []; }
 
