@@ -163,6 +163,18 @@ def main():
     input_role = "sun" if args.drive == "sun" else "carrier"
     output_role = "carrier" if args.drive == "sun" else "sun"
 
+    # The TOPMOST O-shaft is the MODULE OUTPUT (Gearfinity modules output at
+    # the top): it carries the load (e.g. the fan prop) and turns at the last
+    # stage's output rate. Lower O-shafts are carrier couplings (e.g. crank ->
+    # carrier 0). The I/O letter alone can't tell these apart - the fan reuses
+    # DS5O at both ends of the train.
+    def is_o_shaft(c):
+        s = stem_of(c).lower()
+        return s.startswith("ds") and "o" in s.split("_")[0][3:]
+
+    o_shafts = [c for c in comps if is_o_shaft(c)]
+    top_o = max(o_shafts, key=lambda c: c["transform"][11]) if o_shafts else None
+
     parts, missing = [], []
     placed = [0] * n_stages
     for c in comps:
@@ -171,7 +183,7 @@ def main():
         t = list(c["transform"])
         if role == "input":
             kin = {"role": input_role, "stage": 0}
-        elif role == "output":
+        elif role == "output" or c is top_o:
             kin = {"role": output_role, "stage": n_stages - 1}
         else:
             kin = {"role": role, "stage": stage_of_z(t[11])}
