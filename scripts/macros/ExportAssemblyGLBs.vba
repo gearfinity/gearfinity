@@ -85,6 +85,12 @@ Sub main()
             Dim swPart As SldWorks.ModelDoc2
             Set swPart = swApp.OpenDoc6(src, swDocPART, swOpenDocOptions_Silent, "", errs, warns)
             If Not swPart Is Nothing Then
+                ' CRITICAL: the XR/GLB exporter works on the ACTIVE document.
+                ' With the assembly open, OpenDoc6 returns the already-loaded
+                ' part WITHOUT activating it - so without this ActivateDoc3
+                ' every "part" GLB is actually the assembly (10 identical
+                ' files, first run proved it). Activate, then save.
+                swApp.ActivateDoc3 swPart.GetTitle, False, swDontRebuildActiveDoc, errs
                 ' SaveAs3 = the manual-dialog path (honors persistent export
                 ' options), swSaveAsOptions_Copy leaves the part untouched.
                 swPart.SaveAs3 glb, 0, swSaveAsOptions_Silent + swSaveAsOptions_Copy
@@ -107,6 +113,9 @@ Sub main()
             nSkip = nSkip + 1
         End If
     Next i
+
+    ' hand focus back to the assembly
+    swApp.ActivateDoc3 swModel.GetTitle, False, swDontRebuildActiveDoc, errs
 
     MsgBox "GLB export -> web\parts\" & vbCrLf & _
            "Exported " & nExp & vbCrLf & _
