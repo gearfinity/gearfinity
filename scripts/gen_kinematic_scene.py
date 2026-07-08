@@ -86,8 +86,8 @@ def role_of(stem: str) -> str:
         return "carrier"
     if s.startswith("css"):                      # crank shaft SLEEVE is the stationary bearing
         return "static"                          # (must precede the 'cs' input rule)
-    if s.startswith(("cs", "ch", "cp")):         # crank shaft/handle/plate/grip spin with the crank
-        return "input"
+    if s.startswith(("cs", "ch")):               # crank shaft/handle/grip spin with the crank
+        return "input"                           # (CP crank PLATE is static - falls through)
     if s.startswith("fp"):                       # fan prop turns at the train output speed
         return "output"
     if s.startswith("ds"):                       # DS<r>I* couples the sun; DS<r>O* the carrier

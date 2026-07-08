@@ -165,7 +165,8 @@ when a part and its assembly share a stem.
    - `--drive carrier`: carrier driven, sun out — *speed-up* (fan: prop turns
      at 36²/7² ≈ 26.45× the crank)
    The generator writes exact per-stage `rates` into the scene; the app uses
-   them directly (crank parts spin at input rate, `FP*` props at output rate).
+   them directly (crank shaft/handle spin at input rate — the CP crank *plate*
+   and CSS sleeve are static frame; `FP*` props turn at output rate).
 
 ## Debugging tools
 
