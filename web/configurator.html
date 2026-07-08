@@ -31,6 +31,14 @@
     .slot .qty { color: #7f8790; font-size: .75rem; min-width: 2.2rem; text-align: right; }
     #ratio { background: #20242c; border: 1px solid #2c2f36; border-radius: 8px;
              padding: .6rem .7rem; margin-top: .5rem; }
+    /* scene-parts list (GLB scenes): select + visibility controls */
+    .scene-row { cursor: pointer; border-radius: 6px; padding: .24rem .3rem; }
+    .scene-row:hover { background: #20242c; }
+    .scene-row.sel { background: #223049; outline: 1px solid #3b62b3; }
+    .scene-row .sub { color: #7f8790; font-size: .72rem; }
+    .vbtn { background: none; border: 1px solid #3a3d44; color: #9aa0a6; border-radius: 5px;
+            min-width: 1.7rem; height: 1.5rem; cursor: pointer; font-size: .78rem; line-height: 1; }
+    .vbtn.on { color: #8ab4f8; border-color: #8ab4f8; }
     #ratio .big { font-size: 1.25rem; font-weight: 700; }
     #ratio .sub { font-size: .72rem; color: #9aa0a6; margin-top: .15rem; }
     /* viewport */
@@ -72,6 +80,8 @@
       <div id="stages"></div>
       <h2>Parts</h2>
       <div id="slots"></div>
+      <h2 id="sceneH" style="display:none">Scene parts</h2>
+      <div id="sceneParts"></div>
       <div id="ratio"></div>
     </aside>
     <div id="view">
@@ -272,7 +282,7 @@
     let animated = [], chain = null, theta = 0, dirSign = 1;
     const Z = NOMINAL_TEETH, DEPTH = 15, GAP = 6;   // T=15mm, like the real stage
 
-    function clearRoot() { root.clear(); animated = []; }
+    function clearRoot() { root.clear(); animated = []; clearSceneParts(); }
 
     function buildProxy() {
       clearRoot();
@@ -333,7 +343,13 @@
         // tag every mesh for click-to-inspect (per instance - the same file can
         // serve different kinematic roles, e.g. the fan's DS5O shafts)
         const info = { src: p.src, role: p.kin?.role || 'static', stage: p.kin?.stage || 0 };
+        obj.userData.gf = info;
         obj.traverse(ch => { ch.userData.gf = info; });
+        // index by part file for the scene-parts list (select/ghost/hide)
+        const stem = stemOf(p.src);
+        let entry = sceneIndex.get(stem);
+        if (!entry) { entry = { instances: [], ghost: false, hidden: false, row: null }; sceneIndex.set(stem, entry); }
+        entry.instances.push(obj);
         const a = p.transform;
         // SolidWorks MathTransform.ArrayData rotation is ROW-VECTOR convention
         // (p' = p.R + t) -> transpose it for three.js column vectors. Proven by
@@ -357,6 +373,7 @@
         }
       }
       dirSign = data.direction || 1;
+      buildScenePartsList();
       frame((data.kinematics?.stages || []).length || 1);
       // debug: what rate did each animated part actually get?
       console.table(animated.map(a => ({
@@ -383,9 +400,93 @@
       return R.setPosition(point.clone().sub(moved));
     }
 
+    // ---------- scene-parts list: selection, highlight, visibility -----------
+    const sceneH = document.getElementById('sceneH');
+    const scenePartsEl = document.getElementById('sceneParts');
+    const noteEl = document.getElementById('note');
+    let sceneIndex = new Map();   // stem -> { instances: [Object3D], row, ghost, hidden }
+    let selectedStem = null;
+
+    const stemOf = src => src.replace(/\.SLDPRT$/i, '');
+
+    function eachMat(objs, fn) {
+      for (const o of objs) o.traverse(ch => {
+        if (!ch.isMesh) return;
+        for (const m of Array.isArray(ch.material) ? ch.material : [ch.material]) fn(m);
+      });
+    }
+    function setHighlight(objs, on) {
+      eachMat(objs, m => {
+        if (!m.emissive) return;
+        if (on) { if (!m.userData._e) m.userData._e = m.emissive.clone(); m.emissive.set(0x2f6bff); }
+        else if (m.userData._e) { m.emissive.copy(m.userData._e); delete m.userData._e; }
+      });
+    }
+    function applyVis(e) {
+      for (const o of e.instances) o.visible = !e.hidden;
+      eachMat(e.instances, m => {
+        if (e.ghost) {
+          if (m.userData._o === undefined)
+            m.userData._o = { t: m.transparent, o: m.opacity, d: m.depthWrite };
+          m.transparent = true; m.opacity = 0.22; m.depthWrite = false;
+        } else if (m.userData._o !== undefined) {
+          m.transparent = m.userData._o.t; m.opacity = m.userData._o.o;
+          m.depthWrite = m.userData._o.d; delete m.userData._o;
+        }
+      });
+    }
+    function selectPart(stem) {
+      if (selectedStem) {
+        const prev = sceneIndex.get(selectedStem);
+        if (prev) { setHighlight(prev.instances, false); prev.row?.classList.remove('sel'); }
+      }
+      selectedStem = stem;
+      if (!stem) { noteEl.textContent = ''; return; }
+      const e = sceneIndex.get(stem);
+      if (!e) return;
+      setHighlight(e.instances, true);
+      e.row?.classList.add('sel');
+      e.row?.scrollIntoView({ block: 'nearest' });
+      // details: role/stage/rate of the first instance (instances of one file
+      // can differ - the clicked instance's details are shown by the 3D click)
+      const g = e.instances[0]?.userData.gf;
+      if (g && noteEl.textContent === '') noteEl.textContent = partDetails(g);
+    }
+    function partDetails(g) {
+      const rate = chain?.stages[g.stage]?.[g.role] ?? 0;
+      return `${g.src} — ${g.role}, stage ${g.stage + 1} — ${rate.toFixed(3)}× input`;
+    }
+    function buildScenePartsList() {
+      scenePartsEl.innerHTML = '';
+      sceneH.style.display = '';
+      for (const [stem, e] of sceneIndex) {
+        const id = stem.split('_')[0];
+        const label = /^[A-Z]/.test(id) && id.length <= 8 ? id : stem.slice(0, 24);
+        const row = document.createElement('div');
+        row.className = 'slot scene-row';
+        row.innerHTML = `<span class="nm"><b>${label}</b> <span class="sub">×${e.instances.length}</span></span>`;
+        const ghost = document.createElement('button');
+        ghost.className = 'vbtn'; ghost.textContent = '◐'; ghost.title = 'transparent';
+        ghost.onclick = ev => { ev.stopPropagation(); e.ghost = !e.ghost; applyVis(e); ghost.classList.toggle('on', e.ghost); };
+        const hide = document.createElement('button');
+        hide.className = 'vbtn'; hide.textContent = '👁'; hide.title = 'hide / show';
+        hide.onclick = ev => { ev.stopPropagation(); e.hidden = !e.hidden; applyVis(e); hide.classList.toggle('on', e.hidden); };
+        row.appendChild(ghost); row.appendChild(hide);
+        row.onclick = () => { noteEl.textContent = ''; selectPart(selectedStem === stem ? null : stem); };
+        e.row = row;
+        scenePartsEl.appendChild(row);
+      }
+    }
+    function clearSceneParts() {
+      sceneIndex = new Map(); selectedStem = null;
+      scenePartsEl.innerHTML = ''; sceneH.style.display = 'none';
+      noteEl.textContent = '';
+    }
+
     // ---------- click-to-inspect (GLB scenes) ---------------------------------
     const ray = new THREE.Raycaster();
     let downAt = null;
+    const isShown = o => { for (; o; o = o.parent) if (o.visible === false) return false; return true; };
     renderer.domElement.addEventListener('pointerdown', e => { downAt = [e.clientX, e.clientY]; });
     renderer.domElement.addEventListener('click', e => {
       if (downAt && Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5) return; // was a drag
@@ -394,12 +495,12 @@
         ((e.clientX - rect.left) / rect.width) * 2 - 1,
         -((e.clientY - rect.top) / rect.height) * 2 + 1);
       ray.setFromCamera(ndc, camera);
-      const hit = ray.intersectObjects(root.children, true).find(h => h.object.userData.gf);
-      const note = document.getElementById('note');
-      if (!hit) { note.textContent = ''; return; }
+      const hit = ray.intersectObjects(root.children, true)
+        .find(h => h.object.userData.gf && isShown(h.object));
+      if (!hit) { selectPart(null); return; }
       const g = hit.object.userData.gf;
-      const rate = chain?.stages[g.stage]?.[g.role] ?? 0;
-      note.textContent = `${g.src} — ${g.role}, stage ${g.stage + 1} — ${rate.toFixed(3)}× input`;
+      selectPart(stemOf(g.src));
+      noteEl.textContent = partDetails(g);   // the clicked INSTANCE's details
     });
 
     // ---------- animation loop -----------------------------------------------

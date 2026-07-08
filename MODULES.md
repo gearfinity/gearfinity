@@ -43,7 +43,7 @@
 | `CP` | 1 | Crank Plate | crank plate |
 | `CS5` | 1 | Crank Shaft | crank shaft |
 | `CSS` | 1 | Crank Shaft Sleeve | crank shaft sleeve |
-| `DS5O` | 1 | Drive Shaft - output | drive shaft output |
+| `DS5OL` | 1 | Drive Shaft - output | crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking) |
 | `DS5IL` | 1 | Drive Shaft - input | drive shaft input |
 | `H` | 2 | Handle Half | handle |
 | `HP2` | 1 | Handle Plate | handle plate |
@@ -65,7 +65,7 @@
 | `CP` | 1 | Crank Plate | crank plate |
 | `CS5` | 1 | Crank Shaft | crank shaft |
 | `CSS` | 1 | Crank Shaft Sleeve | crank shaft sleeve |
-| `DS5O` | 1 | Drive Shaft - output | drive shaft output |
+| `DS5OL` | 1 | Drive Shaft - output | crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking) |
 | `DS5IL` | 1 | Drive Shaft - input | drive shaft input |
 | `H` | 2 | Handle Half | handle |
 | `HP2` | 1 | Handle Plate | handle plate |
@@ -88,7 +88,7 @@
 | `CP` | 1 | Crank Plate | crank plate |
 | `CS5` | 1 | Crank Shaft | crank shaft |
 | `CSS` | 1 | Crank Shaft Sleeve | crank shaft sleeve |
-| `DS5O` | 1 | Drive Shaft - output | drive shaft output |
+| `DS5OL` | 1 | Drive Shaft - output | crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking) |
 | `DS5IL` | 1 | Drive Shaft - input | drive shaft input |
 | `H` | 2 | Handle Half | handle |
 | `HP2` | 1 | Handle Plate | handle plate |
@@ -98,7 +98,7 @@
 
 **Swappable options:**
 - **CH2** (crank handle (double; single = CH1)) - alternatives: `CH1`
-- **DS5O** (drive_shaft_output) - alternatives: `DS5OL`
+- **DS5OL** (crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking)) - alternatives: `DS5O`
 - **PS54** (short pins (PS56/PS58 = tighter fit)) - alternatives: `PS56`, `PS58`
 - **PL71** (long pins (PL69/PL67 = looser fit)) - alternatives: `PL69`, `PL67`
 - **Cores**: standard fit recommended; a `T` (tight) variant (e.g. `PGC5MT`) reduces gear skipping when a core is used standalone. Any slot style still functions.
@@ -125,7 +125,7 @@
 | `CP` | 1 | Crank Plate | crank plate |
 | `CS5` | 1 | Crank Shaft | crank shaft |
 | `CSS` | 1 | Crank Shaft Sleeve | crank shaft sleeve |
-| `DS5O` | 1 | Drive Shaft - output | drive shaft output |
+| `DS5OL` | 1 | Drive Shaft - output | crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking) |
 | `DS5I` | 1 | Drive Shaft - input | drive shaft input |
 | `H` | 2 | Handle Half | handle |
 | `HP2` | 1 | Handle Plate | handle plate |
@@ -151,7 +151,7 @@
 | `CP` | 1 | Crank Plate | crank plate |
 | `CS5` | 1 | Crank Shaft | crank shaft |
 | `CSS` | 1 | Crank Shaft Sleeve | crank shaft sleeve |
-| `DS5O` | 1 | Drive Shaft - output | drive shaft output |
+| `DS5OL` | 1 | Drive Shaft - output | crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking) |
 | `DS5I` | 1 | Drive Shaft - input | drive shaft input |
 | `H` | 2 | Handle Half | handle |
 | `HP2` | 1 | Handle Plate | handle plate |
@@ -178,7 +178,7 @@
 | `CP` | 1 | Crank Plate | crank plate |
 | `CS5` | 1 | Crank Shaft | crank shaft |
 | `CSS` | 1 | Crank Shaft Sleeve | crank shaft sleeve |
-| `DS5O` | 1 | Drive Shaft - output | drive shaft output |
+| `DS5OL` | 1 | Drive Shaft - output | crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking) |
 | `DS5I` | 1 | Drive Shaft - input | drive shaft input |
 | `H` | 2 | Handle Half | handle |
 | `HP2` | 1 | Handle Plate | handle plate |
@@ -189,7 +189,7 @@
 **Swappable options:**
 - **FP5CC** (prop (CCW; CW = FP5C)) - alternatives: `FP5C`
 - **CH1** (crank_handle) - alternatives: `CH2`
-- **DS5O** (drive_shaft_output) - alternatives: `DS5OL`
+- **DS5OL** (crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking)) - alternatives: `DS5O`
 - **PS54** (short pins (PS56/PS58 = tighter fit)) - alternatives: `PS56`, `PS58`
 - **PL71** (long pins (PL69/PL67 = looser fit)) - alternatives: `PL69`, `PL67`
 - **Cores**: standard fit recommended; a `T` (tight) variant (e.g. `PGC5MT`) reduces gear skipping when a core is used standalone. Any slot style still functions.
