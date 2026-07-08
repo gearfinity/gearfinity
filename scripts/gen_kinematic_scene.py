@@ -97,7 +97,11 @@ def main():
     args = ap.parse_args()
 
     d = json.loads(Path(args.bom).read_text(encoding="utf-8"))
-    comps = [c for c in d.get("components", []) if not c.get("suppressed")]
+    # Skip sub-assembly nodes: GetComponents(False) returns them ALONGSIDE
+    # their leaf parts (which carry root-space transforms), so only .SLDPRT
+    # rows are scene parts. Recursion works - leaves are placed correctly.
+    comps = [c for c in d.get("components", [])
+             if not c.get("suppressed") and c["file"].lower().endswith(".sldprt")]
 
     # planet stations = sleeve-bearing positions, sorted by angle for stable pairing
     stations = sorted(
