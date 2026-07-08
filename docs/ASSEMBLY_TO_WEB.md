@@ -161,6 +161,22 @@ re-export. GLB lookup prefers `web/parts/` (per-part exports) over
 `web/models/` (whole-assembly mocks), which also avoids the name collision
 when a part and its assembly share a stem.
 
+## Sub-assembly part swaps (the DS5O → DS5OL pattern)
+
+A reused sub-assembly can carry a part that a specific module must REPLACE —
+e.g. every planetary-stage display includes a `DS5O`, but the crank-adjacent
+stage of the fan/crank modules needs `DS5OL` (lockable) instead, added at the
+top level. Handle it with **sub-assembly configurations**:
+
+1. Give the sub-assembly a config (e.g. `no_shaft`) with the part suppressed.
+2. Reference that config on the affected *instance* in the parent assembly
+   (Component Properties → Referenced configuration); add the replacement part
+   at top level.
+
+The pipeline handles this with no extra steps: `DumpAssemblyBOM` records
+`IsSuppressed` per instance-in-context, and the scene generator, ingestion,
+and BOM counting all skip suppressed components.
+
 ## Extending to a new module (crank, fan, multi-stage)
 
 1. Build its display assembly (reuse the planetary display parts for stages —
