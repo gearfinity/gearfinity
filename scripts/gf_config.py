@@ -24,7 +24,7 @@ def build_variant(cfg, module, variant):
     """Expand a variant into an ordered dict: pid -> [qty, role].
     qty is an int, or 'TBD' for not-yet-counted parts (pins)."""
     code = cfg["core_style_codes"]
-    tol = cfg["defaults"]["core_tolerance"]
+    fit = cfg["defaults"].get("core_fit", "")   # "" = standard (omitted), "T" = tight
     stage = cfg["submodules"]["planetary_stage"]
     agg: dict[str, list] = {}
 
@@ -38,7 +38,7 @@ def build_variant(cfg, module, variant):
     for style in variant["stages"]:
         for sname, slot in stage["slots"].items():
             if sname == "core":
-                pid = slot["recommended"].replace("{style}", code[style]).replace("{tol}", tol)
+                pid = slot["recommended"].replace("{style}", code[style]).replace("{fit}", fit)
                 role = f"gear core ({style})"
             else:
                 pid = slot["recommended"]

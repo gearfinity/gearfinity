@@ -35,8 +35,9 @@ for mid, module, vname, variant, agg in gf.iter_builds(cfg):
             if slot.get("alternatives"):
                 a = ", ".join(f"`{x}`" for x in slot["alternatives"])
                 alts.append(f"- **{slot['recommended']}** ({slot.get('role', sname)}) - alternatives: {a}")
-        alts.append(f"- **Cores**: recommended tolerance `{cfg['defaults']['core_tolerance']}`; "
-                    "`10`/`05` are tighter, and any slot style still functions.")
+        alts.append("- **Cores**: standard fit recommended; a `T` (tight) variant "
+                    "(e.g. `PGC5MT`) reduces gear skipping when a core is used standalone. "
+                    "Any slot style still functions.")
         md.append("\n**Swappable options:**")
         md += alts
         md.append("")

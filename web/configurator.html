@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gearfinity — Configurator (preview)</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; height: 100vh; display: flex; flex-direction: column;
+           font-family: system-ui, sans-serif; background: #15171c; color: #e8eaed; overflow: hidden; }
+    header { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
+             padding: .55rem 1rem; background: #1d2026; border-bottom: 1px solid #2c2f36; }
+    header h1 { font-size: 1rem; margin: 0; font-weight: 600; }
+    header .tag { font-size: .7rem; padding: .12rem .5rem; border-radius: 999px; background: #2c2f36; color: #9aa0a6; }
+    header a { color: #8ab4f8; font-size: .82rem; }
+    #mode { margin-left: auto; font-size: .75rem; color: #9aa0a6; }
+    #app { flex: 1; display: flex; min-height: 0; }
+    /* sidebar */
+    #side { width: 300px; min-width: 300px; overflow-y: auto; background: #1a1d23;
+            border-right: 1px solid #2c2f36; padding: .8rem; font-size: .85rem; }
+    #side h2 { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em;
+               color: #9aa0a6; margin: 1rem 0 .4rem; }
+    #side h2:first-child { margin-top: 0; }
+    #side select { width: 100%; background: #2c2f36; color: #e8eaed; border: 1px solid #3a3d44;
+                   border-radius: 6px; padding: .35rem .5rem; font-size: .85rem; }
+    .slot { display: flex; align-items: center; gap: .5rem; padding: .28rem 0; }
+    .slot .nm { flex: 1; color: #bdc1c6; font-size: .78rem; }
+    .slot select { width: 9.5rem !important; }
+    .slot .pid { width: 9.5rem; font-variant-numeric: tabular-nums; font-size: .8rem; }
+    .slot .qty { color: #7f8790; font-size: .75rem; min-width: 2.2rem; text-align: right; }
+    #ratio { background: #20242c; border: 1px solid #2c2f36; border-radius: 8px;
+             padding: .6rem .7rem; margin-top: .5rem; }
+    #ratio .big { font-size: 1.25rem; font-weight: 700; }
+    #ratio .sub { font-size: .72rem; color: #9aa0a6; margin-top: .15rem; }
+    /* viewport */
+    #view { flex: 1; position: relative; min-width: 0; }
+    #view canvas { display: block; }
+    #ctrl { position: absolute; left: 50%; bottom: .8rem; transform: translateX(-50%);
+            display: flex; align-items: center; gap: .8rem; padding: .45rem .8rem;
+            background: rgba(29,32,38,.9); border: 1px solid #2c2f36; border-radius: 999px;
+            backdrop-filter: blur(6px); font-size: .8rem; }
+    #ctrl button { background: #2c2f36; color: #e8eaed; border: 1px solid #3a3d44;
+                   border-radius: 999px; padding: .3rem .9rem; cursor: pointer; }
+    #ctrl input[type=range] { width: 9rem; accent-color: #E6B34D; }
+    #note { position: absolute; top: .6rem; left: .8rem; font-size: .72rem; color: #7f8790;
+            background: rgba(21,23,28,.7); padding: .25rem .5rem; border-radius: 6px; }
+  </style>
+  <script type="importmap">
+  { "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }}
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Gearfinity Configurator</h1>
+    <span class="tag">preview</span>
+    <a href="index.html">Module viewer</a>
+    <a href="assembly.html">Assembly viewer</a>
+    <a href="print.html">Print preview</a>
+    <span id="mode">…</span>
+  </header>
+  <div id="app">
+    <aside id="side">
+      <h2>Module</h2>
+      <select id="selModule"></select>
+      <h2>Variant</h2>
+      <select id="selVariant"></select>
+      <h2>Stages</h2>
+      <div id="stages"></div>
+      <h2>Parts</h2>
+      <div id="slots"></div>
+      <div id="ratio"></div>
+    </aside>
+    <div id="view">
+      <span id="note"></span>
+      <div id="ctrl">
+        <button id="play">⏸ pause</button>
+        <label>speed <input id="speed" type="range" min="2" max="60" value="15"></label>
+        <span id="rpm"></span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+    import { chainStages, NOMINAL_TEETH } from './js/gear-train.js';
+
+    // ---------- config model -------------------------------------------------
+    const cfg = await (await fetch('../modules.config.json', { cache: 'no-store' })).json();
+    const styleCode = cfg.core_style_codes;
+    const fitCodes = cfg.core_fit_codes || { standard: '', tight: 'T' };
+    const state = { module: 'crank', variant: null, fits: [], swaps: {} };
+
+    const selModule = document.getElementById('selModule');
+    const selVariant = document.getElementById('selVariant');
+    for (const [mid, m] of Object.entries(cfg.modules))
+      selModule.add(new Option(m.name, mid));
+    selModule.value = state.module;
+
+    function variantDef() { return cfg.modules[state.module].variants[state.variant]; }
+
+    function syncVariants() {
+      selVariant.innerHTML = '';
+      const vs = Object.keys(cfg.modules[state.module].variants);
+      for (const v of vs) selVariant.add(new Option(v, v));
+      state.variant = vs.includes(state.variant) ? state.variant : vs[0];
+      selVariant.value = state.variant;
+      state.fits = variantDef().stages.map(() => 'standard');
+      state.swaps = {};
+    }
+
+    // ---------- sidebar ------------------------------------------------------
+    const stagesEl = document.getElementById('stages');
+    const slotsEl = document.getElementById('slots');
+    const ratioEl = document.getElementById('ratio');
+
+    function corePid(style, fit) {
+      return cfg.submodules.planetary_stage.slots.core.recommended
+        .replace('{style}', styleCode[style]).replace('{fit}', fitCodes[fit]);
+    }
+
+    function renderSidebar() {
+      const v = variantDef();
+      // per-stage core fit pickers
+      stagesEl.innerHTML = '';
+      const fitsAvail = cfg.submodules.planetary_stage.slots.core.fits_available || {};
+      v.stages.forEach((style, i) => {
+        const row = document.createElement('div'); row.className = 'slot';
+        const sel = document.createElement('select');
+        for (const f of (fitsAvail[style] || ['standard'])) sel.add(new Option(f, f));
+        if (!(fitsAvail[style] || []).includes(state.fits[i])) state.fits[i] = 'standard';
+        sel.value = state.fits[i];
+        sel.onchange = () => { state.fits[i] = sel.value; renderSidebar(); };
+        row.innerHTML = `<span class="nm">stage ${i + 1} · ${style}</span>`;
+        const pid = document.createElement('span'); pid.className = 'pid';
+        pid.textContent = corePid(style, state.fits[i]);
+        row.appendChild(sel); row.appendChild(pid);
+        stagesEl.appendChild(row);
+      });
+      // shared slots with swap dropdowns
+      slotsEl.innerHTML = '';
+      const mod = cfg.modules[state.module];
+      const stage = cfg.submodules.planetary_stage.slots;
+      const rows = [];
+      for (const [name, slot] of Object.entries(stage))
+        if (name !== 'core')
+          rows.push([name, slot, v.stages.length * (slot.qty || 1)]);
+      if (v.cover) rows.push(['gearbox cover', { recommended: v.cover }, 1]);
+      for (const [name, slot] of Object.entries(mod.shared_slots || {}))
+        rows.push([name, slot, slot.qty || 1]);
+      for (const [name, slot, qty] of rows) {
+        const row = document.createElement('div'); row.className = 'slot';
+        row.innerHTML = `<span class="nm">${name.replace(/_/g, ' ')}</span>`;
+        if (slot.alternatives?.length) {
+          const sel = document.createElement('select');
+          for (const p of [slot.recommended, ...slot.alternatives]) sel.add(new Option(p, p));
+          sel.value = state.swaps[name] || slot.recommended;
+          sel.onchange = () => { state.swaps[name] = sel.value; };
+          row.appendChild(sel);
+        } else {
+          const pid = document.createElement('span'); pid.className = 'pid';
+          pid.textContent = slot.recommended; row.appendChild(pid);
+        }
+        const q = document.createElement('span'); q.className = 'qty';
+        q.textContent = `×${qty}`; row.appendChild(q);
+        slotsEl.appendChild(row);
+      }
+      // gear-train readout
+      const chain = chainStages(v.stages.map(() => NOMINAL_TEETH));
+      ratioEl.innerHTML =
+        `<div class="big">≈ ${chain.totalRatio.toFixed(0)} : 1</div>
+         <div class="sub">${v.stages.length} stage${v.stages.length > 1 ? 's' : ''} ·
+         nominal (exact once tooth counts land)</div>`;
+      rebuildScene();
+    }
+
+    selModule.onchange = () => { state.module = selModule.value; syncVariants(); renderSidebar(); };
+    selVariant.onchange = () => { state.variant = selVariant.value; state.fits = variantDef().stages.map(() => 'standard'); renderSidebar(); };
+
+    // ---------- three.js viewport (conventions from assembly.html) -----------
+    const view = document.getElementById('view');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x15171c);
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 5000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(devicePixelRatio);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    view.appendChild(renderer.domElement);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x60656f, 1.2));
+    const key = new THREE.DirectionalLight(0xffffff, 1.3); key.position.set(1, 1.2, 1); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.5); fill.position.set(-1, 0.4, -1); scene.add(fill);
+    const under = new THREE.DirectionalLight(0xffffff, 0.7); under.position.set(0.2, -1, -0.3); scene.add(under);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    const root = new THREE.Group();      // Z-up assembly frame
+    root.rotateX(-Math.PI / 2);          // -> three.js Y-up (matches assembly.html world)
+    scene.add(root);
+
+    function resize() {
+      const w = view.clientWidth, h = view.clientHeight;
+      renderer.setSize(w, h);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(resize).observe(view);
+
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    const gltf = new GLTFLoader(); gltf.setDRACOLoader(draco);
+
+    // ---------- proxy gear geometry (until display GLBs land) ----------------
+    // Simple trapezoid-tooth spur profile: fine for showing correct KINEMATICS;
+    // the real display parts (SolidWorks motion-study exports) replace these.
+    const m = 1.6; // module (mm) -> sun r=8, planet r=12, ring r=32 at nominal teeth
+    function gearShape(Z, { internal = false } = {}) {
+      const r = m * Z / 2, tip = r + m * (internal ? -1 : 1), root = r - m * 1.25 * (internal ? -1 : 1);
+      const p = 2 * Math.PI / Z, s = new THREE.Shape();
+      let first = true;
+      for (let k = 0; k < Z; k++) {
+        const a = k * p;
+        const pts = [[root, a - .26 * p], [root, a - .21 * p], [tip, a - .11 * p],
+                     [tip, a + .11 * p], [root, a + .21 * p], [root, a + .26 * p]];
+        for (const [rad, ang] of pts) {
+          const x = rad * Math.cos(ang), y = rad * Math.sin(ang);
+          first ? s.moveTo(x, y) : s.lineTo(x, y);
+          first = false;
+        }
+      }
+      s.closePath();
+      return s;
+    }
+    function gearMesh(Z, depth, color, { hole = 0, internal = false, band = 0 } = {}) {
+      let shape;
+      if (internal) {           // ring: outer band circle with gear-toothed hole
+        shape = new THREE.Shape();
+        shape.absarc(0, 0, m * Z / 2 + band, 0, 2 * Math.PI, false);
+        const h = gearShape(Z, { internal: true }); h.autoClose = true;
+        shape.holes.push(new THREE.Path(h.getPoints(Z * 6)));
+      } else {
+        shape = gearShape(Z);
+        if (hole) { const c = new THREE.Path(); c.absarc(0, 0, hole, 0, 2 * Math.PI, true); shape.holes.push(c); }
+      }
+      const g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false });
+      g.translate(0, 0, -depth / 2);
+      return new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color, metalness: .05, roughness: .7 }));
+    }
+
+    // ---------- scene build + animation --------------------------------------
+    // animated: [{ obj, role, stage, orbit: {r, psi} | null }]
+    let animated = [], chain = null, theta = 0;
+    const Z = NOMINAL_TEETH, DEPTH = 14, GAP = 6;
+
+    function clearRoot() { root.clear(); animated = []; }
+
+    function buildProxy() {
+      clearRoot();
+      const v = variantDef();
+      chain = chainStages(v.stages.map(() => Z));
+      const rSun = m * Z.sun / 2, rPlanet = m * Z.planet / 2, rOrbit = rSun + rPlanet;
+      v.stages.forEach((style, i) => {
+        const z0 = i * (DEPTH + GAP);
+        const stageG = new THREE.Group(); stageG.position.z = z0; root.add(stageG);
+        const ring = gearMesh(Z.ring, DEPTH, 0x5f6672, { internal: true, band: 5 });
+        stageG.add(ring);
+        const sun = gearMesh(Z.sun, DEPTH, 0x8AB4F8, { hole: 2.5 });
+        stageG.add(sun); animated.push({ obj: sun, role: 'sun', stage: i, orbit: null });
+        for (let k = 0; k < 3; k++) {
+          const psi = k * 2 * Math.PI / 3;
+          const pl = gearMesh(Z.planet, DEPTH, 0xE6B34D, { hole: 2 });
+          // initial spin phase: keeps tooth/gap roughly aligned with the sun (proxy-grade)
+          pl.userData.phase = psi * (1 + Z.sun / Z.planet) + Math.PI / Z.planet;
+          stageG.add(pl); animated.push({ obj: pl, role: 'planet', stage: i, orbit: { r: rOrbit, psi } });
+        }
+        const carrier = new THREE.Mesh(
+          new THREE.CylinderGeometry(rOrbit + 4.5, rOrbit + 4.5, 2.4, 48).rotateX(Math.PI / 2),
+          new THREE.MeshStandardMaterial({ color: 0xcfd4da, transparent: true, opacity: .35 }));
+        carrier.position.z = DEPTH / 2 + 1.6;
+        stageG.add(carrier); animated.push({ obj: carrier, role: 'carrier', stage: i, orbit: null });
+      });
+      frame(v.stages.length);
+      document.getElementById('mode').textContent = 'proxy gears — display GLBs pending';
+      document.getElementById('note').textContent =
+        'Proxy geometry: kinematics are live; real display models drop in when exported.';
+    }
+
+    // Future: kinematic GLB scenes (schema in docs/WEB_VIEWER.md). Each part carries
+    // kin: { role: sun|planet|ring|carrier|static, stage: n } and the scene carries
+    // kinematics.stages[n] = { teeth, axis: { origin:[x,y,z], dir:[x,y,z] } }.
+    async function tryLoadSceneJSON() {
+      const url = `scenes/cfg_${state.module}_${state.variant}.json`;
+      try { const r = await fetch(url, { cache: 'no-store' }); return r.ok ? await r.json() : null; }
+      catch { return null; }
+    }
+
+    async function rebuildScene() {
+      const data = await tryLoadSceneJSON();
+      if (!data) return buildProxy();
+      // GLB mode (activates once display scenes exist)
+      clearRoot();
+      chain = chainStages((data.kinematics?.stages || []).map(s => s.teeth || Z));
+      const loads = data.parts.map(p => new Promise(res =>
+        gltf.load(p.url, g => res({ p, obj: g.scene }), undefined, () => res(null))));
+      for (const it of (await Promise.all(loads)).filter(Boolean)) {
+        const { p, obj } = it;
+        const a = p.transform;
+        const M = new THREE.Matrix4().set(a[0], a[1], a[2], a[9], a[3], a[4], a[5], a[10],
+                                          a[6], a[7], a[8], a[11], 0, 0, 0, 1);
+        obj.applyMatrix4(new THREE.Matrix4().makeScale(1000, 1000, 1000).multiply(M)); // m -> mm
+        root.add(obj);
+        if (p.kin && p.kin.role !== 'static')
+          animated.push({ obj, role: p.kin.role, stage: p.kin.stage || 0,
+                          orbit: null, base: obj.matrix.clone(),
+                          axis: data.kinematics?.stages?.[p.kin.stage || 0]?.axis });
+      }
+      frame((data.kinematics?.stages || []).length || 1);
+      document.getElementById('mode').textContent = `scene: ${data.name || state.module}`;
+      document.getElementById('note').textContent = '';
+    }
+
+    function frame(nStages) {
+      const h = nStages * (DEPTH + GAP), r = m * Z.ring / 2 + 12;
+      controls.target.set(0, h / 2 - GAP, 0);
+      camera.position.set(r * 1.7, h / 2 + r * .9, r * 1.9);
+      controls.update();
+    }
+
+    // ---------- animation loop -----------------------------------------------
+    let playing = true;
+    const playBtn = document.getElementById('play');
+    const speedEl = document.getElementById('speed');
+    const rpmEl = document.getElementById('rpm');
+    playBtn.onclick = () => { playing = !playing; playBtn.textContent = playing ? '⏸ pause' : '▶ play'; };
+
+    const clock = new THREE.Clock();
+    function tick() {
+      requestAnimationFrame(tick);
+      const dt = clock.getDelta();
+      const rpm = +speedEl.value;
+      rpmEl.textContent = `${rpm} rpm in`;
+      if (playing && chain) theta += dt * rpm / 60 * 2 * Math.PI;
+      for (const a of animated) {
+        const s = chain?.stages[a.stage]; if (!s) continue;
+        const ang = s[a.role] * theta;
+        if (a.orbit) { // planet: orbit at carrier rate + spin about own axis
+          const oa = s.carrier * theta + a.orbit.psi;
+          a.obj.position.set(a.orbit.r * Math.cos(oa), a.orbit.r * Math.sin(oa), a.obj.position.z);
+          a.obj.rotation.z = ang + (a.obj.userData.phase || 0); // absolute spin
+        } else if (a.base) { // GLB mode: rotate about stage axis in assembly frame
+          const ax = a.axis || { origin: [0, 0, 0], dir: [0, 0, 1] };
+          const d = new THREE.Vector3(...ax.dir).normalize();
+          const o = new THREE.Vector3(...ax.origin).multiplyScalar(1000);
+          const R = new THREE.Matrix4().makeRotationAxis(d, ang)
+            .setPosition(o.clone().sub(o.clone().applyMatrix4(new THREE.Matrix4().makeRotationAxis(d, ang))));
+          a.obj.matrixAutoUpdate = false;
+          a.obj.matrix.copy(R.multiply(a.base));
+        } else {
+          a.obj.rotation.z = ang;
+        }
+      }
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    // ---------- boot ----------------------------------------------------------
+    syncVariants();
+    renderSidebar();
+    resize();
+    tick();
+  </script>
+</body>
+</html>

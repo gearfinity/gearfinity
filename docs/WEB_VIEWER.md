@@ -74,13 +74,63 @@ three.js configurator  → assemble, swap on config change, animate
 - **Phase 0 — Static POC** ✅ : one mock `.glb` in `<model-viewer>`.
 - **Phase 1 — Gallery:** commit working GLBs; live on Pages; **mock registry**;
   picker shows each module's mock.
-- **Phase 2 — Assembled from parts:** named-node GLBs + transforms → three.js
-  places each proxy; switch variant/options (swap proxies).
-- **Phase 3 — Motion:** procedural gear animation; interactive crank; speed/play
-  controls.
-- **Phase 4 — Configurator:** full option picking driven by `modules.config.json`,
-  live build list, "download these parts" → bundles; baked discrete clips
-  (exploded views).
+- **Phase 2 — Assembled from parts** ✅ (proven): named-node GLBs + transforms →
+  three.js places each part (`web/assembly.html`, crank_input).
+- **Phase 3 — Motion** ✅ (proxy mode): procedural gear animation with speed/play
+  controls, live in `web/configurator.html` on parametric proxy gears.
+- **Phase 4 — Configurator** 🔨 (shell built): option picking driven by
+  `modules.config.json` (module/variant/core-fit/swaps) works; real display GLBs
+  + "download these parts" → bundles still to come; baked discrete clips
+  (exploded views) later.
+
+## The configurator (`web/configurator.html`) + kinematics
+
+- **Sidebar** is generated from `modules.config.json`: module, variant,
+  per-stage core fit (via `fits_available` — only catalog-real fits offered),
+  swap dropdowns for slots with `alternatives`.
+- **Kinematics** live in `web/js/gear-train.js` (pure math, no three.js):
+  Willis equation on tooth counts; stages chain carrier → next sun; total
+  ratio and per-role rates come out as exact rationals.
+- **EXACTNESS:** the real Gearfinity ratio is **not exactly 5:1** — "5:1" is the
+  nominal name. `gear-train.js` falls back to `NOMINAL_TEETH` (10/15/40 → 5:1)
+  until real tooth counts are supplied per stage; then rates become exact.
+  Gears that **start perfectly meshed** (poses from the `.bom.json`) **stay
+  meshed** only with exact rates — approximate is acceptable for now (owner
+  call, 2026-07).
+- **Proxy mode:** until display GLBs exist, the app renders parametric
+  trapezoid-tooth proxy gears so the animation layer is testable end-to-end.
+
+### Display asset class (third class, alongside print STL + CAD STEP)
+
+The printable core is **print-in-place** (one fused mesh — cannot animate).
+The motion-study parts (e.g. `planetary_stage_core_mock_display-sun.SLDPRT`)
+are the **kinematic decomposition**: individually exported GLBs the web app
+can spin. Display parts never enter `parts.csv` (not printable).
+
+### Kinematic scene schema (`web/scenes/cfg_<module>_<variant>.json`)
+
+Extends the assembly-viewer scene with roles + stage axes:
+
+```jsonc
+{
+  "name": "crank_2-stage",
+  "parts": [
+    { "src": "…-sun.SLDPRT", "url": "models/…-sun.glb",
+      "transform": [r0,…,r8, x,y,z],          // metres, row-major (bom.json)
+      "kin": { "role": "sun", "stage": 0 } }  // sun|planet|ring|carrier|static
+  ],
+  "kinematics": {
+    "stages": [
+      { "teeth": { "sun": 10, "planet": 15, "ring": 40 },   // real counts when known
+        "axis": { "origin": [0,0,0], "dir": [0,0,1] } }      // stage axis, assembly frame, metres
+    ]
+  }
+}
+```
+
+Sun/ring/carrier rotate about the stage axis; planets need orbit (carrier rate
+about the stage axis) **plus** spin about their own axis — the GLB-mode planet
+path is finalized when the display exports land (proxy mode already does both).
 
 ## Open decisions
 

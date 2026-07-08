@@ -10,7 +10,7 @@
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
-| `PGC5M15` | 1 | Planetary Gear Core | gear core (middle) |
+| `PGC5M` | 1 | Planetary Gear Core | gear core (middle) |
 | `PCB5` | 1 | Planet Carrier Bottom | planet carrier bottom |
 | `PCT5` | 1 | Planet Carrier Top | planet carrier top |
 | `PGSB62` | 3 | Planet Gear Sleeve Bearing | planet sleeve bearing |
@@ -23,7 +23,7 @@
 **Swappable options:**
 - **PS56** (short pins (PS54 looser, PS58 tighter)) - alternatives: `PS54`, `PS58`
 - **PL71** (long pins (PL69/PL67 = looser fit)) - alternatives: `PL69`, `PL67`
-- **Cores**: recommended tolerance `15`; `10`/`05` are tighter, and any slot style still functions.
+- **Cores**: standard fit recommended; a `T` (tight) variant (e.g. `PGC5MT`) reduces gear skipping when a core is used standalone. Any slot style still functions.
 
 ## Crank Module
 
@@ -33,7 +33,7 @@
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
-| `PGC5M15` | 1 | Planetary Gear Core | gear core (middle) |
+| `PGC5M` | 1 | Planetary Gear Core | gear core (middle) |
 | `PCB5` | 1 | Planet Carrier Bottom | planet carrier bottom |
 | `PCT5` | 1 | Planet Carrier Top | planet carrier top |
 | `PGSB62` | 3 | Planet Gear Sleeve Bearing | planet sleeve bearing |
@@ -55,7 +55,7 @@
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
-| `PGC5M15` | 2 | Planetary Gear Core | gear core (middle) |
+| `PGC5M` | 2 | Planetary Gear Core | gear core (middle) |
 | `PCB5` | 2 | Planet Carrier Bottom | planet carrier bottom |
 | `PCT5` | 2 | Planet Carrier Top | planet carrier top |
 | `PGSB62` | 6 | Planet Gear Sleeve Bearing | planet sleeve bearing |
@@ -77,12 +77,12 @@
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
-| `PGC5M15` | 2 | Planetary Gear Core | gear core (middle) |
+| `PGC5M` | 2 | Planetary Gear Core | gear core (middle) |
 | `PCB5` | 3 | Planet Carrier Bottom | planet carrier bottom |
 | `PCT5` | 3 | Planet Carrier Top | planet carrier top |
 | `PGSB62` | 9 | Planet Gear Sleeve Bearing | planet sleeve bearing |
 | `PSC` | 6 | Planetary Stage Cover | stage cover |
-| `PGC5O15` | 1 | Planetary Gear Core | gear core (outer) |
+| `PGC5O` | 1 | Planetary Gear Core | gear core (outer) |
 | `GC3` | 1 | Gearbox Cover Half | gearbox cover |
 | `CH2` | 1 | Crank Handle | crank handle (double; single = CH1) |
 | `CP` | 1 | Crank Plate | crank plate |
@@ -101,7 +101,7 @@
 - **DS5O** (drive_shaft_output) - alternatives: `DS5OL`
 - **PS54** (short pins (PS56/PS58 = tighter fit)) - alternatives: `PS56`, `PS58`
 - **PL71** (long pins (PL69/PL67 = looser fit)) - alternatives: `PL69`, `PL67`
-- **Cores**: recommended tolerance `15`; `10`/`05` are tighter, and any slot style still functions.
+- **Cores**: standard fit recommended; a `T` (tight) variant (e.g. `PGC5MT`) reduces gear skipping when a core is used standalone. Any slot style still functions.
 
 ## Fan Module
 
@@ -111,7 +111,7 @@
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
-| `PGC5M15` | 1 | Planetary Gear Core | gear core (middle) |
+| `PGC5M` | 1 | Planetary Gear Core | gear core (middle) |
 | `PCB5` | 1 | Planet Carrier Bottom | planet carrier bottom |
 | `PCT5` | 1 | Planet Carrier Top | planet carrier top |
 | `PGSB62` | 3 | Planet Gear Sleeve Bearing | planet sleeve bearing |
@@ -137,7 +137,7 @@
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
-| `PGC5M15` | 2 | Planetary Gear Core | gear core (middle) |
+| `PGC5M` | 2 | Planetary Gear Core | gear core (middle) |
 | `PCB5` | 2 | Planet Carrier Bottom | planet carrier bottom |
 | `PCT5` | 2 | Planet Carrier Top | planet carrier top |
 | `PGSB62` | 6 | Planet Gear Sleeve Bearing | planet sleeve bearing |
@@ -163,12 +163,12 @@
 
 | Part | Qty | Name | Role |
 |---|---|---|---|
-| `PGC5M15` | 2 | Planetary Gear Core | gear core (middle) |
+| `PGC5M` | 2 | Planetary Gear Core | gear core (middle) |
 | `PCB5` | 3 | Planet Carrier Bottom | planet carrier bottom |
 | `PCT5` | 3 | Planet Carrier Top | planet carrier top |
 | `PGSB62` | 9 | Planet Gear Sleeve Bearing | planet sleeve bearing |
 | `PSC` | 6 | Planetary Stage Cover | stage cover |
-| `PGC5O15` | 1 | Planetary Gear Core | gear core (outer) |
+| `PGC5O` | 1 | Planetary Gear Core | gear core (outer) |
 | `GC3` | 1 | Gearbox Cover Half | gearbox cover |
 | `FP5CC` | 1 | Fan Prop | prop (CCW; CW = FP5C) |
 | `FC` | 1 | Fan Cage | fan cage |
@@ -192,5 +192,5 @@
 - **DS5O** (drive_shaft_output) - alternatives: `DS5OL`
 - **PS54** (short pins (PS56/PS58 = tighter fit)) - alternatives: `PS56`, `PS58`
 - **PL71** (long pins (PL69/PL67 = looser fit)) - alternatives: `PL69`, `PL67`
-- **Cores**: recommended tolerance `15`; `10`/`05` are tighter, and any slot style still functions.
+- **Cores**: standard fit recommended; a `T` (tight) variant (e.g. `PGC5MT`) reduces gear skipping when a core is used standalone. Any slot style still functions.
 
