@@ -78,6 +78,7 @@
       <span id="note"></span>
       <div id="ctrl">
         <button id="play">⏸ pause</button>
+        <button id="rev" title="reverse rotation">⇄ reverse</button>
         <label>speed <input id="speed" type="range" min="2" max="60" value="15"></label>
         <span id="rpm"></span>
       </div>
@@ -268,13 +269,14 @@
 
     // ---------- scene build + animation --------------------------------------
     // animated: [{ obj, role, stage, orbit: {r, psi} | null }]
-    let animated = [], chain = null, theta = 0;
+    let animated = [], chain = null, theta = 0, dirSign = 1;
     const Z = NOMINAL_TEETH, DEPTH = 15, GAP = 6;   // T=15mm, like the real stage
 
     function clearRoot() { root.clear(); animated = []; }
 
     function buildProxy() {
       clearRoot();
+      dirSign = 1;
       const v = variantDef();
       chain = chainStages(v.stages.map(() => Z));
       const rSun = m * Z.sun / 2, rPlanet = m * Z.planet / 2, rOrbit = rSun + rPlanet;
@@ -308,7 +310,8 @@
     // kin: { role: sun|planet|ring|carrier|static, stage: n } and the scene carries
     // kinematics.stages[n] = { teeth, axis: { origin:[x,y,z], dir:[x,y,z] } }.
     async function tryLoadSceneJSON() {
-      const url = `scenes/cfg_${state.module}_${state.variant}.json`;
+      // no-store + timestamp: a re-generated scene must NEVER be served stale
+      const url = `scenes/cfg_${state.module}_${state.variant}.json?v=${Date.now()}`;
       try { const r = await fetch(url, { cache: 'no-store' }); return r.ok ? await r.json() : null; }
       catch { return null; }
     }
@@ -327,6 +330,10 @@
       const okParts = (await Promise.all(loads)).filter(Boolean);
       for (const it of okParts) {
         const { p, obj } = it;
+        // tag every mesh for click-to-inspect (per instance - the same file can
+        // serve different kinematic roles, e.g. the fan's DS5O shafts)
+        const info = { src: p.src, role: p.kin?.role || 'static', stage: p.kin?.stage || 0 };
+        obj.traverse(ch => { ch.userData.gf = info; });
         const a = p.transform;
         // SolidWorks MathTransform.ArrayData rotation is ROW-VECTOR convention
         // (p' = p.R + t) -> transpose it for three.js column vectors. Proven by
@@ -338,7 +345,7 @@
         root.add(obj);
         if (p.kin && p.kin.role !== 'static') {
           const base = obj.matrix.clone();
-          animated.push({ obj, role: p.kin.role, stage: p.kin.stage || 0,
+          animated.push({ obj, src: p.src, role: p.kin.role, stage: p.kin.stage || 0,
                           orbit: null, base,
                           // spin axis passes through kin.center (the BODY, for
                           // parts whose geometry is offset from their origin);
@@ -349,7 +356,13 @@
                           axis: data.kinematics?.stages?.[p.kin.stage || 0]?.axis });
         }
       }
+      dirSign = data.direction || 1;
       frame((data.kinematics?.stages || []).length || 1);
+      // debug: what rate did each animated part actually get?
+      console.table(animated.map(a => ({
+        src: a.src, role: a.role, stage: a.stage,
+        rate: +(chain.stages[a.stage]?.[a.role] ?? 0).toFixed(3),
+      })));
       document.getElementById('mode').textContent =
         `scene: ${data.name || state.module} (${okParts.length}/${data.parts.length} GLBs)`;
       document.getElementById('note').textContent = okParts.length < data.parts.length
@@ -370,12 +383,32 @@
       return R.setPosition(point.clone().sub(moved));
     }
 
+    // ---------- click-to-inspect (GLB scenes) ---------------------------------
+    const ray = new THREE.Raycaster();
+    let downAt = null;
+    renderer.domElement.addEventListener('pointerdown', e => { downAt = [e.clientX, e.clientY]; });
+    renderer.domElement.addEventListener('click', e => {
+      if (downAt && Math.hypot(e.clientX - downAt[0], e.clientY - downAt[1]) > 5) return; // was a drag
+      const rect = renderer.domElement.getBoundingClientRect();
+      const ndc = new THREE.Vector2(
+        ((e.clientX - rect.left) / rect.width) * 2 - 1,
+        -((e.clientY - rect.top) / rect.height) * 2 + 1);
+      ray.setFromCamera(ndc, camera);
+      const hit = ray.intersectObjects(root.children, true).find(h => h.object.userData.gf);
+      const note = document.getElementById('note');
+      if (!hit) { note.textContent = ''; return; }
+      const g = hit.object.userData.gf;
+      const rate = chain?.stages[g.stage]?.[g.role] ?? 0;
+      note.textContent = `${g.src} — ${g.role}, stage ${g.stage + 1} — ${rate.toFixed(3)}× input`;
+    });
+
     // ---------- animation loop -----------------------------------------------
     let playing = true;
     const playBtn = document.getElementById('play');
     const speedEl = document.getElementById('speed');
     const rpmEl = document.getElementById('rpm');
     playBtn.onclick = () => { playing = !playing; playBtn.textContent = playing ? '⏸ pause' : '▶ play'; };
+    document.getElementById('rev').onclick = () => { dirSign = -dirSign; };
 
     const clock = new THREE.Clock();
     function tick() {
@@ -383,7 +416,7 @@
       const dt = clock.getDelta();
       const rpm = +speedEl.value;
       rpmEl.textContent = `${rpm} rpm in`;
-      if (playing && chain) theta += dt * rpm / 60 * 2 * Math.PI;
+      if (playing && chain) theta += dt * rpm / 60 * 2 * Math.PI * dirSign;
       for (const a of animated) {
         const s = chain?.stages[a.stage]; if (!s) continue;
         const ang = s[a.role] * theta;

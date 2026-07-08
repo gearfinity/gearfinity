@@ -123,6 +123,8 @@ def main():
     ap.add_argument("--out", required=True, help="scene name, e.g. cfg_fan_2-stage")
     ap.add_argument("--drive", choices=["sun", "carrier"], default="sun",
                     help="driven member per stage: sun=reduction (crank), carrier=speed-up (fan)")
+    ap.add_argument("--reverse", action="store_true",
+                    help="default spin direction is reversed (e.g. CCW fan props)")
     ap.add_argument("--planet-z", type=float, default=0.0,
                     help="fallback mesh-plane Z (metres) if the ring GLB is missing")
     args = ap.parse_args()
@@ -210,6 +212,7 @@ def main():
     scene = {
         "name": args.out.removeprefix("cfg_"),
         "drive": args.drive,
+        "direction": -1 if args.reverse else 1,
         "parts": parts,
         "kinematics": {"stages": [
             {"teeth": NOMINAL_TEETH,
