@@ -16,7 +16,7 @@ Usage:
         --out cfg_planetary_stage_single [--planet-z 0.0]
 """
 from __future__ import annotations
-import argparse, json, math
+import argparse, json, math, struct
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -32,6 +32,40 @@ for d in [REPO / "web" / "models", REPO / "web" / "parts"]:
 NOMINAL_TEETH = {"sun": 10, "planet": 15, "ring": 40}  # placeholder; real counts later
 
 
+def glb_bbox_centre(url: str):
+    """Geometry bbox centre of a GLB (metres, its own frame), or None.
+    Needed because display parts extracted from the core keep the CORE's
+    origin - the planet body sits ~96 mm from its part origin."""
+    path = REPO / "web" / url
+    if not url or not path.exists():
+        return None
+    b = path.read_bytes()
+    if struct.unpack_from("<I", b, 0)[0] != 0x46546C67:
+        return None
+    off, g = 12, None
+    while off < len(b):
+        clen, ctype = struct.unpack_from("<II", b, off)
+        if ctype == 0x4E4F534A:
+            g = json.loads(b[off + 8: off + 8 + clen])
+            break
+        off += 8 + clen
+    if not g:
+        return None
+    lo, hi = [float("inf")] * 3, [float("-inf")] * 3
+    for mesh in g.get("meshes", []):
+        for prim in mesh.get("primitives", []):
+            ai = prim.get("attributes", {}).get("POSITION")
+            if ai is None:
+                continue
+            acc = g["accessors"][ai]
+            for i in range(3):
+                lo[i] = min(lo[i], acc["min"][i])
+                hi[i] = max(hi[i], acc["max"][i])
+    if lo[0] == float("inf"):
+        return None
+    return [(a + b) / 2 for a, b in zip(lo, hi)]
+
+
 def role_of(stem: str) -> str:
     """Map a display-assembly component file stem to its kinematic role."""
     s = stem.lower()
@@ -45,8 +79,8 @@ def role_of(stem: str) -> str:
         return "carrier"
     if s.startswith(("pl", "pgsb")):             # long pins + sleeve bearings ride the carrier
         return "carrier"
-    if s.startswith("ds"):                       # drive shaft turns with (drives) the sun
-        return "sun"
+    if s.startswith("ds"):                       # DS<r>I* = input (sun speed); DS<r>O* = output (carrier speed)
+        return "carrier" if "o" in s.split("_")[0][3:] else "sun"
     return "static"                              # covers, short pins, ...
 
 
@@ -67,23 +101,37 @@ def main():
          if c["file"].upper().startswith("PGSB")),
         key=lambda xy: math.atan2(xy[1], xy[0]))
 
+    # the ring defines the stage frame; its geometry mid-plane = the gear mesh Z
+    ring = next((c for c in comps if role_of(c["file"].rsplit(".", 1)[0]) == "ring"), None)
+    mesh_z = args.planet_z
+    if ring:
+        rc = glb_bbox_centre(GLB.get(ring["file"].rsplit(".", 1)[0].lower(), ""))
+        if rc:
+            mesh_z = rc[2] + ring["transform"][11]
+
     parts, missing, planet_i = [], [], 0
     for c in comps:
         stem = c["file"].rsplit(".", 1)[0]
         role = role_of(stem)
         t = list(c["transform"])
+        kin = {"role": role, "stage": 0}
         if role == "planet":
             if planet_i < len(stations):        # re-station parked display planets
                 x, y = stations[planet_i]
-                t = [1, 0, 0, 0, 1, 0, 0, 0, 1, x, y, args.planet_z]
+                # display planets keep the CORE's origin (body ~96 mm off its
+                # part origin), so compensate by the GLB body centre: place the
+                # BODY at the station, on the ring's mesh plane.
+                bc = glb_bbox_centre(GLB.get(stem.lower(), "")) or [0, 0, 0]
+                t = [1, 0, 0, 0, 1, 0, 0, 0, 1,
+                     x - bc[0], y - bc[1], mesh_z - bc[2]]
+                kin["center"] = [x, y, mesh_z]  # spin axis through the BODY, not the part origin
                 planet_i += 1
             else:
                 print(f"warn: no free station for {c['name']} - left at parked pose")
         url = GLB.get(stem.lower(), "")
         if not url:
             missing.append(c["file"])
-        parts.append({"src": c["file"], "url": url, "transform": t,
-                      "kin": {"role": role, "stage": 0}})
+        parts.append({"src": c["file"], "url": url, "transform": t, "kin": kin})
 
     scene = {
         "name": args.out.removeprefix("cfg_"),

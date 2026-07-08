@@ -42,7 +42,11 @@
 
     const params = new URLSearchParams(location.search);
     const sceneName = params.get('scene') || 'crank_input';
-    const rotMode = (params.get('rot') || 'row').toLowerCase();   // row | col
+    // 'col' proven correct: SolidWorks ArrayData rotation is row-VECTOR
+    // convention, so three.js (column vectors) needs the transpose. Confirmed
+    // by the display-assembly pins (row-reading tilted them 9-16 deg) - and it
+    // retroactively explains the crank-shaft 45deg anomaly.
+    const rotMode = (params.get('rot') || 'col').toLowerCase();   // col | row
     const upMode = (params.get('up') || 'z').toLowerCase();        // z | y  (SolidWorks is Z-up)
     const statusEl = document.getElementById('status');
     const errEl = document.getElementById('err');

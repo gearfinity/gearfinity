@@ -310,15 +310,24 @@
       for (const it of okParts) {
         const { p, obj } = it;
         const a = p.transform;
-        const M = new THREE.Matrix4().set(a[0], a[1], a[2], a[9], a[3], a[4], a[5], a[10],
-                                          a[6], a[7], a[8], a[11], 0, 0, 0, 1);
+        // SolidWorks MathTransform.ArrayData rotation is ROW-VECTOR convention
+        // (p' = p.R + t) -> transpose it for three.js column vectors. Proven by
+        // the display pins: row-reading tilted them ~9-16 deg; transposed they
+        // are exactly vertical. (Also explains the old crank-shaft 45deg anomaly.)
+        const M = new THREE.Matrix4().set(a[0], a[3], a[6], a[9], a[1], a[4], a[7], a[10],
+                                          a[2], a[5], a[8], a[11], 0, 0, 0, 1);
         obj.applyMatrix4(new THREE.Matrix4().makeScale(1000, 1000, 1000).multiply(M)); // m -> mm
         root.add(obj);
         if (p.kin && p.kin.role !== 'static') {
           const base = obj.matrix.clone();
           animated.push({ obj, role: p.kin.role, stage: p.kin.stage || 0,
                           orbit: null, base,
-                          pos0: new THREE.Vector3().setFromMatrixPosition(base),
+                          // spin axis passes through kin.center (the BODY, for
+                          // parts whose geometry is offset from their origin);
+                          // fall back to the part origin.
+                          pos0: p.kin.center
+                            ? new THREE.Vector3(...p.kin.center).multiplyScalar(1000)
+                            : new THREE.Vector3().setFromMatrixPosition(base),
                           axis: data.kinematics?.stages?.[p.kin.stage || 0]?.axis });
         }
       }
