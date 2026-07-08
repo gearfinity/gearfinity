@@ -11,11 +11,8 @@
 *.SLDDRW  filter=lfs diff=lfs merge=lfs -text
 *.slddrw  filter=lfs diff=lfs merge=lfs -text
 
-# Neutral CAD exchange formats
-*.STEP  filter=lfs diff=lfs merge=lfs -text
-*.step  filter=lfs diff=lfs merge=lfs -text
-*.STP   filter=lfs diff=lfs merge=lfs -text
-*.stp   filter=lfs diff=lfs merge=lfs -text
+# Neutral CAD exchange formats (STEP/STP) are intentionally NOT tracked - see
+# .gitignore. They're huge (embossed BREP) and delivered via GitHub Releases.
 
 # Mesh / print formats
 *.STL  filter=lfs diff=lfs merge=lfs -text

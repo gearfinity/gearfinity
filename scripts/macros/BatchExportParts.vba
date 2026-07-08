@@ -32,6 +32,10 @@ Option Explicit
 ' >>> adjust this path if the repo moves <<<
 Const FOLDER As String = "C:\Users\headl\Documents\GitHub\gearfinity\_all_parts\"
 Const FORCE_ALL As Boolean = False
+' STEP is a LOCAL-ONLY CAD artifact - it is NOT committed to git (.gitignore),
+' because the embossed BREP is ~20-40x the STL size. It's generated here so you
+' can build source.zip bundles and publish CAD via GitHub Releases. Set False for
+' faster STL-only runs when you don't need to refresh the CAD files.
 Const EXPORT_STEP As Boolean = True
 
 Sub main()

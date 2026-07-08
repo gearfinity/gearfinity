@@ -11,6 +11,11 @@ config model. For each recommended build, produces under dist/:
 Files are resolved through each part's File Link in parts.csv, so this stays
 correct as filenames are migrated. Missing files are reported, not fatal.
 
+STEP note: STEP files are NOT tracked in git (they're huge - see .gitignore),
+so source.zip is only produced when you run this LOCALLY, where the macro-exported
+STEP files exist on disk. In CI (fresh clone, no STEP) the bundles are STL-only.
+To publish CAD, run this locally and attach the source.zip(s) to a GitHub Release.
+
 Usage:  python scripts/build_bundles.py
 """
 from __future__ import annotations

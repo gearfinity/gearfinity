@@ -58,8 +58,14 @@ first piece of the **sync-export automation** — no more hand-exporting each pa
 - Run: Tools ▸ Macro ▸ New… → paste [`BatchExportParts.vba`](BatchExportParts.vba)
   → save as `.swp` → F5.
 - `FORCE_ALL = True` exports everything regardless of dates.
-- **Print orientation:** STL uses a coordinate system named **`CS_PRINT`** if the
-  part has one, else the default origin. Give a part a `CS_PRINT` CS when it needs
-  a specific slicer orientation.
-- Untested live — report any "constant not defined" / error line and I'll fix it.
+- **Print orientation (STL):** the export uses `ModelDoc2.SaveAs3`, which honors the
+  persistent STL "Output coordinate system" setting. Set that to **`CS_PRINT`** once
+  in the STL export dialog, then give any part a `CS_PRINT` coordinate system when it
+  needs a specific slicer orientation (else it exports from the default origin).
+  `ModelDocExtension.SaveAs` does **not** honor this — that's why we use `SaveAs3`.
+- **STEP is local-only:** STEP files are **not** committed to git (they're huge — see
+  `.gitignore`). The macro still exports them so you can build `source.zip` bundles
+  and publish CAD via **GitHub Releases**. STEP ignores `CS_PRINT` (always design
+  frame) — that's fine, STEP is for CAD, not slicing. Set `EXPORT_STEP = False` for
+  faster STL-only runs.
 - Next: a GLB export pass (design frame) can be added for the viewer.

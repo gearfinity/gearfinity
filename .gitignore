@@ -4,6 +4,13 @@ dist/
 __pycache__/
 .claude/
 *.bom.json
+# STEP/STP are CAD-interchange files, NOT stored in git: the embossed BREP is
+# huge (~20-40x the STL) and would balloon LFS on every re-export. They're
+# generated locally by BatchExportParts and published via GitHub Releases only.
+_all_parts/*.STEP
+_all_parts/*.step
+_all_parts/*.STP
+_all_parts/*.stp
 # local/generated web assets (GLBs move to _all_parts/ under the automation plan;
 # scenes are generated from *.bom.json)
 web/scenes/
