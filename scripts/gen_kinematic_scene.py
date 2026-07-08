@@ -36,10 +36,11 @@ for d in [REPO / "web" / "models", REPO / "web" / "parts"]:
 NOMINAL_TEETH = {"sun": 14, "planet": 22, "ring": 58}
 
 
-def glb_bbox_centre(url: str):
-    """Geometry bbox centre of a GLB (metres, its own frame), or None.
+def glb_bbox(url: str):
+    """Geometry bbox (lo, hi) of a GLB (metres, its own frame), or None.
     Needed because display parts extracted from the core keep the CORE's
-    origin - the planet body sits ~96 mm from its part origin."""
+    origin - the planet body sits ~96 mm from its part origin - and to
+    resolve which stage a long shaft actually engages."""
     path = REPO / "web" / url
     if not url or not path.exists():
         return None
@@ -67,7 +68,22 @@ def glb_bbox_centre(url: str):
                 hi[i] = max(hi[i], acc["max"][i])
     if lo[0] == float("inf"):
         return None
-    return [(a + b) / 2 for a, b in zip(lo, hi)]
+    return lo, hi
+
+
+def glb_bbox_centre(url: str):
+    bb = glb_bbox(url)
+    return [(a + b) / 2 for a, b in zip(*bb)] if bb else None
+
+
+def world_z_span(c, bb):
+    """World-space Z extent of a component's geometry: transform (column
+    convention - transpose of the stored row-vector rotation) x bbox corners."""
+    a = c["transform"]
+    lo, hi = bb
+    zs = [a[2] * x + a[5] * y + a[8] * z + a[11]
+          for x in (lo[0], hi[0]) for y in (lo[1], hi[1]) for z in (lo[2], hi[2])]
+    return min(zs), max(zs)
 
 
 def role_of(stem: str) -> str:
@@ -165,17 +181,34 @@ def main():
     input_role = "sun" if args.drive == "sun" else "carrier"
     output_role = "carrier" if args.drive == "sun" else "sun"
 
-    # The TOPMOST O-shaft is the MODULE OUTPUT (Gearfinity modules output at
-    # the top): it carries the load (e.g. the fan prop) and turns at the last
-    # stage's output rate. Lower O-shafts are carrier couplings (e.g. crank ->
-    # carrier 0). The I/O letter alone can't tell these apart - the fan reuses
-    # DS5O at both ends of the train.
-    def is_o_shaft(c):
-        s = stem_of(c).lower()
-        return s.startswith("ds") and "o" in s.split("_")[0][3:]
+    # Stage GEAR BANDS (world z-range of each ring's teeth). An I-shaft keys
+    # the sun of the stage whose band its GEOMETRY overlaps - not the stage
+    # nearest its origin. Proof: the fan's output shaft DS5I is 68 mm long,
+    # origin z=12.5 (nearest stage 0) but its keyed end sits in stage 1's sun
+    # bore and it carries the prop at 26.45x. Owner click-identified it.
+    bands = []
+    for rg in rings:
+        bb = glb_bbox(GLB.get(stem_of(rg).lower(), ""))
+        z0 = rg["transform"][11]
+        bands.append((z0 + bb[0][2], z0 + bb[1][2]) if bb else (z0, z0 + 0.015))
 
-    o_shafts = [c for c in comps if is_o_shaft(c)]
-    top_o = max(o_shafts, key=lambda c: c["transform"][11]) if o_shafts else None
+    def shaft_stage(c, o_type):
+        bb = glb_bbox(GLB.get(stem_of(c).lower(), ""))
+        if bb and bands:
+            zlo, zhi = world_z_span(c, bb)
+            if o_type:
+                # O-shafts key a CARRIER at their spline (top) end - carriers
+                # sandwich the gear bands, so use the top end's nearest stage.
+                return stage_of_z(zhi)
+            # I-shafts key the SUN whose gear band their geometry overlaps most
+            best, best_ov = None, 0.0
+            for k, (b0, b1) in enumerate(bands):
+                ov = min(zhi, b1) - max(zlo, b0)
+                if ov > best_ov:
+                    best, best_ov = k, ov
+            if best is not None:
+                return best
+        return stage_of_z(c["transform"][11])
 
     parts, missing = [], []
     placed = [0] * n_stages
@@ -185,8 +218,12 @@ def main():
         t = list(c["transform"])
         if role == "input":
             kin = {"role": input_role, "stage": 0}
-        elif role == "output" or c is top_o:
+        elif role == "output":
             kin = {"role": output_role, "stage": n_stages - 1}
+        elif stem.lower().startswith("ds"):
+            # shafts: stage from actual geometry extent (see shaft_stage)
+            o_type = "o" in stem.lower().split("_")[0][3:]
+            kin = {"role": role, "stage": shaft_stage(c, o_type)}
         else:
             kin = {"role": role, "stage": stage_of_z(t[11])}
         if role == "planet":
