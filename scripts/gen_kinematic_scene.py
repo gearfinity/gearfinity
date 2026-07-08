@@ -217,7 +217,12 @@ def main():
         role = role_of(stem)
         t = list(c["transform"])
         if role == "input":
-            kin = {"role": input_role, "stage": 0}
+            # crank parts ride whichever END of the train they sit at - the
+            # crank module has cranks at BOTH ends (strong bottom, fast top)
+            if mids and t[11] > mids[-1]:
+                kin = {"role": output_role, "stage": n_stages - 1}
+            else:
+                kin = {"role": input_role, "stage": 0}
         elif role == "output":
             kin = {"role": output_role, "stage": n_stages - 1}
         elif stem.lower().startswith("ds"):
