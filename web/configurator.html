@@ -36,6 +36,8 @@
     .scene-row:hover { background: #20242c; }
     .scene-row.sel { background: #223049; outline: 1px solid #3b62b3; }
     .scene-row .sub { color: #7f8790; font-size: .72rem; }
+    .scene-row .car { width: .95rem; color: #7f8790; cursor: pointer; user-select: none; }
+    .inst-row { padding-left: 1.35rem; font-size: .76rem; }
     .vbtn { background: none; border: 1px solid #3a3d44; color: #9aa0a6; border-radius: 5px;
             min-width: 1.7rem; height: 1.5rem; cursor: pointer; font-size: .78rem; line-height: 1; }
     .vbtn.on { color: #8ab4f8; border-color: #8ab4f8; }
@@ -340,16 +342,15 @@
       const okParts = (await Promise.all(loads)).filter(Boolean);
       for (const it of okParts) {
         const { p, obj } = it;
-        // tag every mesh for click-to-inspect (per instance - the same file can
-        // serve different kinematic roles, e.g. the fan's DS5O shafts)
+        // per-instance record: the same file can serve different kinematic
+        // roles (the fan's DS5O shafts), and instances hide/ghost individually
         const info = { src: p.src, role: p.kin?.role || 'static', stage: p.kin?.stage || 0 };
-        obj.userData.gf = info;
-        obj.traverse(ch => { ch.userData.gf = info; });
-        // index by part file for the scene-parts list (select/ghost/hide)
         const stem = stemOf(p.src);
+        const inst = { obj, stem, gf: info, ghost: false, hidden: false, row: null, gBtn: null, hBtn: null };
+        obj.traverse(ch => { ch.userData.gf = info; ch.userData.gfInst = inst; });
         let entry = sceneIndex.get(stem);
-        if (!entry) { entry = { instances: [], ghost: false, hidden: false, row: null }; sceneIndex.set(stem, entry); }
-        entry.instances.push(obj);
+        if (!entry) { entry = { insts: [] }; sceneIndex.set(stem, entry); }
+        entry.insts.push(inst);
         const a = p.transform;
         // SolidWorks MathTransform.ArrayData rotation is ROW-VECTOR convention
         // (p' = p.R + t) -> transpose it for three.js column vectors. Proven by
@@ -400,85 +401,151 @@
       return R.setPosition(point.clone().sub(moved));
     }
 
-    // ---------- scene-parts list: selection, highlight, visibility -----------
+    // ---------- scene-parts list: per-instance selection + visibility --------
     const sceneH = document.getElementById('sceneH');
     const scenePartsEl = document.getElementById('sceneParts');
     const noteEl = document.getElementById('note');
-    let sceneIndex = new Map();   // stem -> { instances: [Object3D], row, ghost, hidden }
-    let selectedStem = null;
+    // stem -> { insts: [inst], row, sub, carEl, expanded }
+    // inst = { obj, stem, gf, ghost, hidden, row, gBtn, hBtn }
+    let sceneIndex = new Map();
+    let selected = null;          // { stem, inst | null (whole group) }
 
     const stemOf = src => src.replace(/\.SLDPRT$/i, '');
 
-    function eachMat(objs, fn) {
+    function setHighlight(objs, on) {
       for (const o of objs) o.traverse(ch => {
         if (!ch.isMesh) return;
-        for (const m of Array.isArray(ch.material) ? ch.material : [ch.material]) fn(m);
-      });
-    }
-    function setHighlight(objs, on) {
-      eachMat(objs, m => {
-        if (!m.emissive) return;
-        if (on) { if (!m.userData._e) m.userData._e = m.emissive.clone(); m.emissive.set(0x2f6bff); }
-        else if (m.userData._e) { m.emissive.copy(m.userData._e); delete m.userData._e; }
-      });
-    }
-    function applyVis(e) {
-      for (const o of e.instances) o.visible = !e.hidden;
-      eachMat(e.instances, m => {
-        if (e.ghost) {
-          if (m.userData._o === undefined)
-            m.userData._o = { t: m.transparent, o: m.opacity, d: m.depthWrite };
-          m.transparent = true; m.opacity = 0.22; m.depthWrite = false;
-        } else if (m.userData._o !== undefined) {
-          m.transparent = m.userData._o.t; m.opacity = m.userData._o.o;
-          m.depthWrite = m.userData._o.d; delete m.userData._o;
+        for (const m of Array.isArray(ch.material) ? ch.material : [ch.material]) {
+          if (!m.emissive) continue;
+          if (on) { if (!m.userData._e) m.userData._e = m.emissive.clone(); m.emissive.set(0x2f6bff); }
+          else if (m.userData._e) { m.emissive.copy(m.userData._e); delete m.userData._e; }
         }
       });
     }
-    function selectPart(stem) {
-      if (selectedStem) {
-        const prev = sceneIndex.get(selectedStem);
-        if (prev) { setHighlight(prev.instances, false); prev.row?.classList.remove('sel'); }
-      }
-      selectedStem = stem;
-      if (!stem) { noteEl.textContent = ''; return; }
-      const e = sceneIndex.get(stem);
-      if (!e) return;
-      setHighlight(e.instances, true);
-      e.row?.classList.add('sel');
-      e.row?.scrollIntoView({ block: 'nearest' });
-      // details: role/stage/rate of the first instance (instances of one file
-      // can differ - the clicked instance's details are shown by the 3D click)
-      const g = e.instances[0]?.userData.gf;
-      if (g && noteEl.textContent === '') noteEl.textContent = partDetails(g);
+    // CAD-style ghost. DoubleSide is essential: with translucent front faces
+    // you must SEE the back faces, else shells look like they lost faces
+    // (the artifact the owner reported). Ghosts draw after opaque parts.
+    function setGhostMats(obj, on) {
+      obj.traverse(ch => {
+        if (!ch.isMesh) return;
+        ch.renderOrder = on ? 10 : 0;
+        for (const m of Array.isArray(ch.material) ? ch.material : [ch.material]) {
+          if (on) {
+            if (m.userData._o === undefined)
+              m.userData._o = { t: m.transparent, o: m.opacity, d: m.depthWrite, s: m.side };
+            m.transparent = true; m.opacity = 0.25; m.depthWrite = false; m.side = THREE.DoubleSide;
+          } else if (m.userData._o !== undefined) {
+            m.transparent = m.userData._o.t; m.opacity = m.userData._o.o;
+            m.depthWrite = m.userData._o.d; m.side = m.userData._o.s;
+            delete m.userData._o;
+          }
+          m.needsUpdate = true;
+        }
+      });
+    }
+    function applyInstVis(inst) {
+      inst.obj.visible = !inst.hidden;
+      setGhostMats(inst.obj, inst.ghost);
     }
     function partDetails(g) {
       const rate = chain?.stages[g.stage]?.[g.role] ?? 0;
       return `${g.src} — ${g.role}, stage ${g.stage + 1} — ${rate.toFixed(3)}× input`;
     }
+    function clearSelection() {
+      if (!selected) return;
+      const e = sceneIndex.get(selected.stem);
+      const objs = selected.inst ? [selected.inst.obj] : (e ? e.insts.map(i => i.obj) : []);
+      setHighlight(objs, false);
+      ((selected.inst && selected.inst.row) || e?.row)?.classList.remove('sel');
+      selected = null;
+      noteEl.textContent = '';
+    }
+    function selectInstance(inst) {
+      if (selected?.inst === inst) return clearSelection();   // toggle
+      clearSelection();
+      setHighlight([inst.obj], true);
+      const e = sceneIndex.get(inst.stem);
+      if (e && e.insts.length > 1 && !e.expanded) toggleExpand(e, true);
+      const row = inst.row || e?.row;                          // single-instance parts use the group row
+      row?.classList.add('sel');
+      row?.scrollIntoView({ block: 'nearest' });
+      selected = { stem: inst.stem, inst };
+      noteEl.textContent = partDetails(inst.gf);
+    }
+    function selectGroup(stem) {
+      if (selected && selected.stem === stem && !selected.inst) return clearSelection();
+      clearSelection();
+      const e = sceneIndex.get(stem);
+      if (!e) return;
+      setHighlight(e.insts.map(i => i.obj), true);
+      e.row.classList.add('sel');
+      e.row.scrollIntoView({ block: 'nearest' });
+      selected = { stem, inst: null };
+      noteEl.textContent = `${stem} — ${e.insts.length} instances`;
+    }
+    function toggleExpand(e, open) {
+      e.expanded = open === undefined ? !e.expanded : open;
+      e.sub.style.display = e.expanded ? '' : 'none';
+      if (e.carEl.textContent) e.carEl.textContent = e.expanded ? '▾' : '▸';
+    }
+    function vbtn(sym, title, handler) {
+      const b = document.createElement('button');
+      b.className = 'vbtn'; b.textContent = sym; b.title = title;
+      b.onclick = ev => { ev.stopPropagation(); handler(b); };
+      return b;
+    }
     function buildScenePartsList() {
       scenePartsEl.innerHTML = '';
       sceneH.style.display = '';
       for (const [stem, e] of sceneIndex) {
+        const n = e.insts.length;
         const id = stem.split('_')[0];
         const label = /^[A-Z]/.test(id) && id.length <= 8 ? id : stem.slice(0, 24);
         const row = document.createElement('div');
         row.className = 'slot scene-row';
-        row.innerHTML = `<span class="nm"><b>${label}</b> <span class="sub">×${e.instances.length}</span></span>`;
-        const ghost = document.createElement('button');
-        ghost.className = 'vbtn'; ghost.textContent = '◐'; ghost.title = 'transparent';
-        ghost.onclick = ev => { ev.stopPropagation(); e.ghost = !e.ghost; applyVis(e); ghost.classList.toggle('on', e.ghost); };
-        const hide = document.createElement('button');
-        hide.className = 'vbtn'; hide.textContent = '👁'; hide.title = 'hide / show';
-        hide.onclick = ev => { ev.stopPropagation(); e.hidden = !e.hidden; applyVis(e); hide.classList.toggle('on', e.hidden); };
-        row.appendChild(ghost); row.appendChild(hide);
-        row.onclick = () => { noteEl.textContent = ''; selectPart(selectedStem === stem ? null : stem); };
-        e.row = row;
+        const car = document.createElement('span');
+        car.className = 'car'; car.textContent = n > 1 ? '▸' : '';
+        car.onclick = ev => { ev.stopPropagation(); if (n > 1) toggleExpand(e); };
+        const nm = document.createElement('span');
+        nm.className = 'nm'; nm.innerHTML = `<b>${label}</b> <span class="sub">×${n}</span>`;
+        row.appendChild(car); row.appendChild(nm);
+        row.appendChild(vbtn('◐', n > 1 ? 'transparent (all instances)' : 'transparent', b => {
+          const on = !e.insts.every(i => i.ghost);
+          for (const i of e.insts) { i.ghost = on; applyInstVis(i); i.gBtn?.classList.toggle('on', on); }
+          b.classList.toggle('on', on);
+        }));
+        row.appendChild(vbtn('👁', n > 1 ? 'hide/show (all instances)' : 'hide/show', b => {
+          const on = !e.insts.every(i => i.hidden);
+          for (const i of e.insts) { i.hidden = on; applyInstVis(i); i.hBtn?.classList.toggle('on', on); }
+          b.classList.toggle('on', on);
+        }));
+        row.onclick = () => n === 1 ? selectInstance(e.insts[0]) : selectGroup(stem);
+        e.row = row; e.carEl = car; e.expanded = false;
         scenePartsEl.appendChild(row);
+        // per-instance sub-rows (collapsed by default)
+        e.sub = document.createElement('div');
+        e.sub.style.display = 'none';
+        if (n > 1) e.insts.forEach((inst, i) => {
+          const r = document.createElement('div');
+          r.className = 'slot scene-row inst-row';
+          const g = inst.gf;
+          const tag = g.role === 'static' ? 'static' : `${g.role} · s${g.stage + 1}`;
+          r.innerHTML = `<span class="nm">#${i + 1} <span class="sub">${tag}</span></span>`;
+          r.appendChild(inst.gBtn = vbtn('◐', 'transparent', b => {
+            inst.ghost = !inst.ghost; applyInstVis(inst); b.classList.toggle('on', inst.ghost);
+          }));
+          r.appendChild(inst.hBtn = vbtn('👁', 'hide/show', b => {
+            inst.hidden = !inst.hidden; applyInstVis(inst); b.classList.toggle('on', inst.hidden);
+          }));
+          r.onclick = () => selectInstance(inst);
+          inst.row = r;
+          e.sub.appendChild(r);
+        });
+        scenePartsEl.appendChild(e.sub);
       }
     }
     function clearSceneParts() {
-      sceneIndex = new Map(); selectedStem = null;
+      sceneIndex = new Map(); selected = null;
       scenePartsEl.innerHTML = ''; sceneH.style.display = 'none';
       noteEl.textContent = '';
     }
@@ -496,11 +563,9 @@
         -((e.clientY - rect.top) / rect.height) * 2 + 1);
       ray.setFromCamera(ndc, camera);
       const hit = ray.intersectObjects(root.children, true)
-        .find(h => h.object.userData.gf && isShown(h.object));
-      if (!hit) { selectPart(null); return; }
-      const g = hit.object.userData.gf;
-      selectPart(stemOf(g.src));
-      noteEl.textContent = partDetails(g);   // the clicked INSTANCE's details
+        .find(h => h.object.userData.gfInst && isShown(h.object));
+      if (!hit) { clearSelection(); return; }
+      selectInstance(hit.object.userData.gfInst);   // exactly the clicked instance
     });
 
     // ---------- animation loop -----------------------------------------------
