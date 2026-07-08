@@ -147,7 +147,7 @@ PGC5M,PGC5-2S15; PGC5M15,1,Planetary Gear Core ,Planetary gear core. 5:1 ratio. 
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
-- Other: This is a loose tolerance. If it feels too loose you can use a tighter tolerance version such as PGC5-2S10",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/PGC5M15_planetary_gear_core.STL
+- Other: This is a loose tolerance. If it feels too loose you can use a tighter tolerance version such as PGC5-2S10",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/PGC5M_planetary_gear_core.STL
 PGC5MT,,1,Planetary Gear Core,Planetary gear core. 5:1 ratio. Middle slots on ring. Sleeve bearing. Tight fit (reduces gear skipping when the core is used outside a full stage; slightly more friction).,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
@@ -157,7 +157,7 @@ PGC5O,PGC5-3S15; PGC5O15,1,Planetary Gear Core ,Planetary gear core. 5:1 ratio. 
 - Infill: any/5%
 - Layer height: 0.2 mm
 - Supports: none
-- Other: This is a loose tolerance. If it feels too loose you can use a tighter tolerance version such as PGC5-2S10",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/PGC5O15_planetary_gear_core.STL
+- Other: This is a loose tolerance. If it feels too loose you can use a tighter tolerance version such as PGC5-2S10",https://github.com/gearfinity/gearfinity/blob/main/_all_parts/PGC5O_planetary_gear_core.STL
 PGSB62,PGSB-1,1,Planet Gear Sleeve Bearing,Planet gear sleeve bearing. 7.4mm OD 6.2mm ID,"- Perimeters: 3
 - Infill: any/5%
 - Layer height: 0.2 mm
