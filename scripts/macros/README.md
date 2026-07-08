@@ -68,4 +68,27 @@ first piece of the **sync-export automation** — no more hand-exporting each pa
   and publish CAD via **GitHub Releases**. STEP ignores `CS_PRINT` (always design
   frame) — that's fine, STEP is for CAD, not slicing. Set `EXPORT_STEP = False` for
   faster STL-only runs.
-- Next: a GLB export pass (design frame) can be added for the viewer.
+
+---
+
+## ExportAssemblyGLBs
+
+Exports every **unique component part** of the **active assembly** to
+**GLB** (Extended Reality Binary) in `web/parts/` — the per-part display
+assets the web configurator loads. Instances share one file (3 planets → 1
+GLB), so one run covers the whole assembly. Date-checked like
+BatchExportParts (`FORCE_ALL = True` to re-export everything).
+
+- Run: open the display assembly → Tools ▸ Macro ▸ New… → paste
+  [`ExportAssemblyGLBs.vba`](ExportAssemblyGLBs.vba) → save as `.swp` → F5.
+- GLB exports in the part's **design frame + metres** — exactly what the
+  `.bom.json` transforms expect. (STL = print frame; GLB = design frame.)
+- Output goes to `web/parts/` (takes precedence over `web/models/`, where
+  whole-assembly mocks live — avoids the ring-part/assembly name collision).
+
+### Display-assembly workflow (one assembly → web scene)
+1. Open the display assembly (e.g. `planetary_stage_core_mock_display.SLDASM`).
+2. Run **DumpAssemblyBOM** → `<assembly>.bom.json` (poses).
+3. Run **ExportAssemblyGLBs** → `web/parts/*.glb` (geometry).
+4. `python scripts/gen_kinematic_scene.py <bom> --out cfg_<module>_<variant>`
+   → the configurator renders + animates the real assembly.
