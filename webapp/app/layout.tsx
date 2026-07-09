@@ -43,18 +43,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${roboto.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
-        <header className="sticky top-0 z-20 flex items-center gap-4 border-b border-white/10 bg-[#1a1733]/85 px-4 py-2.5 backdrop-blur">
-          <Link href="/" className="flex items-center gap-2">
+        <header className="sticky top-0 z-20 flex items-center gap-3 border-b border-white/10 bg-[#1a1733]/85 px-4 py-2.5 backdrop-blur">
+          <Link href="/" className="flex shrink-0 items-center gap-2">
             <Image
               src="/landing/logo.png"
               alt="Gearfinity"
               width={150}
               height={42}
-              className="h-8 w-auto"
+              className="h-7 w-auto sm:h-8"
               priority
             />
           </Link>
-          <nav className="ml-auto flex items-center gap-4 text-sm text-white/60">
+          <nav className="ml-auto flex items-center gap-3 overflow-x-auto whitespace-nowrap text-sm text-white/60 sm:gap-4">
             <Link href="/build/planetary_stage" className="hover:text-white">
               Planetary
             </Link>

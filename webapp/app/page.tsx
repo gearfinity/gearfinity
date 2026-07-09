@@ -163,7 +163,7 @@ export default function Home() {
           Configure each one in 3D — the animations run the{" "}
           <em>real assemblies</em> with exact gear kinematics (36:7 per stage).
         </p>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               id: "planetary_stage",

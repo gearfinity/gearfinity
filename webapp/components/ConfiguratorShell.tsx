@@ -211,9 +211,9 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
     selection.instId === sel.instId;
 
   return (
-    <div className="flex h-[calc(100vh-3.25rem)]">
-      {/* sidebar */}
-      <aside className="w-80 shrink-0 overflow-y-auto border-r border-zinc-800 bg-zinc-950 p-4 text-sm">
+    <div className="flex flex-col md:h-[calc(100dvh-3.25rem)] md:flex-row">
+      {/* sidebar: below the viewer on mobile, fixed column on md+ */}
+      <aside className="order-2 w-full shrink-0 border-t border-zinc-800 bg-zinc-950 p-4 text-sm md:order-1 md:w-80 md:overflow-y-auto md:border-r md:border-t-0">
         <h2 className="section-h">Variant</h2>
         <select
           className="input w-full"
@@ -376,8 +376,8 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
         </div>
       </aside>
 
-      {/* viewport */}
-      <div className="relative min-w-0 flex-1">
+      {/* viewport: fixed height on mobile so the page scrolls to the sidebar */}
+      <div className="relative order-1 h-[58dvh] min-w-0 md:order-2 md:h-auto md:flex-1">
         {scene ? (
           <SceneViewer
             scene={scene}
@@ -402,25 +402,28 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
         )}
 
         {scene && (
-          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-full border border-zinc-800 bg-zinc-950/90 px-4 py-2 text-xs backdrop-blur">
+          <div className="absolute bottom-3 left-1/2 flex max-w-[96%] -translate-x-1/2 items-center gap-2 rounded-full border border-zinc-800 bg-zinc-950/90 px-3 py-1.5 text-xs backdrop-blur sm:bottom-4 sm:gap-3 sm:px-4 sm:py-2">
             <button className="btn" onClick={() => setPlaying((p) => !p)}>
-              {playing ? "⏸ pause" : "▶ play"}
+              {playing ? "⏸" : "▶"}
+              <span className="hidden sm:inline">
+                {playing ? " pause" : " play"}
+              </span>
             </button>
             <button className="btn" onClick={() => setReversed((r) => !r)}>
-              ⇄ reverse
+              ⇄<span className="hidden sm:inline"> reverse</span>
             </button>
             <label className="flex items-center gap-2">
-              speed
+              <span className="hidden sm:inline">speed</span>
               <input
                 type="range"
                 min={2}
                 max={60}
                 value={rpm}
                 onChange={(e) => setRpm(+e.target.value)}
-                className="accent-[#00A3FF]"
+                className="w-24 accent-[#00A3FF] sm:w-36"
               />
             </label>
-            <span className="text-zinc-500">{rpm} rpm in</span>
+            <span className="whitespace-nowrap text-zinc-500">{rpm} rpm</span>
           </div>
         )}
       </div>
