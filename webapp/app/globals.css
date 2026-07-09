@@ -39,6 +39,38 @@ body::before {
   background-repeat: no-repeat, repeat;
 }
 
+/* twinkle layer: a second star field pulsing over the static one
+   (the original Carrd page animated its particles' fill-opacity) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='480' viewBox='0 0 640 480' preserveAspectRatio='none'%3E%3Cg fill='rgba(200,180,255,0.35)'%3E%3Ccircle cx='97' cy='88' r='1.0'/%3E%3Ccircle cx='201' cy='260' r='0.7'/%3E%3Ccircle cx='289' cy='132' r='1.2'/%3E%3Ccircle cx='371' cy='318' r='0.8'/%3E%3Ccircle cx='455' cy='96' r='1.1'/%3E%3Ccircle cx='541' cy='276' r='0.7'/%3E%3Ccircle cx='611' cy='150' r='1.0'/%3E%3Ccircle cx='58' cy='214' r='0.8'/%3E%3Ccircle cx='149' cy='418' r='1.1'/%3E%3Ccircle cx='240' cy='355' r='0.6'/%3E%3Ccircle cx='330' cy='234' r='0.9'/%3E%3Ccircle cx='424' cy='430' r='0.7'/%3E%3Ccircle cx='507' cy='372' r='1.0'/%3E%3Ccircle cx='588' cy='448' r='0.7'/%3E%3Ccircle cx='36' cy='452' r='0.9'/%3E%3Ccircle cx='620' cy='330' r='0.6'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: gf-twinkle 5.5s ease-in-out infinite;
+}
+
+@keyframes gf-twinkle {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
 /* gradient-filled display text (original .style-1 / heading styles) */
 .text-fill-hero {
   background-image: linear-gradient(110deg, rgba(255, 255, 255, 0.478) 0%, #ffffff 67%);

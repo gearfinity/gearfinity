@@ -51,8 +51,11 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
   const [details, setDetails] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [, bump] = useState(0); // re-render after imperative vis changes
+  const userPicked = useRef(false);
+  const rowRefs = useRef(new Map<string, HTMLElement | null>());
 
-  // which variants have a real scene (for the "3D" tag)
+  // which variants have a real scene (for the "3D" tag) — and unless the
+  // user already chose, default to the first variant that HAS a 3D scene
   useEffect(() => {
     let alive = true;
     (async () => {
@@ -66,13 +69,26 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
           }
         }),
       );
-      if (alive) setLive3d(Object.fromEntries(entries));
+      if (!alive) return;
+      const liveMap = Object.fromEntries(entries);
+      setLive3d(liveMap);
+      setVariant((cur) => {
+        if (userPicked.current || liveMap[cur]) return cur;
+        return variantNames.find((n) => liveMap[n]) ?? cur;
+      });
     })();
     return () => {
       alive = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moduleId]);
+
+  // keep per-stage fits + swaps in sync with whichever variant is active
+  useEffect(() => {
+    setFits(mod.variants[variant].stages.map(() => "standard"));
+    setSwaps({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variant, moduleId]);
 
   // load the scene for the current variant
   useEffect(() => {
@@ -163,10 +179,24 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
   );
 
   const changeVariant = (name: string) => {
+    userPicked.current = true;
     setVariant(name);
-    setFits(mod.variants[name].stages.map(() => "standard"));
-    setSwaps({});
   };
+
+  // centre the selected part's sidebar row (3D clicks land mid-list)
+  useEffect(() => {
+    if (!selection) return;
+    const single = (groups.get(selection.stem)?.length ?? 0) === 1;
+    const key =
+      selection.kind === "inst" && !single
+        ? `i:${selection.instId}`
+        : `g:${selection.stem}`;
+    requestAnimationFrame(() => {
+      rowRefs.current
+        .get(key)
+        ?.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+  }, [selection, groups]);
 
   const ratio = useMemo(
     () => chainStages(v.stages.map(() => NOMINAL_TEETH)).totalRatio,
@@ -257,6 +287,9 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
               return (
                 <div key={stem}>
                   <div
+                    ref={(el) => {
+                      rowRefs.current.set(`g:${stem}`, el);
+                    }}
                     className={`row cursor-pointer rounded px-1 hover:bg-zinc-900 ${
                       isSel({ kind: insts.length === 1 ? "inst" : "group", stem, instId: insts.length === 1 ? insts[0].id : undefined })
                         ? "bg-blue-950 outline outline-1 outline-blue-700"
@@ -302,6 +335,9 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
                     insts.map((inst, i) => (
                       <div
                         key={inst.id}
+                        ref={(el) => {
+                          rowRefs.current.set(`i:${inst.id}`, el);
+                        }}
                         className={`row cursor-pointer rounded py-0.5 pl-6 pr-1 text-xs hover:bg-zinc-900 ${
                           isSel({ kind: "inst", stem, instId: inst.id })
                             ? "bg-blue-950 outline outline-1 outline-blue-700"
