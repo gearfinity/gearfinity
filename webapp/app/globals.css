@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0e1014;
+  --foreground: #e8eaed;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* configurator UI atoms */
+.section-h {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9aa0a6;
+}
+.section-h:first-child {
+  margin-top: 0;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.22rem 0;
+}
+.input {
+  background: #1d2026;
+  color: #e8eaed;
+  border: 1px solid #33363d;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+}
+.btn {
+  background: #1d2026;
+  color: #e8eaed;
+  border: 1px solid #33363d;
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  cursor: pointer;
+}
+.btn:hover {
+  border-color: #4a4f58;
+}
+.vbtn {
+  background: none;
+  border: 1px solid #33363d;
+  color: #9aa0a6;
+  border-radius: 5px;
+  min-width: 1.6rem;
+  height: 1.45rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+.vbtn-on {
+  color: #8ab4f8;
+  border-color: #8ab4f8;
+}
