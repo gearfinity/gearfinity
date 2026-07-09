@@ -381,7 +381,7 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
                 max={60}
                 value={rpm}
                 onChange={(e) => setRpm(+e.target.value)}
-                className="accent-amber-400"
+                className="accent-[#00A3FF]"
               />
             </label>
             <span className="text-zinc-500">{rpm} rpm in</span>
