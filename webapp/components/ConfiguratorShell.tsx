@@ -10,6 +10,7 @@ import {
   moduleDef,
   slotRows,
 } from "@/lib/config";
+import { bundleUrl, youtubeId } from "@/lib/bundles";
 import { chainStages, NOMINAL_TEETH } from "@/lib/gear-train";
 import { fetchScene, sceneUrl, type SceneData } from "@/lib/scene";
 import type { SceneEngine, Inst } from "@/components/viewer/engine";
@@ -29,7 +30,18 @@ interface Selection {
   instId?: number;
 }
 
-export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
+export interface PartInfo {
+  name: string;
+  notes: string;
+}
+
+export default function ConfiguratorShell({
+  moduleId,
+  parts = {},
+}: {
+  moduleId: string;
+  parts?: Record<string, PartInfo>;
+}) {
   const mod = moduleDef(moduleId)!;
   const variantNames = Object.keys(mod.variants);
   const [variant, setVariant] = useState(variantNames[0]);
@@ -51,8 +63,47 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
   const [details, setDetails] = useState("");
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const [, bump] = useState(0); // re-render after imperative vis changes
+  const [copied, setCopied] = useState(false);
   const userPicked = useRef(false);
   const rowRefs = useRef(new Map<string, HTMLElement | null>());
+  // config state parsed from a shared URL, applied when its variant is active
+  const pendingUrl = useRef<{
+    forVariant: string;
+    fits?: string[];
+    swaps?: Record<string, string>;
+  } | null>(null);
+
+  // read shareable config from the URL once (client-only; ?v=, ?fits=, ?s.<slot>=)
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const v = q.get("v");
+    const fits = q.get("fits")?.split(",");
+    const swaps: Record<string, string> = {};
+    q.forEach((val, key) => {
+      if (key.startsWith("s.")) swaps[key.slice(2)] = val;
+    });
+    const forVariant = v && mod.variants[v] ? v : variantNames[0];
+    pendingUrl.current = {
+      forVariant,
+      fits,
+      swaps: Object.keys(swaps).length ? swaps : undefined,
+    };
+    if (v && mod.variants[v]) {
+      userPicked.current = true;
+      setVariant(v);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [moduleId]);
+
+  // write the current config back to the URL (shareable links)
+  useEffect(() => {
+    const q = new URLSearchParams();
+    q.set("v", variant);
+    if (fits.some((f) => f !== "standard")) q.set("fits", fits.join(","));
+    for (const [k, val] of Object.entries(swaps)) q.set(`s.${k}`, val);
+    const qs = q.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}?${qs}`);
+  }, [variant, fits, swaps]);
 
   // which variants have a real scene (for the "3D" tag) — and unless the
   // user already chose, default to the first variant that HAS a 3D scene
@@ -83,10 +134,24 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moduleId]);
 
-  // keep per-stage fits + swaps in sync with whichever variant is active
+  // keep per-stage fits + swaps in sync with whichever variant is active,
+  // applying URL-shared state when its target variant becomes active
   useEffect(() => {
-    setFits(mod.variants[variant].stages.map(() => "standard"));
-    setSwaps({});
+    const stages = mod.variants[variant].stages;
+    const p = pendingUrl.current;
+    if (p && p.forVariant === variant) {
+      pendingUrl.current = null;
+      setFits(
+        stages.map((style, i) => {
+          const f = p.fits?.[i];
+          return f && fitsFor(style).includes(f) ? f : "standard";
+        }),
+      );
+      setSwaps(p.swaps ?? {});
+    } else {
+      setFits(stages.map(() => "standard"));
+      setSwaps({});
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant, moduleId]);
 
@@ -204,6 +269,13 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
   );
   const rows = useMemo(() => slotRows(moduleId, variant), [moduleId, variant]);
 
+  // unique part IDs of the configured build (cores + selected slot parts)
+  const buildPids = useMemo(() => {
+    const pids = v.stages.map((style, i) => corePid(style, fits[i] ?? "standard"));
+    for (const { name, slot } of rows) pids.push(swaps[name] ?? slot.recommended);
+    return [...new Set(pids)];
+  }, [v, fits, rows, swaps]);
+
   const isSel = (sel: Selection) =>
     selection &&
     selection.kind === sel.kind &&
@@ -227,6 +299,34 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
             </option>
           ))}
         </select>
+
+        <div className="mt-3 flex gap-2">
+          <a
+            href={bundleUrl(moduleId, variant)}
+            className="flex-1 rounded-lg bg-[#4659BD] px-3 py-2 text-center text-sm font-medium text-white transition hover:bg-[#5a6fd6]"
+          >
+            ⬇ Download print files
+          </a>
+          <button
+            className="btn shrink-0"
+            title="copy a shareable link to this configuration"
+            onClick={() => {
+              navigator.clipboard
+                .writeText(window.location.href)
+                .then(() => {
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1600);
+                })
+                .catch(() => {});
+            }}
+          >
+            {copied ? "✓ copied" : "🔗 share"}
+          </button>
+        </div>
+        <p className="mt-1.5 text-[0.7rem] leading-snug text-zinc-500">
+          Zip of every STL for the recommended {variant} build, already in
+          print orientation.
+        </p>
 
         <h2 className="section-h">Stages</h2>
         {v.stages.map((style, i) => (
@@ -275,6 +375,31 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
             <span className="w-8 text-right text-xs text-zinc-500">×{qty}</span>
           </div>
         ))}
+
+        <details className="mt-3">
+          <summary className="cursor-pointer text-xs text-zinc-400 hover:text-zinc-200">
+            Print settings per part
+          </summary>
+          <div className="mt-2 space-y-3">
+            {buildPids
+              .filter((pid) => parts[pid])
+              .map((pid) => (
+                <div key={pid}>
+                  <div className="text-xs font-semibold">
+                    {pid}{" "}
+                    <span className="font-normal text-zinc-500">
+                      {parts[pid].name}
+                    </span>
+                  </div>
+                  {parts[pid].notes && (
+                    <pre className="mt-1 whitespace-pre-wrap rounded bg-zinc-900 p-2 font-sans text-[0.68rem] leading-relaxed text-zinc-400">
+                      {parts[pid].notes}
+                    </pre>
+                  )}
+                </div>
+              ))}
+          </div>
+        </details>
 
         {groups.size > 0 && (
           <>
@@ -374,6 +499,22 @@ export default function ConfiguratorShell({ moduleId }: { moduleId: string }) {
             (36:7 per stage, teeth 14/22/58)
           </div>
         </div>
+
+        {youtubeId(mod.assembly_video) && (
+          <>
+            <h2 className="section-h">Assembly video</h2>
+            <div className="aspect-video overflow-hidden rounded-lg border border-zinc-800">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${youtubeId(mod.assembly_video)}`}
+                title={`${mod.name} assembly video`}
+                allow="accelerometer; encrypted-media; picture-in-picture"
+                allowFullScreen
+                loading="lazy"
+                className="h-full w-full"
+              />
+            </div>
+          </>
+        )}
       </aside>
 
       {/* viewport: fixed height on mobile so the page scrolls to the sidebar */}

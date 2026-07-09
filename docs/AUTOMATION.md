@@ -114,3 +114,32 @@ model / arrange in SolidWorks
 3. **Wire CI:** scenes on push, bundles on release (done), Pages deploy (done).
 4. **Print-preview mode** in the app (STL on a print bed) — slicer-orientation QA.
 5. **Configurator UI** — config-driven part swapping + procedural animation.
+
+---
+
+## Part 5 — Publishing print bundles (live workflow, 2026-07)
+
+The webapp's "Download print files" buttons link to GitHub Release assets
+(stable tag **`bundles-v1`**), one zip per module variant:
+
+```
+python scripts/build_bundles.py                    # regenerate dist/ from parts.csv
+gh release upload bundles-v1 dist/*/*/*_print.zip --clobber   # refresh in place
+```
+
+`--clobber` re-uploads changed zips under the same URLs, so the app needs no
+change when parts are re-exported. URL pattern:
+`https://github.com/gearfinity/gearfinity/releases/download/bundles-v1/<module>_<variant>_print.zip`
+
+## Part 6 — Webapp deploy (live workflow, 2026-07)
+
+The Next.js app lives in `webapp/` and deploys to Vercel **via CLI only**
+(the Vercel account's git integration cannot see this repo's GitHub account):
+
+```
+cd webapp
+npm run build                                     # runs sync-data (scenes/GLBs/config) first
+npx vercel deploy --prod --yes --token <token>    # remote build; data uploads with the source
+```
+
+Live at https://gearfinity.vercel.app (+ app.gearfinity.xyz once DNS lands).

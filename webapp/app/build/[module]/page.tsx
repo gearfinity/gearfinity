@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ConfiguratorShell from "@/components/ConfiguratorShell";
 import { config, MODULE_IDS } from "@/lib/config";
+import { partsCatalog } from "@/lib/parts-server";
 
 export function generateStaticParams() {
   return MODULE_IDS.map((id) => ({ module: id }));
@@ -24,5 +25,5 @@ export default async function BuildPage({
 }) {
   const { module: id } = await params;
   if (!config.modules[id]) notFound();
-  return <ConfiguratorShell moduleId={id} />;
+  return <ConfiguratorShell moduleId={id} parts={partsCatalog()} />;
 }
