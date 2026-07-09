@@ -65,10 +65,12 @@ function Section({
         }`}
       >
         <div className={media ? "md:w-1/2" : "mx-auto max-w-2xl text-center"}>
-          <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+          <h2 className="text-fill-h2 text-3xl font-medium tracking-tight sm:text-4xl">
             {title}
           </h2>
-          <div className="mt-4 space-y-4 text-white/70">{children}</div>
+          <div className="mt-5 space-y-4 text-lg leading-[1.8] text-white/50">
+            {children}
+          </div>
         </div>
         {media && <div className="w-full md:w-1/2">{media}</div>}
       </div>
@@ -84,20 +86,21 @@ export default function Home() {
         <Image
           src="/landing/logo.png"
           alt="Gearfinity"
-          width={420}
-          height={118}
+          width={840}
+          height={236}
           priority
-          className="mx-auto h-auto w-72 sm:w-96"
+          className="mx-auto h-auto w-80 sm:w-[34rem]"
         />
-        <h1 className="mt-8 text-4xl font-bold tracking-tight sm:text-5xl">
-          Print · Build · Innovate
+        <h1 className="text-fill-hero mt-10 text-5xl font-medium tracking-[-0.03em] sm:text-6xl">
+          Print - Build - <mark>Innovate</mark>
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-white/70">
-          Welcome to <b className="text-white">Gearfinity</b>, your playground
+        <p className="mx-auto mt-8 max-w-3xl text-xl leading-[1.875] text-white/50">
+          Welcome to <mark className="gf">Gearfinity</mark>, your playground
           for boundless mechanical creations! Gearfinity is a modular and
-          extensible 3D printing project, functioning as a comprehensive{" "}
-          <b className="text-white">engineering kit</b>. Assemble intricate,
-          fully functional mechanical constructs entirely from 3D printed parts
+          extensible 3D printing project, functioning as a{" "}
+          <mark className="gf">comprehensive engineering kit</mark>. With
+          Gearfinity, you can assemble intricate, fully functional mechanical
+          constructs <mark className="gf">entirely from 3D printed parts</mark>{" "}
           — bearings, fasteners, and all.
         </p>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -120,7 +123,7 @@ export default function Home() {
       <Section id="printed" title="Fully 3D Printed">
         <p>
           All parts are 3D printed (even bearings!) with{" "}
-          <b className="text-white">NO</b> additional supports. Just keep
+          <mark className="gf">NO</mark> additional supports. Just keep
           printing and building!
         </p>
         <div className="flex flex-wrap justify-center gap-3 pt-2">
@@ -153,7 +156,7 @@ export default function Home() {
 
       {/* modules */}
       <section className="mx-auto w-full max-w-5xl px-6 py-14">
-        <h2 className="text-center text-2xl font-bold tracking-tight sm:text-3xl">
+        <h2 className="text-fill-h2 text-center text-3xl font-medium tracking-tight sm:text-4xl">
           The Modules
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-center text-white/60">
@@ -202,7 +205,7 @@ export default function Home() {
           ))}
         </div>
         <p className="mt-10 text-center text-white/60">
-          <b className="text-white">And more…</b> With Gearfinity, your
+          <mark className="gf">And more…</mark> With Gearfinity, your
           imagination is the limit. Join the community for early access to new
           modules as they are released.
         </p>
@@ -227,7 +230,7 @@ export default function Home() {
         id="community"
         className="mx-auto w-full max-w-3xl px-6 py-14 text-center"
       >
-        <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
+        <h2 className="text-fill-h2 text-3xl font-medium tracking-tight sm:text-4xl">
           Join the Gearfinity Community!
         </h2>
         <ul className="mx-auto mt-6 max-w-md space-y-2 text-left text-sm text-white/70">

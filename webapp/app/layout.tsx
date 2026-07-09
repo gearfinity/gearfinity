@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const roboto = Roboto({
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: {
@@ -37,9 +41,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} h-full antialiased`}>
+    <html lang="en" className={`${roboto.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col font-sans">
-        <header className="sticky top-0 z-20 flex items-center gap-4 border-b border-white/10 bg-[#151226]/90 px-4 py-2.5 backdrop-blur">
+        <header className="sticky top-0 z-20 flex items-center gap-4 border-b border-white/10 bg-[#1a1733]/85 px-4 py-2.5 backdrop-blur">
           <Link href="/" className="flex items-center gap-2">
             <Image
               src="/landing/logo.png"

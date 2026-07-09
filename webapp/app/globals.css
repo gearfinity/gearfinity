@@ -1,9 +1,11 @@
 @import "tailwindcss";
 
-/* Gearfinity brand palette (from the original gearfinity.xyz):
-   deep indigo-violet base, indigo primary, bright blue accent */
+/* Gearfinity brand (values lifted from the original gearfinity.xyz CSS):
+   body base #363F7C under a fixed 55deg gradient (#4659BD -> #241C1C -> #39499B)
+   with a lavender particle field; Roboto type; gradient-filled headings;
+   mark = #4659BD emphasis. */
 :root {
-  --background: #151226;
+  --background: #363f7c;
   --foreground: #f0eff5;
   --brand: #4659bd;
   --accent: #00a3ff;
@@ -14,15 +16,54 @@
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
   --color-accent: var(--accent);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-roboto);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
 }
 
-/* configurator UI atoms */
+/* fixed page background: particles over the brand gradient */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='480' viewBox='0 0 640 480' preserveAspectRatio='none'%3E%3Cg fill='rgba(170,117,255,0.20)'%3E%3Ccircle cx='42' cy='61' r='1.1'/%3E%3Ccircle cx='131' cy='214' r='0.8'/%3E%3Ccircle cx='217' cy='94' r='1.4'/%3E%3Ccircle cx='305' cy='287' r='0.7'/%3E%3Ccircle cx='389' cy='140' r='1.2'/%3E%3Ccircle cx='470' cy='330' r='0.9'/%3E%3Ccircle cx='553' cy='75' r='1.3'/%3E%3Ccircle cx='608' cy='249' r='0.8'/%3E%3Ccircle cx='84' cy='388' r='1.0'/%3E%3Ccircle cx='186' cy='445' r='0.7'/%3E%3Ccircle cx='268' cy='372' r='1.1'/%3E%3Ccircle cx='352' cy='452' r='0.9'/%3E%3Ccircle cx='437' cy='31' r='0.8'/%3E%3Ccircle cx='520' cy='420' r='1.2'/%3E%3Ccircle cx='597' cy='390' r='0.7'/%3E%3Ccircle cx='23' cy='300' r='0.9'/%3E%3C/g%3E%3Cg fill='rgba(255,255,255,0.14)'%3E%3Ccircle cx='72' cy='150' r='0.8'/%3E%3Ccircle cx='168' cy='38' r='0.6'/%3E%3Ccircle cx='247' cy='198' r='1.0'/%3E%3Ccircle cx='333' cy='60' r='0.7'/%3E%3Ccircle cx='418' cy='232' r='0.9'/%3E%3Ccircle cx='495' cy='170' r='0.6'/%3E%3Ccircle cx='576' cy='320' r='1.0'/%3E%3Ccircle cx='118' cy='330' r='0.6'/%3E%3Ccircle cx='214' cy='300' r='0.8'/%3E%3Ccircle cx='300' cy='410' r='0.6'/%3E%3Ccircle cx='396' cy='352' r='0.9'/%3E%3Ccircle cx='481' cy='450' r='0.7'/%3E%3Ccircle cx='560' cy='120' r='0.6'/%3E%3Ccircle cx='630' cy='40' r='0.8'/%3E%3C/g%3E%3C/svg%3E"),
+    linear-gradient(55deg, #4659bd 0%, #241c1c 50%, #39499b 100%);
+  background-size: 100% 100%, auto;
+  background-position: center, 0% 0%;
+  background-repeat: no-repeat, repeat;
+}
+
+/* gradient-filled display text (original .style-1 / heading styles) */
+.text-fill-hero {
+  background-image: linear-gradient(110deg, rgba(255, 255, 255, 0.478) 0%, #ffffff 67%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+}
+.text-fill-h2 {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.412) 0%, #ffffff 67%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+}
+.text-fill-hero mark,
+.text-fill-h2 mark,
+mark.gf {
+  background: none;
+  background-color: transparent;
+  color: #5b6fd7;
+  -webkit-text-fill-color: #5b6fd7;
+}
+
+/* configurator UI atoms (dark neutral panels sit on the brand gradient) */
 .section-h {
   margin: 1rem 0 0.4rem;
   font-size: 0.7rem;
