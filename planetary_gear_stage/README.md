@@ -23,6 +23,12 @@ Building the Planetary Gear Stage, you'll explore the mechanics of planetary gea
 3. **Follow the Video:** Watch the [Planetary Gear Stage Assembly Video](https://www.youtube.com/watch?v=IewrQ3KnOlo) for step-by-step instructions.
 4. **Enjoy Your Creation:** Once assembled, experiment with the gear stage or integrate it into larger Gearfinity modules.
 
+#### 📦 Get the parts
+The printable files live in one place now (no more duplicate copies in this folder):
+- **Recommended build & quantities:** [MODULES.md](../MODULES.md) — the Planetary Stage build.
+- **Full parts list:** [parts.csv](../parts.csv) — every part with print settings, linking to its STL in [_all_parts/](../_all_parts/).
+- **One-click download bundles** are published as GitHub Release assets *(coming with the next release)*.
+
 #### Join the Gearfinity Community:
 Interested in becoming a part of the Gearfinity universe? Join our community to stay updated and get exclusive access to new content! By signing up, you'll gain:
 

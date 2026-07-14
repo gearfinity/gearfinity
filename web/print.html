@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gearfinity — Print-Orientation Preview</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: #15171c; color: #e8eaed; }
+    header {
+      position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: .75rem;
+      flex-wrap: wrap; padding: .6rem 1rem; background: rgba(29,32,38,.92); border-bottom: 1px solid #2c2f36;
+      backdrop-filter: blur(6px);
+    }
+    header h1 { font-size: 1rem; margin: 0; font-weight: 600; }
+    header .tag { font-size: .7rem; padding: .12rem .5rem; border-radius: 999px; background: #2c2f36; color: #9aa0a6; }
+    header .hint { font-size: .78rem; color: #9aa0a6; }
+    #status { margin-left: auto; font-size: .8rem; color: #9aa0a6; }
+    input[type=search] {
+      background: #2c2f36; border: 1px solid #3a3d44; border-radius: 6px; color: #e8eaed;
+      padding: .35rem .6rem; font-size: .85rem; width: 12rem;
+    }
+    #grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: .8rem; padding: 1rem;
+    }
+    .card {
+      background: #1d2026; border: 1px solid #2c2f36; border-radius: 10px; overflow: hidden;
+      cursor: pointer; transition: border-color .15s, transform .1s;
+    }
+    .card:hover { border-color: #4a4f58; transform: translateY(-2px); }
+    .card .thumb { width: 100%; aspect-ratio: 4/3; background: #15171c; display: block; object-fit: contain; }
+    .card .thumb.loading { display: grid; place-content: center; color: #5b616b; font-size: .75rem; }
+    .card .meta { padding: .5rem .6rem; }
+    .card .id { font-weight: 600; font-size: .9rem; }
+    .card .name { font-size: .75rem; color: #9aa0a6; }
+    .card .dims { font-size: .72rem; color: #7f8790; margin-top: .2rem; font-variant-numeric: tabular-nums; }
+    /* detail modal */
+    #modal { position: fixed; inset: 0; z-index: 20; background: rgba(10,11,14,.86); display: none; }
+    #modal.open { display: block; }
+    #modal .bar { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center;
+      gap: .75rem; padding: .6rem 1rem; z-index: 2; }
+    #modal .bar .id { font-weight: 600; }
+    #modal .bar .dims { font-size: .8rem; color: #9aa0a6; }
+    #modal .close { margin-left: auto; background: #2c2f36; border: 1px solid #3a3d44; color: #e8eaed;
+      border-radius: 6px; padding: .3rem .7rem; cursor: pointer; }
+    #modal canvas { display: block; width: 100%; height: 100%; }
+  </style>
+  <script type="importmap">
+  { "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }}
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Print-Orientation Preview</h1>
+    <span class="tag">preview</span>
+    <span class="hint">Each part is dropped onto the bed, <b>Z-up</b> like a slicer. If a part sits wrong, it needs a <code>CS_PRINT</code>.</span>
+    <input id="search" type="search" placeholder="filter by ID / name…" />
+    <span id="status">loading…</span>
+  </header>
+  <div id="grid"></div>
+
+  <div id="modal">
+    <div class="bar">
+      <span class="id" id="mId"></span>
+      <span class="dims" id="mDims"></span>
+      <button class="close" id="mClose">✕ close</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const FILAMENT = 0xE6B34D;
+    const BG = 0x15171c;
+    const statusEl = document.getElementById('status');
+    const grid = document.getElementById('grid');
+    const loader = new STLLoader();
+    // cache-buster stamped once per page load, so a refresh always fetches the
+    // freshly re-exported STLs (browsers cache ../_all_parts/*.STL aggressively).
+    const CB = '?v=' + Date.now();
+
+    // ---- shared scene builder (Z-up, part dropped onto a bed grid) ----------
+    function buildScene(geo) {
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(BG);
+      geo.computeBoundingBox();
+      const bb = geo.boundingBox;
+      const size = new THREE.Vector3(); bb.getSize(size);
+      const center = new THREE.Vector3(); bb.getCenter(center);
+
+      const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(
+        { color: FILAMENT, metalness: 0.05, roughness: 0.75 }));
+      // centre in X/Y, drop lowest point onto the bed (z = 0)
+      mesh.position.set(-center.x, -center.y, -bb.min.z);
+      scene.add(mesh);
+
+      const foot = Math.max(size.x, size.y, 10);
+      const gridSize = foot * 2.4;
+      const bed = new THREE.GridHelper(gridSize, 24, 0x454b55, 0x2b2f37);
+      bed.rotateX(Math.PI / 2);              // XZ -> XY plane (the bed, z = 0)
+      scene.add(bed);
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x33373f, 1.15));
+      const key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(0.6, -1, 1.4); scene.add(key);
+      const fill = new THREE.DirectionalLight(0xffffff, 0.35); fill.position.set(-1, 0.5, 0.6); scene.add(fill);
+
+      const r = Math.max(size.x, size.y, size.z) || 10;
+      const cam = new THREE.PerspectiveCamera(38, 1, r / 100, r * 200);
+      cam.up.set(0, 0, 1);                    // Z is up, like a slicer
+      cam.position.set(r * 1.5, -r * 1.9, r * 1.35);
+      const target = new THREE.Vector3(0, 0, size.z / 2);
+      cam.lookAt(target);
+      return { scene, cam, size, r, target };
+    }
+
+    const fmt = v => v.toFixed(1);
+
+    // ---- thumbnail renderer (one shared context, capture to <img>) ----------
+    const thumbRenderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    thumbRenderer.setSize(300, 225);
+    thumbRenderer.setPixelRatio(1);
+
+    async function makeThumb(part, card) {
+      let geo;
+      try { geo = await new Promise((res, rej) => loader.load(part.stl + CB, res, undefined, rej)); }
+      catch { card.querySelector('.thumb').textContent = 'load failed'; return; }
+      const { scene, cam, size } = buildScene(geo);
+      cam.aspect = 300 / 225; cam.updateProjectionMatrix();
+      thumbRenderer.render(scene, cam);
+      const img = card.querySelector('.thumb');
+      const url = thumbRenderer.domElement.toDataURL('image/png');
+      const el = document.createElement('img');
+      el.className = 'thumb'; el.src = url; el.alt = part.id;
+      img.replaceWith(el);
+      card.querySelector('.dims').textContent =
+        `${fmt(size.x)} × ${fmt(size.y)} × ${fmt(size.z)} mm`;
+      card._size = size;
+      geo.dispose();
+    }
+
+    // ---- detail modal (interactive orbit) -----------------------------------
+    const modal = document.getElementById('modal');
+    let detail = null;
+    function closeDetail() {
+      if (!detail) return;
+      cancelAnimationFrame(detail.raf);
+      detail.controls.dispose();
+      detail.renderer.dispose();
+      detail.renderer.domElement.remove();
+      detail = null;
+      modal.classList.remove('open');
+    }
+    async function openDetail(part) {
+      modal.classList.add('open');
+      document.getElementById('mId').textContent = `${part.id} — ${part.name}`;
+      document.getElementById('mDims').textContent = '';
+      let geo;
+      try { geo = await new Promise((res, rej) => loader.load(part.stl + CB, res, undefined, rej)); }
+      catch { document.getElementById('mDims').textContent = 'load failed'; return; }
+      const { scene, cam, size, target } = buildScene(geo);
+      document.getElementById('mDims').textContent =
+        `${fmt(size.x)} × ${fmt(size.y)} × ${fmt(size.z)} mm`;
+      const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(devicePixelRatio);
+      const resize = () => {
+        renderer.setSize(innerWidth, innerHeight);
+        cam.aspect = innerWidth / innerHeight; cam.updateProjectionMatrix();
+      };
+      resize();
+      modal.appendChild(renderer.domElement);
+      const controls = new OrbitControls(cam, renderer.domElement);
+      controls.enableDamping = true; controls.target.copy(target); controls.update();
+      const loop = () => { detail.raf = requestAnimationFrame(loop); controls.update(); renderer.render(scene, cam); };
+      detail = { renderer, controls, raf: 0, geo, onResize: resize };
+      addEventListener('resize', resize);
+      loop();
+    }
+    document.getElementById('mClose').addEventListener('click', closeDetail);
+    modal.addEventListener('click', e => { if (e.target === modal) closeDetail(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+    // ---- build the grid, render thumbnails sequentially ---------------------
+    (async () => {
+      let data;
+      try { data = await (await fetch('scenes/print_parts.json', { cache: 'no-store' })).json(); }
+      catch { statusEl.textContent = 'no manifest — run scripts/gen_print_manifest.py'; return; }
+
+      const cards = [];
+      for (const part of data.parts) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML =
+          `<div class="thumb loading">rendering…</div>
+           <div class="meta"><div class="id">${part.id}</div>
+           <div class="name">${part.name}</div><div class="dims"></div></div>`;
+        card.addEventListener('click', () => openDetail(part));
+        card._part = part;
+        grid.appendChild(card);
+        cards.push({ part, card });
+      }
+
+      document.getElementById('search').addEventListener('input', e => {
+        const q = e.target.value.toLowerCase();
+        for (const { part, card } of cards)
+          card.style.display = (part.id + ' ' + part.name).toLowerCase().includes(q) ? '' : 'none';
+      });
+
+      let done = 0;
+      for (const { part, card } of cards) {
+        await makeThumb(part, card);
+        statusEl.textContent = `${++done} / ${cards.length} rendered`;
+      }
+      statusEl.textContent = `${cards.length} parts · click one to inspect`;
+    })();
+  </script>
+</body>
+</html>

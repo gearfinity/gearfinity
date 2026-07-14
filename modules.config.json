@@ -1,0 +1,100 @@
+{
+  "_about": "Gearfinity configuration model. Each module variant prescribes a RECOMMENDED build; alternatives also function (nothing here is a hard requirement). Source of truth for download bundles, platform descriptions, and a future configurator. Part IDs are defined in parts.csv / NAMING.md.",
+  "_assumptions_to_confirm": [
+    "crank_input / output not yet broken out as submodules (needs the assembly BOMs)",
+    "crank/fan pin counts still TBD (need their assembly BOMs); planetary_stage counts observed from its display-assembly BOM"
+  ],
+  "_pin_model": "Planned (future phase): each part declares (a) how many pin-holes it has and (b) which non-pin parts it mates with. A pin spans ONE hole in EACH of two mating parts, so pins at an interface are shared and counted once - not summed per part. Total pins are then computed from the assembly graph rather than added up per part. Example: a planetary core has 8 pin-holes and each stage cover has 4; attaching 2 covers to one core uses 8 pins total (shared), not 16.",
+
+  "defaults": { "core_fit": "" },
+  "core_style_codes": { "middle": "M", "outer": "O", "closed": "C" },
+  "core_fit_codes": { "standard": "", "tight": "T" },
+
+  "submodules": {
+    "planetary_stage": {
+      "name": "Planetary Stage",
+      "description": "One 5:1 herringbone planetary gear stage - the core reusable building block.",
+      "assembly_video": "https://www.youtube.com/watch?v=IewrQ3KnOlo",
+      "core_param": {
+        "name": "core_style",
+        "options": ["middle", "outer"],
+        "default": "middle",
+        "note": "Picks which core variant aligns its ring slots with the open cover windows (aesthetic). Any style still functions. ('closed' code C is reserved; no closed part in the catalog currently.)"
+      },
+      "slots": {
+        "core":                  { "recommended": "PGC5{style}{fit}", "qty": 1, "role": "gear core", "alt_note": "T = tight fit (e.g. PGC5MT), for cores used standalone / outside a stage stack", "fits_available": { "middle": ["standard", "tight"], "outer": ["standard"] } },
+        "planet_carrier_bottom": { "recommended": "PCB5", "qty": 1 },
+        "planet_carrier_top":    { "recommended": "PCT5", "qty": 1 },
+        "planet_sleeve_bearing": { "recommended": "PGSB62", "qty": 3, "_confirm": "qty per stage" },
+        "stage_cover":           { "recommended": "PSC", "qty": 2, "note": "2 per stage (covers both ends)" }
+      }
+    }
+  },
+
+  "modules": {
+    "planetary_stage": {
+      "name": "Planetary Stage (standalone)",
+      "assembly_video": "https://www.youtube.com/watch?v=IewrQ3KnOlo",
+      "uses_submodule": "planetary_stage",
+      "shared_slots": {
+        "drive_shaft": { "recommended": "DS5O" },
+        "pins_short":  { "recommended": "PS56", "qty": 8, "alternatives": ["PS54", "PS58"], "role": "short pins (PS54 looser, PS58 tighter)", "_source": "observed in planetary_stage_core_mock_display.SLDASM BOM (4 per cover x 2 covers)" },
+        "pins_long":   { "recommended": "PL71", "qty": 6, "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)", "_source": "observed in planetary_stage_core_mock_display.SLDASM BOM (carrier)" },
+        "pin_tool":    { "recommended": "PT", "role": "assembly tool" }
+      },
+      "variants": {
+        "single": { "stages": ["middle"], "cover": null }
+      }
+    },
+
+    "crank": {
+      "name": "Crank Module",
+      "assembly_video": "https://www.youtube.com/watch?v=rEJv3zD0lIk",
+      "shared_slots": {
+        "crank_handle":       { "recommended": "CH2", "alternatives": ["CH1"], "role": "crank handle (double; single = CH1)" },
+        "crank_plate":        { "recommended": "CP" },
+        "crank_shaft":        { "recommended": "CS5" },
+        "crank_shaft_sleeve": { "recommended": "CSS" },
+        "drive_shaft_output": { "recommended": "DS5OL", "alternatives": ["DS5O"], "role": "crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking)" },
+        "drive_shaft_input":  { "recommended": "DS5IL" },
+        "handle":             { "recommended": "H", "qty": 2 },
+        "handle_plate":       { "recommended": "HP2" },
+        "pins_short":         { "recommended": "PS54", "qty": "TBD", "alternatives": ["PS56", "PS58"], "role": "short pins (PS56/PS58 = tighter fit)" },
+        "pins_long":          { "recommended": "PL71", "qty": "TBD", "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)" },
+        "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
+      },
+      "variants": {
+        "1-stage": { "stages": ["middle"], "cover": "GC1" },
+        "2-stage": { "stages": ["middle", "middle"], "cover": "GC2" },
+        "3-stage": { "stages": ["middle", "outer", "middle"], "cover": "GC3" }
+      }
+    },
+
+    "fan": {
+      "name": "Fan Module",
+      "assembly_video": "https://www.youtube.com/watch?v=oZlYVgYIprY",
+      "shared_slots": {
+        "fan_prop":           { "recommended": "FP5CC", "alternatives": ["FP5C"], "role": "prop (CCW; CW = FP5C)" },
+        "fan_cage":           { "recommended": "FC" },
+        "fan_funnel":         { "recommended": "FF" },
+        "roller_bearing":     { "recommended": "RB-2" },
+        "crank_handle":       { "recommended": "CH1", "alternatives": ["CH2"] },
+        "crank_plate":        { "recommended": "CP" },
+        "crank_shaft":        { "recommended": "CS5" },
+        "crank_shaft_sleeve": { "recommended": "CSS" },
+        "drive_shaft_output": { "recommended": "DS5OL", "alternatives": ["DS5O"], "role": "crank-adjacent drive shaft - DS5OL locks to the crank shaft (DS5O = non-locking)" },
+        "drive_shaft_input":  { "recommended": "DS5I" },
+        "handle":             { "recommended": "H", "qty": 2 },
+        "handle_plate":       { "recommended": "HP2" },
+        "pins_short":         { "recommended": "PS54", "qty": "TBD", "alternatives": ["PS56", "PS58"], "role": "short pins (PS56/PS58 = tighter fit)" },
+        "pins_long":          { "recommended": "PL71", "qty": "TBD", "alternatives": ["PL69", "PL67"], "role": "long pins (PL69/PL67 = looser fit)" },
+        "pin_tool":           { "recommended": "PT", "role": "assembly tool" }
+      },
+      "variants": {
+        "1-stage": { "stages": ["middle"], "cover": "GC1" },
+        "2-stage": { "stages": ["middle", "middle"], "cover": "GC2" },
+        "3-stage": { "stages": ["middle", "outer", "middle"], "cover": "GC3" }
+      }
+    }
+  }
+}

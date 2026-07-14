@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gearfinity — Assembly Viewer (preview)</title>
+  <style>
+    :root { color-scheme: dark; }
+    body { margin: 0; overflow: hidden; font-family: system-ui, sans-serif; background: #15171c; color: #e8eaed; }
+    #hud { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; align-items: center; gap: .75rem;
+           flex-wrap: wrap; padding: .5rem .9rem; background: rgba(29,32,38,.85); border-bottom: 1px solid #2c2f36;
+           font-size: .85rem; backdrop-filter: blur(4px); }
+    #hud h1 { font-size: .95rem; margin: 0; font-weight: 600; }
+    #hud .tag { font-size: .7rem; padding: .12rem .5rem; border-radius: 999px; background: #2c2f36; color: #9aa0a6; }
+    #status { margin-left: auto; color: #9aa0a6; }
+    #err { position: fixed; bottom: .6rem; left: .9rem; right: .9rem; z-index: 5; color: #f28b82; font-size: .78rem; white-space: pre-wrap; }
+    canvas { display: block; }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="hud">
+    <h1>Gearfinity Assembly Viewer</h1>
+    <span class="tag">preview</span>
+    <span id="name"></span>
+    <span id="status">loading…</span>
+  </div>
+  <div id="err"></div>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const params = new URLSearchParams(location.search);
+    const sceneName = params.get('scene') || 'crank_input';
+    // 'col' proven correct: SolidWorks ArrayData rotation is row-VECTOR
+    // convention, so three.js (column vectors) needs the transpose. Confirmed
+    // by the display-assembly pins (row-reading tilted them 9-16 deg) - and it
+    // retroactively explains the crank-shaft 45deg anomaly.
+    const rotMode = (params.get('rot') || 'col').toLowerCase();   // col | row
+    const upMode = (params.get('up') || 'z').toLowerCase();        // z | y  (SolidWorks is Z-up)
+    const statusEl = document.getElementById('status');
+    const errEl = document.getElementById('err');
+    document.getElementById('name').textContent = sceneName;
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x15171c);
+    const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 1e-4, 1e4);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(devicePixelRatio);
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    document.body.appendChild(renderer.domElement);
+
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x60656f, 1.2));
+    const key = new THREE.DirectionalLight(0xffffff, 1.3); key.position.set(1, 1.2, 1); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.5); fill.position.set(-1, 0.4, -1); scene.add(fill);
+    const under = new THREE.DirectionalLight(0xffffff, 0.7); under.position.set(0.2, -1, -0.3); scene.add(under);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
+    const gltf = new GLTFLoader();
+    gltf.setDRACOLoader(draco);
+    const loadGLB = url => new Promise(res => gltf.load(url, g => res(g.scene), undefined, () => res(null)));
+
+    function matrixFor(a) {
+      // a = [r0..r8, x,y,z] ; GLB + transforms both in metres, so no scale.
+      const m = new THREE.Matrix4();
+      if (rotMode === 'col')
+        m.set(a[0], a[3], a[6], a[9], a[1], a[4], a[7], a[10], a[2], a[5], a[8], a[11], 0, 0, 0, 1);
+      else
+        m.set(a[0], a[1], a[2], a[9], a[3], a[4], a[5], a[10], a[6], a[7], a[8], a[11], 0, 0, 0, 1);
+      return m;
+    }
+
+    (async () => {
+      let data;
+      try { data = await (await fetch(`scenes/${sceneName}.json`, { cache: 'no-store' })).json(); }
+      catch { statusEl.textContent = 'scene not found'; errEl.textContent = `Missing scenes/${sceneName}.json`; return; }
+
+      const isGlb = u => typeof u === 'string' && u.toLowerCase().endsWith('.glb');
+      const loaded = await Promise.all(data.parts.map(async p => ({ p, obj: isGlb(p.url) ? await loadGLB(p.url) : null })));
+      const fails = loaded.filter(x => !x.obj).map(x => x.p.url);
+      const ok = loaded.filter(x => x.obj);
+      if (!ok.length) { statusEl.textContent = 'nothing loaded'; errEl.textContent = 'No GLBs loaded. Export parts to .glb and regenerate the scene.'; return; }
+
+      ok.forEach(({ p, obj }) => { obj.applyMatrix4(matrixFor(p.transform)); group.add(obj); });
+
+      if (upMode === 'z') group.rotateX(Math.PI / 2);   // SolidWorks Z-up -> three.js Y-up
+      group.updateMatrixWorld(true);
+
+      const box = new THREE.Box3().setFromObject(group);
+      const c = box.getCenter(new THREE.Vector3());
+      const s = box.getSize(new THREE.Vector3());
+      const r = Math.max(s.x, s.y, s.z) || 1;
+      controls.target.copy(c);
+      camera.position.copy(c).add(new THREE.Vector3(r * 1.6, r * 1.1, r * 1.9));
+      camera.near = r / 500; camera.far = r * 500; camera.updateProjectionMatrix();
+      controls.update();
+      console.log(`rot=${rotMode} up=${upMode} size~${r.toFixed(3)}`);
+
+      statusEl.textContent = `${ok.length}/${data.parts.length} parts (rot=${rotMode}, up=${upMode})`;
+      if (fails.length) errEl.textContent = 'Not loaded (no GLB yet): ' + fails.map(u => u.split('/').pop()).join(', ');
+    })();
+
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+    (function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); })();
+  </script>
+</body>
+</html>

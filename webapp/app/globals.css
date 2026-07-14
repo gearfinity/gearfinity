@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* Gearfinity brand (values lifted from the original gearfinity.xyz CSS):
+   body base #363F7C under a fixed 55deg gradient (#4659BD -> #241C1C -> #39499B)
+   with a lavender particle field; Roboto type; gradient-filled headings;
+   mark = #4659BD emphasis. */
+:root {
+  --background: #363f7c;
+  --foreground: #f0eff5;
+  --brand: #4659bd;
+  --accent: #00a3ff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-roboto);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* fixed page background: particles over the brand gradient */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc2NDAnIGhlaWdodD0nNDgwJyB2aWV3Qm94PScwIDAgNjQwIDQ4MCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+PGcgZmlsbD0ncmdiYSgxNzAsMTE3LDI1NSwwLjIwKSc+PGNpcmNsZSBjeD0nNDInIGN5PSc2MScgcj0nMS4xJy8+PGNpcmNsZSBjeD0nMTMxJyBjeT0nMjE0JyByPScwLjgnLz48Y2lyY2xlIGN4PScyMTcnIGN5PSc5NCcgcj0nMS40Jy8+PGNpcmNsZSBjeD0nMzA1JyBjeT0nMjg3JyByPScwLjcnLz48Y2lyY2xlIGN4PSczODknIGN5PScxNDAnIHI9JzEuMicvPjxjaXJjbGUgY3g9JzQ3MCcgY3k9JzMzMCcgcj0nMC45Jy8+PGNpcmNsZSBjeD0nNTUzJyBjeT0nNzUnIHI9JzEuMycvPjxjaXJjbGUgY3g9JzYwOCcgY3k9JzI0OScgcj0nMC44Jy8+PGNpcmNsZSBjeD0nODQnIGN5PSczODgnIHI9JzEuMCcvPjxjaXJjbGUgY3g9JzE4NicgY3k9JzQ0NScgcj0nMC43Jy8+PGNpcmNsZSBjeD0nMjY4JyBjeT0nMzcyJyByPScxLjEnLz48Y2lyY2xlIGN4PSczNTInIGN5PSc0NTInIHI9JzAuOScvPjxjaXJjbGUgY3g9JzQzNycgY3k9JzMxJyByPScwLjgnLz48Y2lyY2xlIGN4PSc1MjAnIGN5PSc0MjAnIHI9JzEuMicvPjxjaXJjbGUgY3g9JzU5NycgY3k9JzM5MCcgcj0nMC43Jy8+PGNpcmNsZSBjeD0nMjMnIGN5PSczMDAnIHI9JzAuOScvPjwvZz48ZyBmaWxsPSdyZ2JhKDI1NSwyNTUsMjU1LDAuMTQpJz48Y2lyY2xlIGN4PSc3MicgY3k9JzE1MCcgcj0nMC44Jy8+PGNpcmNsZSBjeD0nMTY4JyBjeT0nMzgnIHI9JzAuNicvPjxjaXJjbGUgY3g9JzI0NycgY3k9JzE5OCcgcj0nMS4wJy8+PGNpcmNsZSBjeD0nMzMzJyBjeT0nNjAnIHI9JzAuNycvPjxjaXJjbGUgY3g9JzQxOCcgY3k9JzIzMicgcj0nMC45Jy8+PGNpcmNsZSBjeD0nNDk1JyBjeT0nMTcwJyByPScwLjYnLz48Y2lyY2xlIGN4PSc1NzYnIGN5PSczMjAnIHI9JzEuMCcvPjxjaXJjbGUgY3g9JzExOCcgY3k9JzMzMCcgcj0nMC42Jy8+PGNpcmNsZSBjeD0nMjE0JyBjeT0nMzAwJyByPScwLjgnLz48Y2lyY2xlIGN4PSczMDAnIGN5PSc0MTAnIHI9JzAuNicvPjxjaXJjbGUgY3g9JzM5NicgY3k9JzM1Micgcj0nMC45Jy8+PGNpcmNsZSBjeD0nNDgxJyBjeT0nNDUwJyByPScwLjcnLz48Y2lyY2xlIGN4PSc1NjAnIGN5PScxMjAnIHI9JzAuNicvPjxjaXJjbGUgY3g9JzYzMCcgY3k9JzQwJyByPScwLjgnLz48L2c+PC9zdmc+"),
+    linear-gradient(55deg, #4659bd 0%, #241c1c 50%, #39499b 100%);
+  background-size: 100% 100%, auto;
+  background-position: center, 0% 0%;
+  background-repeat: no-repeat, repeat;
+}
+
+/* twinkle layer: a second star field pulsing over the static one
+   (the original Carrd page animated its particles' fill-opacity) */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc2NDAnIGhlaWdodD0nNDgwJyB2aWV3Qm94PScwIDAgNjQwIDQ4MCcgcHJlc2VydmVBc3BlY3RSYXRpbz0nbm9uZSc+PGcgZmlsbD0ncmdiYSgyMDAsMTgwLDI1NSwwLjQwKSc+PGNpcmNsZSBjeD0nOTcnIGN5PSc4OCcgcj0nMS4yJy8+PGNpcmNsZSBjeD0nMjAxJyBjeT0nMjYwJyByPScwLjknLz48Y2lyY2xlIGN4PScyODknIGN5PScxMzInIHI9JzEuNCcvPjxjaXJjbGUgY3g9JzM3MScgY3k9JzMxOCcgcj0nMS4wJy8+PGNpcmNsZSBjeD0nNDU1JyBjeT0nOTYnIHI9JzEuMycvPjxjaXJjbGUgY3g9JzU0MScgY3k9JzI3Nicgcj0nMC45Jy8+PGNpcmNsZSBjeD0nNjExJyBjeT0nMTUwJyByPScxLjInLz48Y2lyY2xlIGN4PSc1OCcgY3k9JzIxNCcgcj0nMS4wJy8+PGNpcmNsZSBjeD0nMTQ5JyBjeT0nNDE4JyByPScxLjMnLz48Y2lyY2xlIGN4PScyNDAnIGN5PSczNTUnIHI9JzAuOCcvPjxjaXJjbGUgY3g9JzMzMCcgY3k9JzIzNCcgcj0nMS4xJy8+PGNpcmNsZSBjeD0nNDI0JyBjeT0nNDMwJyByPScwLjknLz48Y2lyY2xlIGN4PSc1MDcnIGN5PSczNzInIHI9JzEuMicvPjxjaXJjbGUgY3g9JzU4OCcgY3k9JzQ0OCcgcj0nMC45Jy8+PGNpcmNsZSBjeD0nMzYnIGN5PSc0NTInIHI9JzEuMScvPjxjaXJjbGUgY3g9JzYyMCcgY3k9JzMzMCcgcj0nMC44Jy8+PC9nPjwvc3ZnPg==");
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  animation: gf-twinkle 5.5s ease-in-out infinite;
+}
+
+@keyframes gf-twinkle {
+  0%,
+  100% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after {
+    animation: none;
+    opacity: 0.5;
+  }
+}
+
+/* gradient-filled display text (original .style-1 / heading styles) */
+.text-fill-hero {
+  background-image: linear-gradient(110deg, rgba(255, 255, 255, 0.478) 0%, #ffffff 67%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+}
+.text-fill-h2 {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.412) 0%, #ffffff 67%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ffffff;
+}
+.text-fill-hero mark,
+.text-fill-h2 mark,
+mark.gf {
+  background: none;
+  background-color: transparent;
+  color: #5b6fd7;
+  -webkit-text-fill-color: #5b6fd7;
+}
+
+/* configurator UI atoms (dark neutral panels sit on the brand gradient) */
+.section-h {
+  margin: 1rem 0 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9aa0a6;
+}
+.section-h:first-child {
+  margin-top: 0;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.22rem 0;
+}
+.input {
+  background: #1d2026;
+  color: #e8eaed;
+  border: 1px solid #33363d;
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.8rem;
+}
+.btn {
+  background: #1d2026;
+  color: #e8eaed;
+  border: 1px solid #33363d;
+  border-radius: 999px;
+  padding: 0.3rem 0.85rem;
+  cursor: pointer;
+}
+.btn:hover {
+  border-color: #4a4f58;
+}
+.vbtn {
+  background: none;
+  border: 1px solid #33363d;
+  color: #9aa0a6;
+  border-radius: 5px;
+  min-width: 1.6rem;
+  height: 1.45rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+.vbtn-on {
+  color: #8ab4f8;
+  border-color: #8ab4f8;
+}

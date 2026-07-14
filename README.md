@@ -125,7 +125,11 @@ Learn more and join the Gearfinity community at [https://gearfinity.xyz](https:/
 
 ## 📋 Parts List
 
-You can view the current parts list table [here](https://docs.google.com/spreadsheets/d/158TpOWADwtF0e0_Nwcch7mfOSl0_y_dtp3eGY885oxw/edit?usp=sharing).
+The full parts list lives in this repo at **[parts.csv](parts.csv)** — GitHub renders it as a sortable, searchable table, and it stays in sync with the actual files in [_all_parts/](_all_parts/). Each row includes the part ID, description, recommended print settings, and a direct link to the printable STL.
+
+Part IDs follow the naming scheme documented in **[NAMING.md](NAMING.md)**. If you have an older ID from a previous version, the migration table in that document (and the `alias` column in `parts.csv`) maps every old ID to its current one.
+
+> Prefer a spreadsheet? A mirror is also published as a [Google Sheet](https://docs.google.com/spreadsheets/d/158TpOWADwtF0e0_Nwcch7mfOSl0_y_dtp3eGY885oxw/edit?usp=sharing). The in-repo `parts.csv` is the source of truth.
 ## 🤝 Contributing
 
 Community and collaboration are the cornerstones of Gearfinity. If you're keen on contributing, check out our guidelines. Together, let's push the boundaries of what we can create!

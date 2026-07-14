@@ -1,0 +1,8 @@
+# Explicit upload exclusions. Presence of this file means the CLI does NOT
+# fall back to .gitignore - so the pipeline-synced data (public/scenes,
+# public/parts, data/) uploads to the remote builder even though it's
+# gitignored locally.
+node_modules
+.next
+.vercel
+.env.local

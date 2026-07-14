@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gearfinity — Module Viewer (preview)</title>
+  <script type="module"
+    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; height: 100vh; display: flex; flex-direction: column;
+      font-family: system-ui, sans-serif; background: #15171c; color: #e8eaed;
+    }
+    header {
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+      padding: .6rem 1rem; background: #1d2026; border-bottom: 1px solid #2c2f36;
+    }
+    header h1 { font-size: 1rem; margin: 0; font-weight: 600; }
+    header .tag {
+      font-size: .7rem; padding: .15rem .5rem; border-radius: 999px;
+      background: #2c2f36; color: #9aa0a6;
+    }
+    select {
+      margin-left: auto; background: #2c2f36; color: #e8eaed;
+      border: 1px solid #3a3d44; border-radius: 6px; padding: .35rem .6rem;
+    }
+    model-viewer { flex: 1; width: 100%; background: #15171c; }
+    #empty {
+      position: absolute; inset: 0; display: none; place-content: center;
+      text-align: center; padding: 2rem; color: #9aa0a6;
+    }
+    #empty.show { display: grid; }
+    #empty code { color: #cdd2d8; background: #2c2f36; padding: .1rem .35rem; border-radius: 4px; }
+    footer { padding: .4rem 1rem; font-size: .72rem; color: #80868b; background: #1d2026; }
+    a { color: #8ab4f8; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gearfinity Module Viewer</h1>
+    <span class="tag">preview</span>
+    <a href="configurator.html" style="font-size:.82rem">Configurator →</a>
+    <a href="assembly.html" style="font-size:.82rem">Assembly viewer →</a>
+    <a href="print.html" style="font-size:.82rem">Print-orientation preview →</a>
+    <select id="picker" aria-label="Choose a model"></select>
+  </header>
+
+  <model-viewer id="mv"
+    camera-controls auto-rotate touch-action="pan-y"
+    shadow-intensity="1" exposure="1.05"
+    environment-image="neutral" ar ar-modes="webxr scene-viewer quick-look"
+    alt="Gearfinity module preview">
+  </model-viewer>
+
+  <div id="empty">
+    <div>
+      <p>No model loaded yet.</p>
+      <p>Export a mock display assembly to <code>.glb</code> (Extended Reality Binary)
+         and drop it in <code>web/models/</code>, then add it to the list in
+         <code>index.html</code>.</p>
+    </div>
+  </div>
+
+  <footer>
+    Mock display assemblies, rendered in-browser via glTF/GLB. Mocks are for
+    visualization only — printable files live in <a href="../parts.csv">parts.csv</a>.
+  </footer>
+
+  <script type="module">
+    // Known mock models. Add an entry whenever you export a new .glb to web/models/.
+    const MODELS = [
+      { id: 'planetary_stage_core_mock_display', label: 'Planetary Stage (mock)' },
+    ];
+
+    const mv = document.getElementById('mv');
+    const picker = document.getElementById('picker');
+    const empty = document.getElementById('empty');
+
+    for (const m of MODELS) {
+      const o = document.createElement('option');
+      o.value = m.id; o.textContent = m.label;
+      picker.appendChild(o);
+    }
+
+    function load(id) {
+      empty.classList.remove('show');
+      mv.src = `models/${id}.glb`;
+    }
+    mv.addEventListener('error', () => empty.classList.add('show'));
+
+    const params = new URLSearchParams(location.search);
+    const start = params.get('model') || (MODELS[0] && MODELS[0].id);
+    if (start) { picker.value = start; load(start); }
+    picker.addEventListener('change', e => load(e.target.value));
+  </script>
+</body>
+</html>
