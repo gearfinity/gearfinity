@@ -26,16 +26,18 @@ transforms.
 ## Step by step
 
 1. **Model a display assembly** (see "Display assemblies" below).
-2. Open it in SolidWorks and run **DumpAssemblyBOM**
-   (`scripts/macros/DumpAssemblyBOM.swp`) → writes `<assembly>.bom.json`
-   next to it: every component instance + its transform.
+2. Open it in SolidWorks, **activate the configuration to capture**, and run
+   **DumpAssemblyBOM** (`scripts/macros/DumpAssemblyBOM.swp`) → writes
+   `<assembly>.<config>.bom.json` next to it: every component instance + its
+   transform. Variant masters (one assembly with 1/2/3-stage configurations)
+   are dumped once per configuration — the filenames never collide.
 3. Run **ExportAssemblyGLBs** (`scripts/macros/ExportAssemblyGLBs.swp`)
    → exports every *unique* component part to `web/parts/<stem>.glb`
    (instances share one file: 3 planets → 1 GLB). Date-checked, so re-runs
    only export what changed.
 4. Generate the scene:
    ```
-   python scripts/gen_kinematic_scene.py _all_parts/<assembly>.bom.json \
+   python scripts/gen_kinematic_scene.py _all_parts/<assembly>.<config>.bom.json \
        --out cfg_<module>_<variant>
    ```
 5. Open `web/configurator.html`, pick the module/variant — the mode indicator
@@ -161,21 +163,34 @@ re-export. GLB lookup prefers `web/parts/` (per-part exports) over
 `web/models/` (whole-assembly mocks), which also avoids the name collision
 when a part and its assembly share a stem.
 
-## Sub-assembly part swaps (the DS5O → DS5OL pattern)
+## Configuration conventions (agreed 2026-07)
 
-A reused sub-assembly can carry a part that a specific module must REPLACE —
-e.g. every planetary-stage display includes a `DS5O`, but the crank-adjacent
-stage of the fan/crank modules needs `DS5OL` (lockable) instead, added at the
-top level. Handle it with **sub-assembly configurations**:
+**Variation lives at the level where it varies:**
 
-1. Give the sub-assembly a config (e.g. `no_shaft`) with the part suppressed.
-2. Reference that config on the affected *instance* in the parent assembly
-   (Component Properties → Referenced configuration); add the replacement part
-   at top level.
+- **Intrinsic** variation (part of the sub-assembly's identity) → a
+  **sub-assembly configuration**. The planetary stage's ring **slot styles**
+  are the canonical case: configs named for the catalog style codes —
+  `middle` / `outer` / `closed` (`PGC5M`/`PGC5O`/`PGC5C`).
+- **Contextual** variation (decided by whichever module uses the
+  sub-assembly) → a **parent-level component**, suppressed/swapped by the
+  parent's configurations. **Drive shafts are contextual**: the stage
+  sub-assembly carries NO shaft; the inter-stage coupler lives in the
+  2-stage wrapper, and terminal shafts (DS5OL, DS5I, …) live in the module
+  assembly — exactly mirroring `modules.config.json`, where shafts are
+  module-level `shared_slots`, not stage slots.
+- SolidWorks cannot swap/suppress a *nested* part per top-level config —
+  suppressing a grandchild from the top writes into the child document's
+  active config, silently changing every other usage. Derived
+  configurations exist (parent→child config inheritance) but keep
+  contextual variation out of shared documents instead.
+- Variant masters (one `fan_module.SLDASM` with `1-stage`/`2-stage`/
+  `3-stage` configs) are supported end-to-end: per-config suppression +
+  referenced child configs + config-specific mates, dumped once per active
+  configuration (per-config bom.json filenames).
 
-The pipeline handles this with no extra steps: `DumpAssemblyBOM` records
-`IsSuppressed` per instance-in-context, and the scene generator, ingestion,
-and BOM counting all skip suppressed components.
+The pipeline needs no special handling: `DumpAssemblyBOM` records the fully
+resolved state (`IsSuppressed` per instance-in-context), and the scene
+generator, ingestion, and BOM counting all skip suppressed components.
 
 ## Extending to a new module (crank, fan, multi-stage)
 

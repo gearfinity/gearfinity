@@ -7,10 +7,13 @@ bills of materials (including pin counts) and component placements.
 
 ### Run it
 1. Open an assembly in SolidWorks (e.g. `fan_module_2_stage.SLDASM`).
-2. **Tools ▸ Macro ▸ New…**, save as `DumpAssemblyBOM.swp`.
-3. Paste the contents of [`DumpAssemblyBOM.vba`](DumpAssemblyBOM.vba) over the
+2. **Activate the configuration** you want to capture — variant masters
+   (e.g. a `fan_module` with 1/2/3-stage configs) are dumped once per config.
+3. **Tools ▸ Macro ▸ New…**, save as `DumpAssemblyBOM.swp`.
+4. Paste the contents of [`DumpAssemblyBOM.vba`](DumpAssemblyBOM.vba) over the
    template, then **Run** (F5).
-4. It writes **`<assembly>.bom.json`** next to the assembly and confirms.
+5. It writes **`<assembly>.<config>.bom.json`** next to the assembly and
+   confirms — per-config filenames, so variant dumps never overwrite each other.
 
 > Late binding — no reference setup needed. Should work across SolidWorks
 > versions. (Not yet tested live — if it errors, note the line and we'll adjust.)
@@ -19,6 +22,7 @@ bills of materials (including pin counts) and component placements.
 ```json
 {
   "assembly": "fan_module_2_stage.SLDASM",
+  "configuration": "Default",
   "components": [
     {
       "name": "crank_shaft_5-1-1",        // instance name

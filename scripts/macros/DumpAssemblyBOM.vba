@@ -1,18 +1,21 @@
 ' DumpAssemblyBOM  -  Gearfinity
 ' --------------------------------------------------------------------------
 ' Traverses the ACTIVE SolidWorks assembly and writes a JSON file next to it
-' (<assembly>.bom.json) listing every component instance with its referenced
-' file, suppression state, and transform (3x3 rotation + translation, metres).
+' (<assembly>.<config>.bom.json) listing every component instance with its
+' referenced file, suppression state, and transform (3x3 rotation +
+' translation, metres). The ACTIVE CONFIGURATION name is part of the filename
+' so variant masters (e.g. fan_module with 1/2/3-stage configs) can be dumped
+' once per configuration without overwriting each other.
 '
-' Feeds scripts/ingest_assembly.py, which maps files -> part IDs and produces
-' a real BOM with quantities (including pins) and component placements for the
-' web viewer.
+' Feeds scripts/gen_kinematic_scene.py (web scenes) and
+' scripts/ingest_assembly.py (BOM quantities).
 '
 ' HOW TO USE
 '   1. Open the assembly (e.g. fan_module_2_stage.SLDASM).
-'   2. Tools > Macro > New...  save as e.g. DumpAssemblyBOM.swp
-'   3. Paste this code over the template, then Run (F5).
-'   4. It writes <assembly path>.bom.json and pops a confirmation.
+'   2. ACTIVATE the configuration you want to capture.
+'   3. Tools > Macro > New...  save as e.g. DumpAssemblyBOM.swp
+'   4. Paste this code over the template, then Run (F5).
+'   5. Repeat per configuration for variant masters.
 '
 ' Uses late binding (no reference setup needed). Transform layout from
 ' MathTransform.ArrayData: [0..8] = row-major 3x3 rotation, [9..11] = x,y,z
@@ -32,8 +35,12 @@ Sub main()
     Dim vComps As Variant
     vComps = swAssy.GetComponents(False)   ' False = all components, all levels
 
+    ' active configuration -> part of the filename (sanitized) + JSON metadata
+    Dim cfgName As String
+    cfgName = swModel.ConfigurationManager.ActiveConfiguration.Name
+
     Dim outPath As String
-    outPath = swModel.GetPathName & ".bom.json"
+    outPath = swModel.GetPathName & "." & SafeName(cfgName) & ".bom.json"
 
     Dim fnum As Integer
     fnum = FreeFile
@@ -41,6 +48,7 @@ Sub main()
 
     Print #fnum, "{"
     Print #fnum, "  ""assembly"": " & JStr(GetLeaf(swModel.GetPathName)) & ","
+    Print #fnum, "  ""configuration"": " & JStr(cfgName) & ","
     Print #fnum, "  ""components"": ["
 
     Dim i As Long, first As Boolean
@@ -96,4 +104,19 @@ Function GetLeaf(p As String) As String
     Dim parts() As String
     parts = Split(p, "\")
     GetLeaf = parts(UBound(parts))
+End Function
+
+' config names can contain characters that are illegal in filenames
+Function SafeName(s As String) As String
+    Dim i As Integer, c As String, r As String
+    For i = 1 To Len(s)
+        c = Mid(s, i, 1)
+        If c Like "[A-Za-z0-9_-]" Then
+            r = r & c
+        Else
+            r = r & "_"
+        End If
+    Next i
+    If r = "" Then r = "Default"
+    SafeName = r
 End Function
